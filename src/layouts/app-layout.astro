@@ -5,18 +5,36 @@ import { siteConfig } from '@config/site';
 import '@styles/global.css';
 
 interface Props {
+  canonicalPath?: string;
   title?: string;
   description?: string;
   mainClass?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  robots?: 'index,follow' | 'noindex,follow' | 'noindex,nofollow';
 }
 
 const {
+  canonicalPath,
   title = siteConfig.fullName,
   description = siteConfig.description,
   mainClass = '',
+  ogImage = siteConfig.openGraphImage,
+  ogType = 'website',
+  robots = 'index,follow',
 } = Astro.props;
 
 const pageTitle = title === siteConfig.fullName ? title : `${title} | ${siteConfig.name}`;
+const resolveUrl = (path: string): string => {
+  if (/^https?:\/\//.test(path)) {
+    return path;
+  }
+
+  return siteConfig.url ? new URL(path, siteConfig.url).toString() : path;
+};
+
+const canonicalUrl = canonicalPath ? resolveUrl(canonicalPath) : undefined;
+const openGraphImageUrl = resolveUrl(ogImage);
 
 const themeInitScript = `
 (() => {
@@ -54,7 +72,19 @@ const themeInitScript = `
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
     <meta name="generator" content={Astro.generator} />
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={siteConfig.fullName} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={openGraphImageUrl} />
+    {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={openGraphImageUrl} />
     <title>{pageTitle}</title>
     <script is:inline set:html={themeInitScript} />
   </head>

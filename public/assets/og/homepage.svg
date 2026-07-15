@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" role="img" aria-labelledby="title description">
+  <title id="title">Personal Technical Knowledge Platform</title>
+  <desc id="description">Open Graph image for PTKP.</desc>
+  <rect width="1200" height="630" fill="#fbfaf8" />
+  <rect x="80" y="78" width="1040" height="474" rx="8" fill="#ffffff" stroke="#d9e1dc" />
+  <text x="130" y="190" fill="#17201c" font-family="Inter, Segoe UI, sans-serif" font-size="60" font-weight="700">PTKP</text>
+  <text x="130" y="270" fill="#17201c" font-family="Inter, Segoe UI, sans-serif" font-size="42" font-weight="700">Personal Technical Knowledge Platform</text>
+  <text x="130" y="345" fill="#52605a" font-family="Inter, Segoe UI, sans-serif" font-size="28">Engineering knowledge, architecture notes, projects,</text>
+  <text x="130" y="385" fill="#52605a" font-family="Inter, Segoe UI, sans-serif" font-size="28">and learning resources for platform engineers.</text>
+  <line x1="130" y1="455" x2="520" y2="455" stroke="#1f6f78" stroke-width="8" stroke-linecap="round" />
+</svg>
