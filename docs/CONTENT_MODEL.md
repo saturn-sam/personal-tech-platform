@@ -63,6 +63,86 @@ This metadata is mandatory unless explicitly exempted.
 
 ---
 
+
+# Content Lifecycle
+
+Every Knowledge Asset follows a defined lifecycle to ensure long-term quality and maintainability.
+
+## Publication Dates
+
+### publishedDate
+
+The date the Knowledge Asset was first published.
+
+Rules:
+
+- Required
+- Immutable after publication
+- Used for chronological views
+
+---
+
+### updatedDate
+
+The date of the latest substantive update.
+
+Rules:
+
+- Optional when initially published
+- Updated whenever technical content changes significantly
+- Minor formatting or typographical corrections do not require updating
+
+---
+
+### reviewedDate
+
+The date the content was last reviewed for technical accuracy.
+
+Rules:
+
+- Optional
+- Recommended for Architecture Guides, Articles, and Technology Pages
+- Indicates the content has been validated against current best practices
+
+---
+
+### revision
+
+Optional revision identifier.
+
+Examples:
+
+- 1.0
+- 1.1
+- 2.0
+
+Major revisions indicate substantial changes in scope or technical content.
+
+---
+
+# Content Lifecycle States
+
+Every Knowledge Asset should exist in one of the following states:
+
+Draft
+
+Content is under development and is not publicly visible.
+
+Review
+
+Content is awaiting technical or editorial review.
+
+Published
+
+Content is publicly available.
+
+Archived
+
+Content is retained for historical reference but is no longer actively maintained.
+
+Archived content should clearly indicate its status.
+
+---
 # 4. Lifecycle
 
 Every Knowledge Asset follows a lifecycle:

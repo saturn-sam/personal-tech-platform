@@ -46,6 +46,40 @@ It should continue to scale as additional technologies, certifications, projects
 
 The platform should become the single source of truth for all publicly shared technical knowledge produced by the author.
 
+
+## Homepage Vision
+
+The homepage is an orientation page rather than a marketing page.
+
+Its purpose is to help visitors understand:
+
+- What PTKP is.
+- What knowledge is available.
+- Where to begin.
+- How topics are connected.
+
+The homepage should remain calm, minimal, and content-focused.
+
+It should encourage exploration through high-quality information architecture rather than promotional messaging.
+
+## Design Philosophy
+
+PTKP is inspired by the usability and clarity of high-quality technical documentation rather than commercial marketing websites.
+
+The visual language should be:
+
+- Minimal
+- Elegant
+- Calm
+- Spacious
+- Typography-driven
+
+The interface should disappear behind the content.
+
+Readers should remember the knowledge they gained, not decorative visual effects.
+
+Every design decision should improve comprehension, reduce cognitive load, and support long-form technical reading.
+
 ---
 
 # 2. Core Principles

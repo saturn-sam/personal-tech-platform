@@ -263,8 +263,15 @@ Deliverables:
 
 Acceptance Criteria:
 
-- Homepage communicates the purpose of PTKP.
-- Visitors can reach major content areas within one or two interactions.
+- Clearly communicates the purpose of PTKP.
+- Highlights featured Knowledge Assets.
+- Highlights featured Projects.
+- Presents Technology Overview.
+- Provides access to Learning Paths.
+- Displays Recent Updates.
+- Includes Certifications section.
+- Guides visitors to major content areas within two interactions.
+- Maintains excellent performance and accessibility.
 
 Status:
 

@@ -12,24 +12,50 @@ The IA prioritizes discoverability, scalability, and long-term maintainability o
 
 Every content item must have a clear place within the platform and meaningful relationships to other content.
 
+
+
 ---
 
-# 2. Primary Navigation
 
-The top-level navigation consists of:
+# Homepage Information Hierarchy
+
+The homepage serves as the entry point to PTKP.
+
+Its purpose is to introduce the platform and guide visitors toward relevant Knowledge Assets.
+
+The homepage should remain focused and avoid information overload.
+
+The recommended section order is:
+
+1. Hero
+2. Featured Knowledge Assets
+3. Featured Projects
+4. Technology Overview
+5. Learning Paths
+6. Recent Updates
+7. Certifications
+8. Footer
+
+Each section should encourage exploration rather than present exhaustive lists.
+
+---
+
+# Primary Navigation
+
+Version 1.0 uses the following primary navigation.
 
 - Home
-- Knowledge
-- Architecture
+- Articles
 - Projects
 - Technologies
+- Learning Paths
 - Certifications
 - Resources
 - About
 
-The navigation should remain stable over time.
+Navigation labels should remain stable across the platform.
 
-Avoid adding new top-level items unless they represent an entirely new domain.
+Avoid changing navigation terminology without updating the Information Architecture.
 
 ---
 
@@ -262,3 +288,4 @@ The architecture must support thousands of content items without restructuring.
 Future content types should be additive rather than disruptive.
 
 Maintain a stable navigation hierarchy while allowing the content library to expand indefinitely.
+
