@@ -33,6 +33,33 @@ seo:
 featured: true
 ---
 
-# OpenShift Virtualization Storage Planning
+OpenShift Virtualization storage planning starts with the workload profile. A virtual machine that serves a transactional database has different expectations than a test VM, a jump host, or a stateless appliance.
 
-Placeholder article content for the homepage knowledge preview.
+## Storage Class Selection
+
+Storage classes should be mapped to workload requirements, not selected only by availability. Confirm access mode, latency profile, replication behavior, snapshot support, and backup integration before a VM template becomes a shared standard.
+
+| Requirement | Storage planning question                       | Example decision                                      |
+| ----------- | ----------------------------------------------- | ----------------------------------------------------- |
+| Performance | Does the VM need predictable latency?           | Use a class backed by high-performance block storage. |
+| Recovery    | Are volume snapshots part of the recovery plan? | Require snapshot-capable classes for stateful VMs.    |
+| Mobility    | Does the VM need live migration?                | Validate access mode and storage backend support.     |
+
+## Capacity Guardrails
+
+Virtual machine disks often grow in a different pattern than container workloads. Track requested capacity, actual allocation, snapshot retention, and storage pool headroom together so operators can identify risk before scheduling failures begin.
+
+```bash
+oc get storageclass
+oc get pv,pvc -A
+oc adm top pod -A --containers
+```
+
+<Callout type="tip" title="Planning shortcut">
+  Treat the storage class as an operational contract. If backup, migration, and performance behavior
+  are unclear, the class is not ready for shared VM consumption.
+</Callout>
+
+## Operational Checks
+
+Before production use, validate a representative VM boot cycle, migration attempt, snapshot workflow, restore workflow, and monitoring signal. The goal is to prove the storage behavior operators will rely on during normal maintenance and incident response.

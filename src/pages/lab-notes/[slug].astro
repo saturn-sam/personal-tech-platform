@@ -1,0 +1,24 @@
+---
+import { render } from 'astro:content';
+
+import Callout from '@components/documentation/callout.astro';
+import CodeBlock from '@components/documentation/code-block.astro';
+import DataTable from '@components/documentation/data-table.astro';
+import MermaidDiagram from '@components/documentation/mermaid-diagram.astro';
+import KnowledgeAssetLayout from '@layouts/knowledge-asset-layout.astro';
+import { getKnowledgeAssetStaticPaths } from '@lib/content/knowledge-assets';
+
+export const getStaticPaths = () => getKnowledgeAssetStaticPaths('lab-notes');
+
+const { entry, nextEntry, previousEntry } = Astro.props;
+const { Content, headings } = await render(entry);
+---
+
+<KnowledgeAssetLayout
+  entry={entry}
+  headings={headings}
+  nextEntry={nextEntry}
+  previousEntry={previousEntry}
+>
+  <Content components={{ Callout, CodeBlock, DataTable, MermaidDiagram }} />
+</KnowledgeAssetLayout>

@@ -103,6 +103,14 @@ export const architectureGuideSchema = baseKnowledgeAssetSchema
   })
   .strict();
 
+const projectTimelineItemSchema = z
+  .object({
+    date: dateSchema,
+    title: nonEmptyString,
+    description: nonEmptyString,
+  })
+  .strict();
+
 export const projectSchema = baseKnowledgeAssetSchema
   .extend({
     assetType: z.literal('project'),
@@ -111,6 +119,15 @@ export const projectSchema = baseKnowledgeAssetSchema
     startDate: dateSchema,
     endDate: dateSchema.optional(),
     outcomes: z.array(nonEmptyString).min(1),
+    gallery: z.array(featuredImageSchema).default([]),
+    timeline: z.array(projectTimelineItemSchema).default([]),
+    diagram: z
+      .object({
+        language: z.literal('mermaid'),
+        title: nonEmptyString,
+      })
+      .strict()
+      .optional(),
   })
   .strict();
 

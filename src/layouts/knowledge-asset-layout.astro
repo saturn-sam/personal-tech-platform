@@ -1,0 +1,268 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+import MarkdownEnhancements from '@components/documentation/markdown-enhancements.astro';
+import Badge from '@components/ui/badge.astro';
+import Card from '@components/ui/card.astro';
+import Tag from '@components/ui/tag.astro';
+import PageContainer from '@components/layout/page-container.astro';
+import Section from '@components/layout/section.astro';
+import Stack from '@components/layout/stack.astro';
+import Breadcrumb from '@components/navigation/breadcrumb.astro';
+import { knowledgeAssetConfig } from '@config/knowledge-assets';
+import { siteConfig } from '@config/site';
+import AppLayout from '@layouts/app-layout.astro';
+import {
+  formatKnowledgeAssetDate,
+  formatKnowledgeAssetMachineDate,
+  getKnowledgeAssetBreadcrumbs,
+  getKnowledgeAssetCollectionConfig,
+  getKnowledgeAssetReadingTime,
+  getKnowledgeAssetTocHeadings,
+  getKnowledgeAssetUrl,
+  type KnowledgeAssetCollectionName,
+  type KnowledgeAssetEntry,
+} from '@lib/content/knowledge-assets';
+
+interface Props {
+  entry: KnowledgeAssetEntry;
+  headings: readonly MarkdownHeading[];
+  nextEntry?: KnowledgeAssetEntry;
+  previousEntry?: KnowledgeAssetEntry;
+}
+
+const { entry, headings, nextEntry, previousEntry } = Astro.props as Props;
+const collection = entry.collection as KnowledgeAssetCollectionName;
+const collectionConfig = getKnowledgeAssetCollectionConfig(collection);
+const labels = knowledgeAssetConfig.labels;
+const breadcrumbs = getKnowledgeAssetBreadcrumbs(collection, entry.data.title);
+const tocHeadings = getKnowledgeAssetTocHeadings(headings);
+const readingTime = getKnowledgeAssetReadingTime(entry);
+const canonicalPath =
+  entry.data.seo.canonicalPath ?? getKnowledgeAssetUrl(collection, entry.data.slug);
+const mermaidTitle =
+  'diagram' in entry.data && entry.data.diagram ? entry.data.diagram.title : labels.mermaidDiagram;
+
+const metadata = [
+  {
+    dateTime: formatKnowledgeAssetMachineDate(entry.data.publishedDate),
+    label: labels.published,
+    value: formatKnowledgeAssetDate(entry.data.publishedDate),
+  },
+  {
+    dateTime: formatKnowledgeAssetMachineDate(entry.data.updatedDate),
+    label: labels.updated,
+    value: formatKnowledgeAssetDate(entry.data.updatedDate),
+  },
+  {
+    label: labels.readingTime,
+    value: readingTime.text,
+  },
+  {
+    label: labels.difficulty,
+    value: entry.data.difficulty,
+  },
+];
+
+const editorialMetadata = [
+  {
+    label: labels.author,
+    value: entry.data.author,
+  },
+  {
+    dateTime: entry.data.reviewedDate
+      ? formatKnowledgeAssetMachineDate(entry.data.reviewedDate)
+      : undefined,
+    label: labels.reviewed,
+    value: entry.data.reviewedDate ? formatKnowledgeAssetDate(entry.data.reviewedDate) : undefined,
+  },
+  {
+    label: labels.revision,
+    value: entry.data.revision,
+  },
+  {
+    label: labels.status,
+    value: entry.data.status,
+  },
+].filter((item) => item.value);
+
+const getEntryHref = (targetEntry: KnowledgeAssetEntry): string =>
+  targetEntry.data.seo.canonicalPath ??
+  getKnowledgeAssetUrl(
+    targetEntry.collection as KnowledgeAssetCollectionName,
+    targetEntry.data.slug,
+  );
+
+const relatedText =
+  entry.data.relatedAssets.length > 0
+    ? `${entry.data.relatedAssets.length} ${labels.relatedWithCount}`
+    : labels.relatedEmpty;
+
+const resolveUrl = (path: string): string | undefined =>
+  siteConfig.url ? new URL(path, siteConfig.url).toString() : undefined;
+
+const structuredData: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  about: entry.data.technologies,
+  author: {
+    '@type': 'Person',
+    name: entry.data.author,
+  },
+  dateModified: formatKnowledgeAssetMachineDate(entry.data.updatedDate),
+  datePublished: formatKnowledgeAssetMachineDate(entry.data.publishedDate),
+  description: entry.data.description,
+  headline: entry.data.title,
+  image: resolveUrl(entry.data.featuredImage.src),
+  keywords: entry.data.tags,
+  mainEntityOfPage: resolveUrl(canonicalPath),
+};
+---
+
+<AppLayout
+  title={entry.data.seo.title}
+  description={entry.data.seo.description}
+  canonicalPath={canonicalPath}
+  ogImage={entry.data.featuredImage.src}
+  ogType="article"
+  robots={entry.data.seo.robots}
+  mainClass="knowledge-asset-page"
+>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  <Section spacing="compact" class="knowledge-asset">
+    <PageContainer size="wide">
+      <Stack gap="lg">
+        <Breadcrumb items={breadcrumbs} />
+
+        <article class="knowledge-asset__article">
+          <header class="knowledge-asset__header">
+            <Badge tone="accent">{collectionConfig.badgeLabel}</Badge>
+            <h1>{entry.data.title}</h1>
+            <p>{entry.data.description}</p>
+
+            <dl class="knowledge-meta" aria-label="Knowledge asset metadata">
+              {
+                metadata.map((item) => (
+                  <div>
+                    <dt>{item.label}</dt>
+                    <dd>
+                      {item.dateTime ? (
+                        <time datetime={item.dateTime}>{item.value}</time>
+                      ) : (
+                        item.value
+                      )}
+                    </dd>
+                  </div>
+                ))
+              }
+            </dl>
+
+            <div class="knowledge-token-groups">
+              <div class="knowledge-token-group" aria-label={labels.tags}>
+                {entry.data.tags.map((tag) => <Tag>{tag}</Tag>)}
+              </div>
+              <div class="knowledge-token-group" aria-label={labels.technologies}>
+                {entry.data.technologies.map((technology) => <Tag>{technology}</Tag>)}
+              </div>
+            </div>
+          </header>
+
+          <div class="knowledge-asset__body">
+            <aside class="knowledge-toc" aria-labelledby="knowledge-toc-title">
+              <h2 id="knowledge-toc-title">{labels.tableOfContents}</h2>
+              {
+                tocHeadings.length > 0 ? (
+                  <ol class="knowledge-toc__list">
+                    {tocHeadings.map((heading) => (
+                      <li
+                        class:list={[
+                          'knowledge-toc__item',
+                          `knowledge-toc__item--depth-${heading.depth}`,
+                        ]}
+                      >
+                        <a class="knowledge-toc__link" href={`#${heading.slug}`}>
+                          {heading.text}
+                        </a>
+                      </li>
+                    ))}
+                  </ol>
+                ) : (
+                  <p>{labels.noTableOfContents}</p>
+                )
+              }
+            </aside>
+
+            <div class="knowledge-asset__main">
+              <div class="knowledge-content">
+                <slot />
+              </div>
+
+              <footer class="knowledge-asset__footer">
+                <nav class="knowledge-adjacent" aria-label={labels.collectionNavigation}>
+                  {
+                    previousEntry ? (
+                      <a class="knowledge-adjacent__link" href={getEntryHref(previousEntry)}>
+                        <span>{labels.previous}</span>
+                        <strong>{previousEntry.data.title}</strong>
+                      </a>
+                    ) : (
+                      <span class="knowledge-adjacent__link knowledge-adjacent__link--disabled">
+                        <span>{labels.previous}</span>
+                        <strong>No previous {collectionConfig.badgeLabel.toLowerCase()}</strong>
+                      </span>
+                    )
+                  }
+                  {
+                    nextEntry ? (
+                      <a class="knowledge-adjacent__link" href={getEntryHref(nextEntry)}>
+                        <span>{labels.next}</span>
+                        <strong>{nextEntry.data.title}</strong>
+                      </a>
+                    ) : (
+                      <span class="knowledge-adjacent__link knowledge-adjacent__link--disabled">
+                        <span>{labels.next}</span>
+                        <strong>No next {collectionConfig.badgeLabel.toLowerCase()}</strong>
+                      </span>
+                    )
+                  }
+                </nav>
+
+                <div class="knowledge-footer-grid">
+                  <Card as="section" class="knowledge-related">
+                    <h2 id="knowledge-related-title">{labels.relatedContent}</h2>
+                    <p>{relatedText}</p>
+                  </Card>
+
+                  <Card as="section" class="knowledge-edit-metadata">
+                    <h2 id="knowledge-edit-metadata-title">{labels.editMetadata}</h2>
+                    <dl>
+                      {
+                        editorialMetadata.map((item) => (
+                          <div>
+                            <dt>{item.label}</dt>
+                            <dd>
+                              {item.dateTime ? (
+                                <time datetime={item.dateTime}>{item.value}</time>
+                              ) : (
+                                item.value
+                              )}
+                            </dd>
+                          </div>
+                        ))
+                      }
+                    </dl>
+                  </Card>
+                </div>
+              </footer>
+            </div>
+          </div>
+        </article>
+      </Stack>
+    </PageContainer>
+  </Section>
+  <MarkdownEnhancements
+    codeCopiedLabel={labels.copiedCode}
+    codeCopyLabel={labels.copyCode}
+    mermaidTitle={mermaidTitle}
+  />
+</AppLayout>

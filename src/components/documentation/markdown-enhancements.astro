@@ -1,0 +1,169 @@
+---
+export interface Props {
+  codeCopiedLabel?: string;
+  codeCopyLabel?: string;
+  mermaidTitle?: string;
+}
+
+const {
+  codeCopiedLabel = 'Copied',
+  codeCopyLabel = 'Copy',
+  mermaidTitle = 'Mermaid diagram',
+} = Astro.props as Props;
+---
+
+<div
+  data-markdown-enhancements
+  data-code-copied-label={codeCopiedLabel}
+  data-code-copy-label={codeCopyLabel}
+  data-mermaid-title={mermaidTitle}
+  hidden
+>
+</div>
+
+<script>
+  import { mermaidConfig } from '@config/mermaid';
+
+  interface MarkdownEnhancementConfig {
+    codeCopiedLabel: string;
+    codeCopyLabel: string;
+    mermaidTitle: string;
+  }
+
+  const getConfig = (): MarkdownEnhancementConfig => {
+    const config = document.querySelector<HTMLElement>('[data-markdown-enhancements]');
+
+    return {
+      codeCopiedLabel: config?.dataset.codeCopiedLabel ?? 'Copied',
+      codeCopyLabel: config?.dataset.codeCopyLabel ?? 'Copy',
+      mermaidTitle: config?.dataset.mermaidTitle ?? 'Mermaid diagram',
+    };
+  };
+
+  const getCodeText = (pre: HTMLPreElement): string =>
+    pre.querySelector('code')?.textContent ?? pre.textContent ?? '';
+
+  const isMermaidPre = (pre: HTMLPreElement): boolean => {
+    const code = pre.querySelector('code');
+    const languageClass = Array.from(code?.classList ?? []).find((className) =>
+      className.includes('language-mermaid'),
+    );
+
+    return (
+      pre.dataset.diagram === 'mermaid' ||
+      pre.dataset.language === 'mermaid' ||
+      Boolean(languageClass)
+    );
+  };
+
+  const enhanceCodeCopy = (): void => {
+    const { codeCopiedLabel, codeCopyLabel } = getConfig();
+    const codeBlocks = document.querySelectorAll<HTMLPreElement>('.knowledge-content pre');
+
+    codeBlocks.forEach((pre, index) => {
+      if (pre.dataset.copyEnhanced === 'true' || isMermaidPre(pre)) {
+        return;
+      }
+
+      const code = getCodeText(pre).trim();
+
+      if (!code) {
+        return;
+      }
+
+      const wrapper = document.createElement('div');
+      const button = document.createElement('button');
+      const codeId = pre.id || `knowledge-code-${index}`;
+
+      pre.id = codeId;
+      pre.tabIndex = pre.tabIndex >= 0 ? pre.tabIndex : 0;
+      pre.dataset.copyEnhanced = 'true';
+      wrapper.className = 'knowledge-code-wrapper';
+      button.type = 'button';
+      button.className = 'copy-button knowledge-code-copy';
+      button.textContent = codeCopyLabel;
+      button.setAttribute('aria-label', `${codeCopyLabel} code block`);
+      button.setAttribute('aria-controls', codeId);
+
+      button.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(code);
+          button.textContent = codeCopiedLabel;
+          window.setTimeout(() => {
+            button.textContent = codeCopyLabel;
+          }, 1800);
+        } catch {
+          button.textContent = codeCopyLabel;
+        }
+      });
+
+      pre.before(wrapper);
+      wrapper.append(button, pre);
+    });
+  };
+
+  const enhanceMermaidCodeBlocks = async (): Promise<void> => {
+    const { mermaidTitle } = getConfig();
+    const mermaidBlocks = Array.from(
+      document.querySelectorAll<HTMLPreElement>('.knowledge-content pre'),
+    ).filter((pre) => isMermaidPre(pre) && pre.dataset.mermaidRendered !== 'true');
+
+    if (mermaidBlocks.length === 0) {
+      return;
+    }
+
+    const { default: mermaid } = await import('mermaid');
+    mermaid.initialize(mermaidConfig);
+
+    await Promise.all(
+      mermaidBlocks.map(async (pre, index) => {
+        const definition = getCodeText(pre).trim();
+
+        if (!definition) {
+          return;
+        }
+
+        const figure = document.createElement('figure');
+        const caption = document.createElement('figcaption');
+        const title = document.createElement('span');
+        const canvas = document.createElement('div');
+        const source = pre.cloneNode(true) as HTMLPreElement;
+
+        figure.className = 'mermaid-diagram knowledge-mermaid-diagram';
+        figure.dataset.mermaidDiagram = '';
+        caption.className = 'mermaid-diagram__caption';
+        title.className = 'mermaid-diagram__title';
+        title.textContent = mermaidTitle;
+        canvas.className = 'mermaid-diagram__canvas';
+        canvas.setAttribute('role', 'img');
+        canvas.setAttribute('aria-label', mermaidTitle);
+        source.classList.add('mermaid-diagram__source');
+        source.setAttribute('hidden', '');
+
+        try {
+          const result = await mermaid.render(
+            `knowledge-mermaid-${Date.now()}-${index}`,
+            definition,
+          );
+
+          canvas.innerHTML = result.svg;
+          caption.append(title);
+          figure.append(caption, source, canvas);
+          pre.dataset.mermaidRendered = 'true';
+          pre.replaceWith(figure);
+        } catch {
+          pre.dataset.mermaidError = 'true';
+        }
+      }),
+    );
+  };
+
+  const enhanceMarkdown = (): void => {
+    enhanceMermaidCodeBlocks()
+      .catch(() => undefined)
+      .finally(enhanceCodeCopy);
+  };
+
+  enhanceMarkdown();
+  document.addEventListener('astro:page-load', enhanceMarkdown);
+</script>

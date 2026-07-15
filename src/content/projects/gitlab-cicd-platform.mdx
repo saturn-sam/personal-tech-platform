@@ -25,7 +25,27 @@ startDate: '2026-03-01'
 outcomes:
   - Standardized CI/CD pipeline structure for infrastructure and application teams.
   - Improved deployment traceability across environments.
-relatedAssets: []
+gallery:
+  - src: /assets/placeholders/gitlab-cicd.svg
+    alt: GitLab CI/CD delivery platform workflow
+timeline:
+  - date: '2026-03-01'
+    title: Delivery workflow discovery
+    description: Reviewed deployment patterns, runner needs, and environment promotion requirements.
+  - date: '2026-05-01'
+    title: Pipeline governance baseline
+    description: Standardized reusable pipeline stages, secret handling, and review expectations.
+  - date: '2026-07-12'
+    title: Traceability review
+    description: Validated deployment records and operational visibility across environments.
+diagram:
+  language: mermaid
+  title: GitLab CI/CD platform flow
+relatedAssets:
+  - collection: articles
+    slug: enterprise-kubernetes-platform-architecture
+  - collection: architecture-guides
+    slug: secure-platform-operations-baseline
 featuredImage:
   src: /assets/placeholders/gitlab-cicd.svg
   alt: GitLab CI/CD platform project
@@ -37,6 +57,39 @@ seo:
 featured: true
 ---
 
-# GitLab CI/CD Platform
+## Architecture Diagram
 
-Placeholder project content for the homepage project preview.
+```mermaid
+flowchart LR
+  Commit[Code Commit] --> Pipeline[GitLab Pipeline]
+  Pipeline --> Runner[Shared Runner]
+  Runner --> Validate[Validation Stage]
+  Validate --> Promote[Environment Promotion]
+  Promote --> Deploy[Deployment Target]
+  Deploy --> Evidence[Deployment Evidence]
+```
+
+## Project Overview
+
+This project defines a shared GitLab CI/CD platform for infrastructure and application delivery workflows. The focus is repeatability, traceability, and operational visibility rather than custom pipelines for every team.
+
+## Implementation Details
+
+The platform model standardizes runner usage, reusable stages, secret handling, validation gates, and environment promotion. The implementation is intended to make delivery behavior visible before changes reach shared infrastructure.
+
+<Callout type="important" title="Governance note">
+  CI/CD governance should make safe delivery easier. The pipeline baseline should reduce manual
+  variation without hiding deployment responsibility.
+</Callout>
+
+## Challenges
+
+- Standardizing pipelines without blocking team-specific build requirements.
+- Separating secret handling from repository-level convenience.
+- Keeping deployment evidence readable for operations and review workflows.
+
+## Lessons Learned
+
+- Shared pipeline templates need versioning and ownership.
+- Promotion rules should be documented in language that both developers and operators understand.
+- Deployment traceability improves incident review when it is captured automatically.

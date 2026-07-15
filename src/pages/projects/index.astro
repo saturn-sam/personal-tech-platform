@@ -1,0 +1,8 @@
+---
+import ProjectIndexLayout from '@layouts/project-index-layout.astro';
+import { getPublishedProjectEntries } from '@lib/content/projects';
+
+const entries = await getPublishedProjectEntries();
+---
+
+<ProjectIndexLayout entries={entries} />

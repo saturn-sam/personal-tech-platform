@@ -25,7 +25,29 @@ startDate: '2026-02-01'
 outcomes:
   - Defined a repeatable Kubernetes platform operating model.
   - Improved deployment consistency through GitOps and CI/CD workflows.
-relatedAssets: []
+gallery:
+  - src: /assets/placeholders/enterprise-kubernetes-platform.svg
+    alt: Enterprise Kubernetes platform operating model
+timeline:
+  - date: '2026-02-01'
+    title: Discovery and platform scope
+    description: Defined shared platform objectives, tenant boundaries, and operational ownership.
+  - date: '2026-04-15'
+    title: Delivery workflow baseline
+    description: Standardized namespace onboarding, GitOps promotion, and CI/CD integration patterns.
+  - date: '2026-07-14'
+    title: Operational readiness review
+    description: Reviewed observability, access control, support handoff, and platform documentation.
+diagram:
+  language: mermaid
+  title: Enterprise Kubernetes platform flow
+relatedAssets:
+  - collection: articles
+    slug: enterprise-kubernetes-platform-architecture
+  - collection: lab-notes
+    slug: kubernetes-node-health-checks
+  - collection: architecture-guides
+    slug: secure-platform-operations-baseline
 featuredImage:
   src: /assets/placeholders/enterprise-kubernetes-platform.svg
   alt: Enterprise Kubernetes platform project
@@ -37,6 +59,39 @@ seo:
 featured: true
 ---
 
-# Enterprise Kubernetes Platform
+## Architecture Diagram
 
-Placeholder project content for the homepage project preview.
+```mermaid
+flowchart LR
+  Developer[Application Team] --> Git[Git Repository]
+  Git --> Pipeline[GitLab Pipeline]
+  Pipeline --> GitOps[GitOps Controller]
+  GitOps --> Namespace[Kubernetes Namespace]
+  Namespace --> Observability[Metrics and Logs]
+  Observability --> Operations[Platform Operations]
+```
+
+## Project Overview
+
+This project defines a shared Kubernetes platform model for application delivery teams. The work focuses on stable cluster operations, clear tenant boundaries, and repeatable deployment workflows rather than one-off cluster provisioning.
+
+## Implementation Details
+
+The implementation centers on namespace standards, GitOps-based promotion, baseline observability, and support handoff. Platform conventions are documented so application teams can onboard without relying on undocumented operational knowledge.
+
+<Callout type="important" title="Project focus">
+  The platform is treated as an operating model, not only as a cluster build. Documentation,
+  ownership, and recovery expectations are part of the implementation.
+</Callout>
+
+## Challenges
+
+- Balancing shared platform controls with team-level delivery autonomy.
+- Keeping cluster standards simple enough for repeated adoption.
+- Making operational ownership visible across platform, security, and application teams.
+
+## Lessons Learned
+
+- Tenant onboarding is easier when namespace conventions are documented before teams request access.
+- GitOps workflows need clear promotion rules, not only repository templates.
+- Platform documentation should be reviewed alongside technical readiness checks.

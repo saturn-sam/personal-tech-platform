@@ -1,0 +1,42 @@
+export const projectConfig = {
+  locale: 'en',
+  routeBase: '/projects/',
+  badgeLabel: 'Project',
+  indexTitle: 'Projects',
+  indexDescription:
+    'Engineering implementations focused on architecture, delivery, operations, and lessons learned.',
+  seoTitle: 'Projects',
+  seoDescription:
+    'Project documentation for infrastructure, Kubernetes, virtualization, automation, and platform engineering implementations.',
+  emptyTitle: 'No published projects',
+  emptyDescription: 'Published engineering project records will appear here after review.',
+  labels: {
+    home: 'Home',
+    projects: 'Projects',
+    status: 'Status',
+    environment: 'Environment',
+    started: 'Started',
+    completed: 'Completed',
+    updated: 'Updated',
+    difficulty: 'Difficulty',
+    technologies: 'Technology stack',
+    categories: 'Categories',
+    outcomes: 'Outcomes',
+    gallery: 'Project gallery',
+    timeline: 'Timeline',
+    relatedKnowledge: 'Related Knowledge Assets',
+    relatedKnowledgeEmpty:
+      'Related Knowledge Assets will appear here when project references are published.',
+    relatedProjects: 'Related projects',
+    relatedProjectsPlaceholder:
+      'Related project relationships are reserved for a later relationship view.',
+    previous: 'Previous',
+    next: 'Next',
+    projectNavigation: 'Project navigation',
+    copyCode: 'Copy',
+    copiedCode: 'Copied',
+    mermaidDiagram: 'Project architecture diagram',
+    implementationWindow: 'Implementation window',
+    projectMetadata: 'Project metadata',
+  },
+} as const;

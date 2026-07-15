@@ -1,0 +1,24 @@
+---
+import { render } from 'astro:content';
+
+import Callout from '@components/documentation/callout.astro';
+import CodeBlock from '@components/documentation/code-block.astro';
+import DataTable from '@components/documentation/data-table.astro';
+import MermaidDiagram from '@components/documentation/mermaid-diagram.astro';
+import ProjectLayout from '@layouts/project-layout.astro';
+import { getProjectStaticPaths } from '@lib/content/projects';
+
+export const getStaticPaths = () => getProjectStaticPaths();
+
+const { entry, nextEntry, previousEntry, relatedKnowledgeEntries } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<ProjectLayout
+  entry={entry}
+  nextEntry={nextEntry}
+  previousEntry={previousEntry}
+  relatedKnowledgeEntries={relatedKnowledgeEntries}
+>
+  <Content components={{ Callout, CodeBlock, DataTable, MermaidDiagram }} />
+</ProjectLayout>

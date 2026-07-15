@@ -26,7 +26,25 @@ endDate: '2026-06-30'
 outcomes:
   - Established a lifecycle-managed private cloud foundation.
   - Standardized infrastructure operations across compute, network, and storage domains.
-relatedAssets: []
+gallery:
+  - src: /assets/placeholders/vcf-datacenter.svg
+    alt: VMware Cloud Foundation datacenter operating model
+timeline:
+  - date: '2026-01-15'
+    title: Datacenter platform scope
+    description: Defined private cloud domains, lifecycle requirements, and operational boundaries.
+  - date: '2026-04-20'
+    title: Foundation implementation model
+    description: Aligned compute, storage, networking, and identity integration for standardized operations.
+  - date: '2026-06-30'
+    title: Completion and handoff
+    description: Documented lifecycle operations, support boundaries, and platform outcomes.
+diagram:
+  language: mermaid
+  title: VMware Cloud Foundation datacenter flow
+relatedAssets:
+  - collection: architecture-guides
+    slug: secure-platform-operations-baseline
 featuredImage:
   src: /assets/placeholders/vcf-datacenter.svg
   alt: VMware Cloud Foundation datacenter project
@@ -38,6 +56,40 @@ seo:
 featured: true
 ---
 
-# VMware Cloud Foundation Datacenter
+## Architecture Diagram
 
-Placeholder project content for the homepage project preview.
+```mermaid
+flowchart LR
+  Operators[Infrastructure Operations] --> SDDC[SDDC Manager]
+  SDDC --> Compute[vSphere Compute]
+  SDDC --> Network[NSX Networking]
+  SDDC --> Storage[Shared Storage]
+  Compute --> Workloads[Private Cloud Workloads]
+  Network --> Workloads
+  Storage --> Workloads
+```
+
+## Project Overview
+
+This project documents a private cloud foundation using VMware Cloud Foundation for standardized datacenter operations. The work emphasizes lifecycle management, platform consistency, and clear operational boundaries across compute, networking, and storage.
+
+## Implementation Details
+
+The implementation model aligns SDDC Manager, vSphere, NSX, identity integration, and operational handoff. The project treats lifecycle management and day-two operations as first-class design concerns.
+
+<Callout type="note" title="Operations note">
+  Private cloud implementation is incomplete until lifecycle operations, ownership, and recovery
+  expectations are documented for the teams that will operate the platform.
+</Callout>
+
+## Challenges
+
+- Coordinating compute, network, storage, and identity dependencies.
+- Preserving lifecycle consistency while accommodating datacenter constraints.
+- Documenting the support model in a way that survives handoff.
+
+## Lessons Learned
+
+- Lifecycle management should influence the initial platform design.
+- Cross-domain ownership needs explicit escalation paths.
+- Datacenter projects benefit from documentation that connects architecture to operations.

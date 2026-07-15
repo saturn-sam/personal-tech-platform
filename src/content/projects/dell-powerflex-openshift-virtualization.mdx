@@ -25,7 +25,27 @@ startDate: '2026-04-01'
 outcomes:
   - Prepared a storage-aware virtualization design for enterprise workloads.
   - Documented operational requirements for VM backup and recovery.
-relatedAssets: []
+gallery:
+  - src: /assets/placeholders/powerflex-openshift.svg
+    alt: Dell PowerFlex and OpenShift Virtualization storage design
+timeline:
+  - date: '2026-04-01'
+    title: Workload and storage discovery
+    description: Identified VM workload classes, storage performance expectations, and recovery requirements.
+  - date: '2026-05-15'
+    title: Platform integration model
+    description: Mapped storage classes, access modes, and operational validation checks.
+  - date: '2026-07-13'
+    title: Recovery planning review
+    description: Documented backup, restore, and migration considerations for VM workloads.
+diagram:
+  language: mermaid
+  title: OpenShift Virtualization storage flow
+relatedAssets:
+  - collection: articles
+    slug: openshift-virtualization-storage-planning
+  - collection: architecture-guides
+    slug: secure-platform-operations-baseline
 featuredImage:
   src: /assets/placeholders/powerflex-openshift.svg
   alt: Dell PowerFlex with OpenShift Virtualization project
@@ -37,6 +57,38 @@ seo:
 featured: true
 ---
 
-# Dell PowerFlex with OpenShift Virtualization
+## Architecture Diagram
 
-Placeholder project content for the homepage project preview.
+```mermaid
+flowchart LR
+  VM[Virtual Machine Workload] --> CDI[OpenShift Virtualization]
+  CDI --> PVC[Persistent Volume Claim]
+  PVC --> StorageClass[PowerFlex Storage Class]
+  StorageClass --> PowerFlex[Dell PowerFlex]
+  PowerFlex --> Backup[Backup and Recovery Workflow]
+```
+
+## Project Overview
+
+This project documents a virtualization modernization path using OpenShift Virtualization with Dell PowerFlex-backed storage. The primary concern is predictable VM storage behavior across provisioning, migration, backup, and recovery.
+
+## Implementation Details
+
+The implementation model maps VM workload classes to storage classes and operational checks. Storage behavior is treated as an explicit platform contract so VM owners understand performance and recovery expectations before production placement.
+
+<Callout type="note" title="Storage contract">
+  Storage class selection should include recovery behavior, snapshot support, and migration
+  compatibility, not only capacity and availability.
+</Callout>
+
+## Challenges
+
+- Aligning VM performance expectations with storage class capabilities.
+- Documenting backup and restore ownership across platform and storage teams.
+- Validating migration behavior before shared VM templates are published.
+
+## Lessons Learned
+
+- VM platform design needs storage validation as early as workload discovery.
+- Recovery assumptions should be tested before production migration.
+- Operational documentation reduces ambiguity between virtualization and storage teams.
