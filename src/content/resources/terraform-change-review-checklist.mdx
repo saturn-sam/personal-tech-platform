@@ -1,0 +1,62 @@
+---
+assetType: resource
+title: Terraform Change Review Checklist
+slug: terraform-change-review-checklist
+description: Review checklist for Terraform plans, module changes, state safety, and deployment promotion.
+summary: A resource for reviewing infrastructure changes before Terraform plans are approved and applied through CI/CD workflows.
+author: Md. Samrat Uz Zaman
+publishedDate: '2026-07-15'
+updatedDate: '2026-07-15'
+status: published
+tags:
+  - Terraform
+  - Infrastructure as Code
+  - Change Review
+technologies:
+  - Terraform
+  - GitLab CI/CD
+categories:
+  - DevOps
+difficulty: intermediate
+resourceType: template
+format: Markdown
+estimatedStudyTime: 25 minutes
+externalUrl: https://developer.hashicorp.com/terraform/docs
+relatedAssets:
+  - collection: projects
+    slug: gitlab-cicd-platform
+featuredImage:
+  src: /assets/placeholders/resource.svg
+  alt: Terraform change review checklist resource
+seo:
+  title: Terraform Change Review Checklist
+  description: Resource template for reviewing Terraform plans, modules, state safety, and CI/CD promotion.
+  canonicalPath: /resources/terraform-change-review-checklist/
+  robots: index,follow
+featured: true
+---
+
+## Why It Matters
+
+Terraform changes can affect shared infrastructure quickly. A review checklist helps teams separate expected drift correction, module behavior, provider changes, and environment-specific risk before approval.
+
+## How to Use This Resource
+
+Apply this checklist during merge request review and before promotion to shared environments. Record unresolved questions before the apply stage begins.
+
+```bash
+terraform fmt -check
+terraform validate
+terraform plan -out=tfplan
+```
+
+## Review Areas
+
+- Confirm provider and module version changes are intentional.
+- Confirm remote state, locking, and workspace selection.
+- Review create, update, replace, and destroy actions separately.
+- Verify that pipeline approvals match the target environment risk.
+
+## Related Practice
+
+Use this resource with GitLab CI/CD project records. The checklist is most useful when plan evidence, approval context, and deployment history stay attached to the pipeline.

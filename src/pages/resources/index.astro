@@ -1,0 +1,12 @@
+---
+import ResourceIndexLayout from '@layouts/resource-index-layout.astro';
+import {
+  getPublishedResourceEntries,
+  groupResourceEntriesByCategory,
+} from '@lib/content/resources';
+
+const entries = await getPublishedResourceEntries();
+const groups = groupResourceEntriesByCategory(entries);
+---
+
+<ResourceIndexLayout groups={groups} />

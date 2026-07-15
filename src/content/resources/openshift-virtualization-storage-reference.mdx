@@ -1,0 +1,68 @@
+---
+assetType: resource
+title: OpenShift Virtualization Storage Reference
+slug: openshift-virtualization-storage-reference
+description: Curated reference for storage questions that affect virtual machines on OpenShift.
+summary: A resource for comparing storage class behavior, migration expectations, backup posture, and VM workload requirements in OpenShift Virtualization environments.
+author: Md. Samrat Uz Zaman
+publishedDate: '2026-07-15'
+updatedDate: '2026-07-15'
+status: published
+tags:
+  - OpenShift Virtualization
+  - Storage
+  - Virtual Machines
+technologies:
+  - OpenShift
+  - Dell PowerFlex
+  - Kubernetes
+categories:
+  - Virtualization
+difficulty: advanced
+resourceType: reference-document
+format: Markdown
+estimatedStudyTime: 30 minutes
+externalUrl: https://docs.openshift.com/
+relatedAssets:
+  - collection: articles
+    slug: openshift-virtualization-storage-planning
+  - collection: projects
+    slug: dell-powerflex-openshift-virtualization
+featuredImage:
+  src: /assets/placeholders/resource.svg
+  alt: OpenShift Virtualization storage reference resource
+seo:
+  title: OpenShift Virtualization Storage Reference
+  description: Resource reference for OpenShift Virtualization storage classes, migration, backup, and VM readiness.
+  canonicalPath: /resources/openshift-virtualization-storage-reference/
+  robots: index,follow
+featured: true
+---
+
+## Why It Matters
+
+Virtual machines make storage assumptions visible. A class that works for stateless containers may not meet the latency, access mode, migration, or backup expectations of stateful VM workloads.
+
+## How to Use This Resource
+
+Use this reference before publishing shared VM templates. Confirm the storage class behavior with representative boot, migration, snapshot, and restore workflows.
+
+```mermaid
+flowchart LR
+  VM[Virtual Machine] --> PVC[Persistent Volume Claim]
+  PVC --> StorageClass[Storage Class]
+  StorageClass --> Backend[Storage Backend]
+  Backend --> Backup[Backup and Restore]
+  Backend --> Migration[Live Migration Readiness]
+```
+
+## Planning Questions
+
+- Which VM profiles need predictable latency?
+- Which classes support snapshot and restore workflows?
+- Which workloads need live migration?
+- Who owns capacity, backup, and recovery validation?
+
+## Related Practice
+
+Use this resource with the OpenShift Virtualization storage article and Dell PowerFlex project record. The resource keeps planning questions visible while the linked assets provide implementation context.

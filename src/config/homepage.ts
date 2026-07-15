@@ -64,7 +64,7 @@ export const homepageConfig = {
       description:
         'Credential records connect platform knowledge to verified technical domains and study paths.',
       issuerLabel: 'Issuer',
-      linkLabel: 'Credential page planned',
+      linkLabel: 'View Credential',
       limit: 7,
     },
     recentUpdates: {

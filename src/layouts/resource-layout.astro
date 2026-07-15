@@ -1,0 +1,307 @@
+---
+import MarkdownEnhancements from '@components/documentation/markdown-enhancements.astro';
+import Badge from '@components/ui/badge.astro';
+import Card from '@components/ui/card.astro';
+import Link from '@components/ui/link.astro';
+import Tag from '@components/ui/tag.astro';
+import PageContainer from '@components/layout/page-container.astro';
+import Section from '@components/layout/section.astro';
+import Stack from '@components/layout/stack.astro';
+import Breadcrumb from '@components/navigation/breadcrumb.astro';
+import { resourceConfig } from '@config/resources';
+import { siteConfig } from '@config/site';
+import AppLayout from '@layouts/app-layout.astro';
+import {
+  formatResourceDate,
+  formatResourceMachineDate,
+  formatResourceType,
+  getResourceBreadcrumbs,
+  getResourceEntryUrl,
+  getResourceUrl,
+  type ResourceEntry,
+  type ResourceRelatedArticleEntry,
+  type ResourceRelatedLearningPathEntry,
+  type ResourceRelatedProjectEntry,
+  type ResourceRelatedTechnologyEntry,
+} from '@lib/content/resources';
+
+interface Props {
+  entry: ResourceEntry;
+  nextEntry?: ResourceEntry;
+  previousEntry?: ResourceEntry;
+  relatedArticleEntries: readonly ResourceRelatedArticleEntry[];
+  relatedLearningPathEntries: readonly ResourceRelatedLearningPathEntry[];
+  relatedProjectEntries: readonly ResourceRelatedProjectEntry[];
+  relatedTechnologyEntries: readonly ResourceRelatedTechnologyEntry[];
+}
+
+interface ResourceMetadataItem {
+  readonly dateTime?: string;
+  readonly label: string;
+  readonly value: string;
+}
+
+const {
+  entry,
+  nextEntry,
+  previousEntry,
+  relatedArticleEntries,
+  relatedLearningPathEntries,
+  relatedProjectEntries,
+  relatedTechnologyEntries,
+} = Astro.props as Props;
+const labels = resourceConfig.labels;
+const breadcrumbs = getResourceBreadcrumbs(entry.data.title);
+const canonicalPath = entry.data.seo.canonicalPath ?? getResourceUrl(entry.data.slug);
+const mermaidTitle = labels.mermaidDiagram;
+
+const metadata: ResourceMetadataItem[] = [
+  {
+    label: labels.type,
+    value: formatResourceType(entry.data.resourceType),
+  },
+  {
+    label: labels.format,
+    value: entry.data.format,
+  },
+  {
+    label: labels.difficulty,
+    value: entry.data.difficulty,
+  },
+  {
+    label: labels.estimatedStudyTime,
+    value: entry.data.estimatedStudyTime,
+  },
+  {
+    dateTime: formatResourceMachineDate(entry.data.updatedDate),
+    label: labels.updated,
+    value: formatResourceDate(entry.data.updatedDate),
+  },
+];
+
+const resolveUrl = (path: string): string | undefined =>
+  siteConfig.url ? new URL(path, siteConfig.url).toString() : undefined;
+
+const getResourceEntryHref = (resourceEntry: ResourceEntry): string =>
+  resourceEntry.data.seo.canonicalPath ?? getResourceUrl(resourceEntry.data.slug);
+
+const structuredData: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  about: entry.data.technologies,
+  additionalType: entry.data.resourceType,
+  author: {
+    '@type': 'Person',
+    name: entry.data.author,
+  },
+  dateModified: formatResourceMachineDate(entry.data.updatedDate),
+  datePublished: formatResourceMachineDate(entry.data.publishedDate),
+  description: entry.data.description,
+  image: resolveUrl(entry.data.featuredImage.src),
+  keywords: entry.data.tags,
+  mainEntityOfPage: resolveUrl(canonicalPath),
+  name: entry.data.title,
+};
+---
+
+<AppLayout
+  title={entry.data.seo.title}
+  description={entry.data.seo.description}
+  canonicalPath={canonicalPath}
+  ogImage={entry.data.featuredImage.src}
+  ogType="article"
+  robots={entry.data.seo.robots}
+  mainClass="resource-page"
+>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  <Section spacing="compact" class="resource-detail">
+    <PageContainer size="wide">
+      <Stack gap="lg">
+        <Breadcrumb items={breadcrumbs} />
+
+        <article class="resource-detail__article">
+          <header class="resource-detail__header">
+            <div class="resource-detail__badges">
+              <Badge tone="accent">{resourceConfig.badgeLabel}</Badge>
+              <Badge>{formatResourceType(entry.data.resourceType)}</Badge>
+            </div>
+            <h1>{entry.data.title}</h1>
+            <p>{entry.data.summary}</p>
+
+            <dl class="resource-meta" aria-label={labels.resourceMetadata}>
+              {
+                metadata.map((item) => (
+                  <div>
+                    <dt>{item.label}</dt>
+                    <dd>
+                      {item.dateTime ? (
+                        <time datetime={item.dateTime}>{item.value}</time>
+                      ) : (
+                        item.value
+                      )}
+                    </dd>
+                  </div>
+                ))
+              }
+            </dl>
+
+            <div class="resource-token-groups">
+              <div class="resource-token-group" aria-label={labels.categories}>
+                {entry.data.categories.map((category) => <Tag>{category}</Tag>)}
+              </div>
+              <div class="resource-token-group" aria-label={labels.technologies}>
+                {entry.data.technologies.map((technology) => <Tag>{technology}</Tag>)}
+              </div>
+            </div>
+          </header>
+
+          <section class="resource-section" aria-labelledby="resource-technologies-title">
+            <h2 id="resource-technologies-title">{labels.technologies}</h2>
+            <div class="resource-related-list resource-related-list--inline">
+              {
+                relatedTechnologyEntries.length > 0 ? (
+                  relatedTechnologyEntries.map((technologyEntry) => (
+                    <a href={getResourceEntryUrl(technologyEntry)}>
+                      <span>Technology</span>
+                      <strong>{technologyEntry.data.title}</strong>
+                    </a>
+                  ))
+                ) : (
+                  <div class="resource-token-group">
+                    {entry.data.technologies.map((technology) => (
+                      <Tag>{technology}</Tag>
+                    ))}
+                  </div>
+                )
+              }
+            </div>
+          </section>
+
+          <div class="knowledge-content resource-content">
+            <slot />
+          </div>
+
+          <footer class="resource-detail__footer">
+            <div class="resource-related-grid">
+              <Card as="section" class="resource-related">
+                <h2>{labels.relatedArticles}</h2>
+                {
+                  relatedArticleEntries.length > 0 ? (
+                    <ul class="resource-related-list">
+                      {relatedArticleEntries.map((articleEntry) => (
+                        <li>
+                          <a href={getResourceEntryUrl(articleEntry)}>
+                            <span>Article</span>
+                            <strong>{articleEntry.data.title}</strong>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>{labels.relatedArticlesEmpty}</p>
+                  )
+                }
+              </Card>
+
+              <Card as="section" class="resource-related">
+                <h2>{labels.relatedProjects}</h2>
+                {
+                  relatedProjectEntries.length > 0 ? (
+                    <ul class="resource-related-list">
+                      {relatedProjectEntries.map((projectEntry) => (
+                        <li>
+                          <a href={getResourceEntryUrl(projectEntry)}>
+                            <span>{projectEntry.data.projectStatus}</span>
+                            <strong>{projectEntry.data.title}</strong>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>{labels.relatedProjectsEmpty}</p>
+                  )
+                }
+              </Card>
+
+              <Card as="section" class="resource-related">
+                <h2>{labels.relatedLearningPaths}</h2>
+                {
+                  relatedLearningPathEntries.length > 0 ? (
+                    <ul class="resource-related-list">
+                      {relatedLearningPathEntries.map((learningPathEntry) => (
+                        <li>
+                          <article class="resource-learning-path">
+                            <span>Learning Path</span>
+                            <strong>{learningPathEntry.data.title}</strong>
+                          </article>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>{labels.relatedLearningPathsEmpty}</p>
+                  )
+                }
+              </Card>
+            </div>
+
+            <Card as="section" class="resource-external">
+              <h2>{labels.externalReferences}</h2>
+              {
+                entry.data.externalUrl || entry.data.downloadPath ? (
+                  <div class="resource-action-list">
+                    {entry.data.externalUrl && (
+                      <Link href={entry.data.externalUrl} target="_blank" variant="standalone">
+                        {labels.openResource}
+                      </Link>
+                    )}
+                    {entry.data.downloadPath && (
+                      <Link href={entry.data.downloadPath} variant="standalone">
+                        {labels.downloadResource}
+                      </Link>
+                    )}
+                  </div>
+                ) : (
+                  <p>{labels.externalReferencesEmpty}</p>
+                )
+              }
+            </Card>
+
+            <nav class="resource-adjacent" aria-label={labels.resourceNavigation}>
+              {
+                previousEntry ? (
+                  <a class="resource-adjacent__link" href={getResourceEntryHref(previousEntry)}>
+                    <span>{labels.previous}</span>
+                    <strong>{previousEntry.data.title}</strong>
+                  </a>
+                ) : (
+                  <span class="resource-adjacent__link resource-adjacent__link--disabled">
+                    <span>{labels.previous}</span>
+                    <strong>No previous resource</strong>
+                  </span>
+                )
+              }
+              {
+                nextEntry ? (
+                  <a class="resource-adjacent__link" href={getResourceEntryHref(nextEntry)}>
+                    <span>{labels.next}</span>
+                    <strong>{nextEntry.data.title}</strong>
+                  </a>
+                ) : (
+                  <span class="resource-adjacent__link resource-adjacent__link--disabled">
+                    <span>{labels.next}</span>
+                    <strong>No next resource</strong>
+                  </span>
+                )
+              }
+            </nav>
+          </footer>
+        </article>
+      </Stack>
+    </PageContainer>
+  </Section>
+  <MarkdownEnhancements
+    codeCopiedLabel={labels.copiedCode}
+    codeCopyLabel={labels.copyCode}
+    mermaidTitle={mermaidTitle}
+  />
+</AppLayout>

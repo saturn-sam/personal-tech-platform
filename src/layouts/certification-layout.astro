@@ -1,0 +1,315 @@
+---
+import MarkdownEnhancements from '@components/documentation/markdown-enhancements.astro';
+import Badge from '@components/ui/badge.astro';
+import Card from '@components/ui/card.astro';
+import Link from '@components/ui/link.astro';
+import Tag from '@components/ui/tag.astro';
+import PageContainer from '@components/layout/page-container.astro';
+import Section from '@components/layout/section.astro';
+import Stack from '@components/layout/stack.astro';
+import Breadcrumb from '@components/navigation/breadcrumb.astro';
+import { certificationConfig } from '@config/certifications';
+import { siteConfig } from '@config/site';
+import AppLayout from '@layouts/app-layout.astro';
+import {
+  formatCertificationDate,
+  formatCertificationMachineDate,
+  getCertificationBreadcrumbs,
+  getCertificationEntryUrl,
+  getCertificationUrl,
+  type CertificationEntry,
+  type CertificationRelatedKnowledgeEntry,
+  type CertificationRelatedLearningPathEntry,
+  type CertificationRelatedProjectEntry,
+  type CertificationRelatedTechnologyEntry,
+} from '@lib/content/certifications';
+import { formatAssetType } from '@lib/content/relationships';
+
+interface Props {
+  entry: CertificationEntry;
+  nextEntry?: CertificationEntry;
+  previousEntry?: CertificationEntry;
+  relatedKnowledgeEntries: readonly CertificationRelatedKnowledgeEntry[];
+  relatedLearningPathEntries: readonly CertificationRelatedLearningPathEntry[];
+  relatedProjectEntries: readonly CertificationRelatedProjectEntry[];
+  relatedTechnologyEntries: readonly CertificationRelatedTechnologyEntry[];
+}
+
+interface CertificationMetadataItem {
+  readonly dateTime?: string;
+  readonly href?: string;
+  readonly label: string;
+  readonly value: string;
+}
+
+const {
+  entry,
+  nextEntry,
+  previousEntry,
+  relatedKnowledgeEntries,
+  relatedLearningPathEntries,
+  relatedProjectEntries,
+  relatedTechnologyEntries,
+} = Astro.props as Props;
+const labels = certificationConfig.labels;
+const breadcrumbs = getCertificationBreadcrumbs(entry.data.title);
+const canonicalPath = entry.data.seo.canonicalPath ?? getCertificationUrl(entry.data.slug);
+const mermaidTitle = labels.mermaidDiagram;
+
+const metadata: CertificationMetadataItem[] = [
+  {
+    label: labels.issuer,
+    value: entry.data.issuer,
+  },
+  {
+    dateTime: formatCertificationMachineDate(entry.data.certificationDate),
+    label: labels.issued,
+    value: formatCertificationDate(entry.data.certificationDate),
+  },
+  {
+    label: labels.difficulty,
+    value: entry.data.difficulty,
+  },
+  {
+    href: entry.data.verificationUrl,
+    label: labels.verification,
+    value: 'Credential verification',
+  },
+];
+
+if (entry.data.expirationDate) {
+  metadata.splice(2, 0, {
+    dateTime: formatCertificationMachineDate(entry.data.expirationDate),
+    label: labels.expires,
+    value: formatCertificationDate(entry.data.expirationDate),
+  });
+}
+
+if (entry.data.credentialId) {
+  metadata.push({
+    label: labels.credentialId,
+    value: entry.data.credentialId,
+  });
+}
+
+const resolveUrl = (path: string): string | undefined =>
+  siteConfig.url ? new URL(path, siteConfig.url).toString() : undefined;
+
+const getCertificationEntryHref = (certificationEntry: CertificationEntry): string =>
+  certificationEntry.data.seo.canonicalPath ?? getCertificationUrl(certificationEntry.data.slug);
+
+const structuredData: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'EducationalOccupationalCredential',
+  credentialCategory: 'Certification',
+  dateCreated: formatCertificationMachineDate(entry.data.certificationDate),
+  description: entry.data.description,
+  educationalLevel: entry.data.difficulty,
+  expires: entry.data.expirationDate
+    ? formatCertificationMachineDate(entry.data.expirationDate)
+    : undefined,
+  image: resolveUrl(entry.data.featuredImage.src),
+  name: entry.data.title,
+  recognizedBy: {
+    '@type': 'Organization',
+    name: entry.data.issuer,
+  },
+  url: resolveUrl(canonicalPath),
+};
+---
+
+<AppLayout
+  title={entry.data.seo.title}
+  description={entry.data.seo.description}
+  canonicalPath={canonicalPath}
+  ogImage={entry.data.featuredImage.src}
+  ogType="article"
+  robots={entry.data.seo.robots}
+  mainClass="certification-page"
+>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  <Section spacing="compact" class="certification-detail">
+    <PageContainer size="wide">
+      <Stack gap="lg">
+        <Breadcrumb items={breadcrumbs} />
+
+        <article class="certification-detail__article">
+          <header class="certification-detail__header">
+            <div class="certification-detail__badges">
+              <Badge tone="accent">{certificationConfig.badgeLabel}</Badge>
+              <Badge>{entry.data.issuer}</Badge>
+            </div>
+            <h1>{entry.data.title}</h1>
+            <p>{entry.data.summary}</p>
+
+            <dl class="certification-meta" aria-label={labels.certificationMetadata}>
+              {
+                metadata.map((item) => (
+                  <div>
+                    <dt>{item.label}</dt>
+                    <dd>
+                      {item.dateTime ? (
+                        <time datetime={item.dateTime}>{item.value}</time>
+                      ) : item.href ? (
+                        <Link href={item.href} target="_blank">
+                          {item.value}
+                        </Link>
+                      ) : (
+                        item.value
+                      )}
+                    </dd>
+                  </div>
+                ))
+              }
+            </dl>
+          </header>
+
+          <section class="certification-section" aria-labelledby="certification-skills-title">
+            <h2 id="certification-skills-title">{labels.skills}</h2>
+            <div class="certification-token-group">
+              {entry.data.skills.map((skill) => <Tag>{skill}</Tag>)}
+            </div>
+          </section>
+
+          <section class="certification-section" aria-labelledby="certification-technologies-title">
+            <h2 id="certification-technologies-title">{labels.technologies}</h2>
+            <div class="certification-related-list certification-related-list--inline">
+              {
+                relatedTechnologyEntries.length > 0 ? (
+                  relatedTechnologyEntries.map((technologyEntry) => (
+                    <a href={getCertificationEntryUrl(technologyEntry)}>
+                      <span>Technology</span>
+                      <strong>{technologyEntry.data.title}</strong>
+                    </a>
+                  ))
+                ) : (
+                  <div class="certification-token-group">
+                    {entry.data.technologies.map((technology) => (
+                      <Tag>{technology}</Tag>
+                    ))}
+                  </div>
+                )
+              }
+            </div>
+          </section>
+
+          <div class="knowledge-content certification-content">
+            <slot />
+          </div>
+
+          <footer class="certification-detail__footer">
+            <div class="certification-related-grid">
+              <Card as="section" class="certification-related">
+                <h2>{labels.relatedProjects}</h2>
+                {
+                  relatedProjectEntries.length > 0 ? (
+                    <ul class="certification-related-list">
+                      {relatedProjectEntries.map((projectEntry) => (
+                        <li>
+                          <a href={getCertificationEntryUrl(projectEntry)}>
+                            <span>{projectEntry.data.projectStatus}</span>
+                            <strong>{projectEntry.data.title}</strong>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>{labels.relatedProjectsEmpty}</p>
+                  )
+                }
+              </Card>
+
+              <Card as="section" class="certification-related">
+                <h2>{labels.relatedKnowledge}</h2>
+                {
+                  relatedKnowledgeEntries.length > 0 ? (
+                    <ul class="certification-related-list">
+                      {relatedKnowledgeEntries.map((knowledgeEntry) => (
+                        <li>
+                          <a href={getCertificationEntryUrl(knowledgeEntry)}>
+                            <span>{formatAssetType(knowledgeEntry.data.assetType)}</span>
+                            <strong>{knowledgeEntry.data.title}</strong>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>{labels.relatedKnowledgeEmpty}</p>
+                  )
+                }
+              </Card>
+
+              <Card as="section" class="certification-related">
+                <h2>{labels.relatedLearningPaths}</h2>
+                {
+                  relatedLearningPathEntries.length > 0 ? (
+                    <ul class="certification-related-list">
+                      {relatedLearningPathEntries.map((learningPathEntry) => (
+                        <li>
+                          <article class="certification-learning-path">
+                            <span>Learning Path</span>
+                            <strong>{learningPathEntry.data.title}</strong>
+                          </article>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>{labels.relatedLearningPathsEmpty}</p>
+                  )
+                }
+              </Card>
+            </div>
+
+            <Card as="section" class="certification-verification">
+              <h2>{labels.verification}</h2>
+              <p>{entry.data.description}</p>
+              <Link href={entry.data.verificationUrl} target="_blank" variant="standalone">
+                Credential verification
+              </Link>
+            </Card>
+
+            <nav class="certification-adjacent" aria-label={labels.certificationNavigation}>
+              {
+                previousEntry ? (
+                  <a
+                    class="certification-adjacent__link"
+                    href={getCertificationEntryHref(previousEntry)}
+                  >
+                    <span>{labels.previous}</span>
+                    <strong>{previousEntry.data.title}</strong>
+                  </a>
+                ) : (
+                  <span class="certification-adjacent__link certification-adjacent__link--disabled">
+                    <span>{labels.previous}</span>
+                    <strong>No previous certification</strong>
+                  </span>
+                )
+              }
+              {
+                nextEntry ? (
+                  <a
+                    class="certification-adjacent__link"
+                    href={getCertificationEntryHref(nextEntry)}
+                  >
+                    <span>{labels.next}</span>
+                    <strong>{nextEntry.data.title}</strong>
+                  </a>
+                ) : (
+                  <span class="certification-adjacent__link certification-adjacent__link--disabled">
+                    <span>{labels.next}</span>
+                    <strong>No next certification</strong>
+                  </span>
+                )
+              }
+            </nav>
+          </footer>
+        </article>
+      </Stack>
+    </PageContainer>
+  </Section>
+  <MarkdownEnhancements
+    codeCopiedLabel={labels.copiedCode}
+    codeCopyLabel={labels.copyCode}
+    mermaidTitle={mermaidTitle}
+  />
+</AppLayout>

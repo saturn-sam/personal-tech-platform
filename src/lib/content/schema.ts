@@ -146,8 +146,9 @@ export const certificationSchema = baseKnowledgeAssetSchema
   .extend({
     assetType: z.literal('certification'),
     issuer: nonEmptyString,
-    credentialId: nonEmptyString,
+    credentialId: nonEmptyString.optional(),
     certificationDate: dateSchema,
+    expirationDate: dateSchema.optional(),
     verificationUrl: z.url(),
     badge: featuredImageSchema,
     skills: z.array(nonEmptyString).min(1),
@@ -167,6 +168,7 @@ export const resourceSchema = baseKnowledgeAssetSchema
       'external-link',
     ]),
     format: nonEmptyString,
+    estimatedStudyTime: nonEmptyString,
     downloadPath: z.string().startsWith('/').optional(),
     externalUrl: z.url().optional(),
   })
