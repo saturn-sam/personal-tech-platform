@@ -3,10 +3,10 @@ assetType: technology
 title: NSX
 slug: nsx
 description: Software-defined networking platform for enterprise virtualization and private cloud environments.
-summary: NSX knowledge assets organize overlay networking, segmentation, routing, firewall policy, and private cloud network operations.
+summary: NSX knowledge in PTKP focuses on overlay networking, segmentation, routing, security policy, and private cloud network operations.
 author: Md. Samrat Uz Zaman
-publishedDate: '2026-07-06'
-updatedDate: '2026-07-09'
+publishedDate: '2026-07-01'
+updatedDate: '2026-07-15'
 status: published
 tags:
   - Networking
@@ -17,21 +17,73 @@ categories:
   - Networking
 difficulty: advanced
 vendor: VMware
+versionInfo: Version aligned with the private cloud release bill
+website: https://www.vmware.com/
 skillLevel: advanced
 aliases:
   - VMware NSX
 relatedAssets: []
 featuredImage:
-  src: /assets/placeholders/nsx.svg
+  src: /assets/placeholders/technology.svg
   alt: NSX technology reference
 seo:
   title: NSX
-  description: Technology placeholder for NSX knowledge assets.
+  description: NSX reference hub for software-defined networking, segmentation, and related private cloud projects.
   canonicalPath: /technologies/nsx/
-  robots: noindex,follow
-featured: true
+  robots: index,follow
+featured: false
 ---
 
-# NSX
+## Overview
 
-Placeholder technology content for the homepage technology overview.
+NSX provides software-defined networking and security controls for virtualized and private cloud platforms. PTKP connects NSX to VMware Cloud Foundation, network operations, segmentation, and platform security.
+
+## Key Concepts
+
+- Segments provide logical network boundaries for workloads.
+- Tiered routing separates tenant and provider routing responsibilities.
+- Distributed firewall policy supports workload-level segmentation.
+- Edge nodes connect overlay networks with physical or external networks.
+
+## Architecture Overview
+
+```mermaid
+flowchart LR
+  Workloads[Workloads] --> Segment[NSX Segment]
+  Segment --> DFW[Distributed Firewall]
+  Segment --> Tier1[Tier-1 Gateway]
+  Tier1 --> Tier0[Tier-0 Gateway]
+  Tier0 --> External[External Network]
+  Manager[NSX Manager] --> DFW
+```
+
+## Installation
+
+Installation should follow the private cloud design for management appliances, transport nodes, uplinks, routing, DNS, NTP, certificates, and backup. Validate underlay reachability before relying on overlay networking.
+
+```bash
+ping -n 4 nsx-manager.example.internal
+nslookup nsx-manager.example.internal
+```
+
+## Configuration
+
+Configuration should document transport zones, uplink profiles, edge clusters, routing ownership, firewall policy ownership, backup, and monitoring. Network changes should remain traceable because they affect many platform dependencies.
+
+## Best Practices
+
+- Keep firewall policy ownership and review cadence explicit.
+- Validate underlay MTU and routing before troubleshooting overlays.
+- Separate edge capacity planning from workload cluster capacity planning.
+- Document north-south and east-west traffic paths.
+
+## Common Issues
+
+- Overlay connectivity fails when underlay MTU, routing, or transport node health is not validated.
+- Firewall policy becomes difficult to audit when rules do not map to workload ownership.
+- Edge capacity issues appear when routing, NAT, and load-balancing assumptions are not documented.
+
+## References
+
+- [VMware technical documentation](https://techdocs.broadcom.com/)
+- [VMware Cloud Foundation Datacenter](/projects/vmware-cloud-foundation-datacenter/)

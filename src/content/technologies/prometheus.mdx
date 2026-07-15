@@ -3,10 +3,10 @@ assetType: technology
 title: Prometheus
 slug: prometheus
 description: Metrics monitoring system for infrastructure, Kubernetes, and application observability.
-summary: Prometheus knowledge assets cover metric collection, alerting strategy, service instrumentation, and platform observability practices.
+summary: Prometheus supports PTKP observability knowledge through metrics collection, alerting signals, service ownership, and platform operations baselines.
 author: Md. Samrat Uz Zaman
-publishedDate: '2026-07-05'
-updatedDate: '2026-07-10'
+publishedDate: '2026-07-08'
+updatedDate: '2026-07-13'
 status: published
 tags:
   - Monitoring
@@ -17,20 +17,70 @@ categories:
   - Monitoring
 difficulty: intermediate
 vendor: Cloud Native Computing Foundation
+versionInfo: Deployment version documented per platform
+website: https://prometheus.io/
 skillLevel: intermediate
 aliases: []
 relatedAssets: []
 featuredImage:
-  src: /assets/placeholders/prometheus.svg
+  src: /assets/placeholders/technology.svg
   alt: Prometheus technology reference
 seo:
   title: Prometheus
-  description: Technology placeholder for Prometheus knowledge assets.
+  description: Prometheus reference hub for metrics, alerting, observability, and platform operations baselines.
   canonicalPath: /technologies/prometheus/
-  robots: noindex,follow
-featured: true
+  robots: index,follow
+featured: false
 ---
 
-# Prometheus
+## Overview
 
-Placeholder technology content for the homepage technology overview.
+Prometheus provides metrics collection and alerting signals for infrastructure, Kubernetes, and application platforms. PTKP treats it as part of the operations baseline rather than a standalone dashboard tool.
+
+## Key Concepts
+
+- Targets expose metrics through scrape endpoints.
+- Time series data is queried with PromQL.
+- Alerting rules translate symptoms into actionable signals.
+- Labels provide the dimensions needed for ownership and triage.
+
+## Architecture Overview
+
+```mermaid
+flowchart LR
+  Targets[Metrics Targets] --> Scrape[Prometheus Scrape]
+  Scrape --> TSDB[(Time Series Data)]
+  TSDB --> Rules[Recording and Alert Rules]
+  Rules --> Alerts[Alertmanager]
+  TSDB --> Dashboards[Dashboards]
+```
+
+## Installation
+
+Installation should follow the platform distribution, operator, or package model already used by the environment. Validate scrape reachability, retention, alert routing, and storage before relying on alerts.
+
+```bash
+promtool check rules alerts.yml
+```
+
+## Configuration
+
+Configuration should define scrape targets, retention, service discovery, alert routing, ownership labels, and rule review procedures. Alerts should identify who owns the response and what the first diagnostic step should be.
+
+## Best Practices
+
+- Prefer alerts that require action.
+- Label metrics so ownership and service boundaries are visible.
+- Review cardinality before adding high-volume labels.
+- Keep runbook links close to alert definitions.
+
+## Common Issues
+
+- Alert fatigue appears when symptoms are noisy or unactionable.
+- Query performance suffers when labels create excessive cardinality.
+- Incident response slows when alerts do not identify service ownership.
+
+## References
+
+- [Prometheus documentation](https://prometheus.io/docs/)
+- [Secure Platform Operations Baseline](/architecture/secure-platform-operations-baseline/)

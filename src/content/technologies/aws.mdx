@@ -3,35 +3,86 @@ assetType: technology
 title: AWS
 slug: aws
 description: Cloud platform used for infrastructure, networking, identity, storage, and managed services.
-summary: AWS knowledge assets organize cloud architecture, infrastructure automation, identity design, networking, and operations topics.
+summary: AWS references in PTKP focus on resilient cloud architecture, identity boundaries, network design, storage choices, and operational guardrails.
 author: Md. Samrat Uz Zaman
 publishedDate: '2026-07-02'
-updatedDate: '2026-07-13'
+updatedDate: '2026-07-10'
 status: published
 tags:
   - Cloud
-  - Architecture
+  - Infrastructure
 technologies:
   - AWS
 categories:
   - Cloud
 difficulty: intermediate
 vendor: Amazon Web Services
+versionInfo: Service versions vary by account and region
+website: https://aws.amazon.com/
 skillLevel: intermediate
 aliases:
   - Amazon Web Services
 relatedAssets: []
 featuredImage:
-  src: /assets/placeholders/aws.svg
+  src: /assets/placeholders/technology.svg
   alt: AWS technology reference
 seo:
   title: AWS
-  description: Technology placeholder for AWS knowledge assets.
+  description: AWS reference hub for cloud architecture, operational guardrails, and related certification records.
   canonicalPath: /technologies/aws/
-  robots: noindex,follow
-featured: true
+  robots: index,follow
+featured: false
 ---
 
-# AWS
+## Overview
 
-Placeholder technology content for the homepage technology overview.
+AWS provides cloud infrastructure and managed services for compute, storage, networking, identity, databases, and operations. PTKP uses this page to connect cloud architecture knowledge with certification and platform engineering context.
+
+## Key Concepts
+
+- Accounts and organizations define administrative and billing boundaries.
+- IAM policies, roles, and federation control access.
+- VPC design shapes network isolation, routing, and connectivity.
+- Managed services reduce operational burden when ownership and limits are understood.
+
+## Architecture Overview
+
+```mermaid
+flowchart LR
+  Users[Users and Operators] --> Identity[IAM and Federation]
+  Identity --> Account[AWS Account]
+  Account --> Network[VPC and Connectivity]
+  Network --> Compute[Compute Services]
+  Network --> Data[Data Services]
+  Account --> Observability[Logging and Monitoring]
+```
+
+## Installation
+
+AWS usage begins with account access, CLI or SDK setup, region selection, and identity configuration. Validate credentials and account boundaries before running infrastructure automation.
+
+```bash
+aws sts get-caller-identity
+aws configure list
+```
+
+## Configuration
+
+Configuration should define account ownership, region policy, IAM boundaries, network standards, tagging, logging, and backup requirements. These guardrails are more important than any individual service setting.
+
+## Best Practices
+
+- Prefer federated access and least-privilege roles.
+- Keep network, identity, and logging standards consistent across accounts.
+- Use infrastructure automation for repeatable service configuration.
+- Review service quotas and regional dependencies during architecture design.
+
+## Common Issues
+
+- Permission troubleshooting becomes slow when IAM ownership is unclear.
+- Network reachability fails when route tables, security groups, and DNS are reviewed separately.
+- Cost and operational risk increase when tagging and ownership are not enforced.
+
+## References
+
+- [AWS documentation](https://docs.aws.amazon.com/)

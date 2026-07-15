@@ -3,35 +3,89 @@ assetType: technology
 title: VMware vSphere
 slug: vmware-vsphere
 description: Enterprise virtualization platform for compute clusters and virtual machine operations.
-summary: VMware vSphere provides the virtualization foundation for resilient enterprise workloads, cluster operations, and resource management.
+summary: VMware vSphere knowledge in PTKP covers cluster operations, virtual machine lifecycle, availability, resource management, and private cloud foundations.
 author: Md. Samrat Uz Zaman
 publishedDate: '2026-07-01'
-updatedDate: '2026-07-14'
+updatedDate: '2026-07-15'
 status: published
 tags:
   - Virtualization
-  - Datacenter
+  - Compute
 technologies:
   - VMware vSphere
 categories:
   - Virtualization
 difficulty: advanced
 vendor: VMware
+versionInfo: Version aligned with the private cloud release bill
+website: https://www.vmware.com/
 skillLevel: advanced
 aliases:
   - vSphere
 relatedAssets: []
 featuredImage:
-  src: /assets/placeholders/vsphere.svg
+  src: /assets/placeholders/technology.svg
   alt: VMware vSphere technology reference
 seo:
   title: VMware vSphere
-  description: Technology placeholder for VMware vSphere knowledge assets.
+  description: VMware vSphere reference hub for virtualization, cluster operations, and related private cloud projects.
   canonicalPath: /technologies/vmware-vsphere/
-  robots: noindex,follow
-featured: true
+  robots: index,follow
+featured: false
 ---
 
-# VMware vSphere
+## Overview
 
-Placeholder technology content for the homepage technology overview.
+VMware vSphere provides the virtualization layer for enterprise compute clusters and virtual machine operations. PTKP connects vSphere to private cloud design, capacity management, and operational ownership.
+
+## Key Concepts
+
+- Clusters group ESXi hosts for resource scheduling and availability.
+- vCenter provides inventory, lifecycle, permissions, and operational control.
+- DRS and HA influence workload placement and recovery behavior.
+- Datastores and networks define the practical limits for virtual machine design.
+
+## Architecture Overview
+
+```mermaid
+flowchart LR
+  Admin[Administrator] --> vCenter[vCenter]
+  vCenter --> Cluster[vSphere Cluster]
+  Cluster --> HostA[ESXi Host]
+  Cluster --> HostB[ESXi Host]
+  HostA --> VMs[Virtual Machines]
+  HostB --> VMs
+  Cluster --> Datastore[Shared Storage]
+  Cluster --> Network[Virtual Networking]
+```
+
+## Installation
+
+Installation should follow the datacenter design for host firmware, management networking, storage presentation, DNS, NTP, and certificate requirements. Validate host readiness before adding capacity to shared clusters.
+
+```bash
+nslookup vcenter.example.internal
+ping -n 4 esxi-01.example.internal
+```
+
+## Configuration
+
+Configuration should define cluster admission control, resource pools, datastore usage, network standards, host profiles, permissions, backup scope, and monitoring. These decisions should be documented before virtual machines rely on the cluster.
+
+## Best Practices
+
+- Keep management access and role assignments reviewed.
+- Align cluster capacity planning with recovery requirements.
+- Document datastore and network placement rules for workload teams.
+- Monitor host health, resource pressure, and vCenter service status.
+
+## Common Issues
+
+- Capacity incidents occur when reservations, limits, and growth trends are not reviewed together.
+- VM recovery expectations are unclear when HA and backup responsibilities are separate.
+- Operations become inconsistent when host configuration drifts between cluster members.
+
+## References
+
+- [VMware technical documentation](https://techdocs.broadcom.com/)
+- [VMware Cloud Foundation Datacenter](/projects/vmware-cloud-foundation-datacenter/)
