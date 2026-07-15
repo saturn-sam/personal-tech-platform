@@ -1,0 +1,12 @@
+---
+import CertificationIndexLayout from '@layouts/certification-index-layout.astro';
+import {
+  getPublishedCertificationEntries,
+  groupCertificationEntriesByIssuer,
+} from '@lib/content/certifications';
+
+const entries = await getPublishedCertificationEntries();
+const groups = groupCertificationEntriesByIssuer(entries);
+---
+
+<CertificationIndexLayout groups={groups} />

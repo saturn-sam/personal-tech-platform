@@ -1,0 +1,65 @@
+---
+assetType: resource
+title: Kubernetes Node Triage Checklist
+slug: kubernetes-node-triage-checklist
+description: Curated checklist for validating Kubernetes node readiness, pressure conditions, and host-level signals.
+summary: A resource for structuring Kubernetes node incident triage from cluster-visible conditions through host service checks.
+author: Md. Samrat Uz Zaman
+publishedDate: '2026-07-15'
+updatedDate: '2026-07-15'
+status: published
+tags:
+  - Kubernetes
+  - Troubleshooting
+  - Operations
+technologies:
+  - Kubernetes
+  - Linux
+categories:
+  - Containers
+difficulty: intermediate
+resourceType: cheat-sheet
+format: Markdown
+estimatedStudyTime: 20 minutes
+externalUrl: https://kubernetes.io/docs/tasks/debug/
+relatedAssets:
+  - collection: lab-notes
+    slug: kubernetes-node-health-checks
+  - collection: articles
+    slug: enterprise-kubernetes-platform-architecture
+featuredImage:
+  src: /assets/placeholders/resource.svg
+  alt: Kubernetes node triage checklist resource
+seo:
+  title: Kubernetes Node Triage Checklist
+  description: Resource checklist for Kubernetes node readiness, pressure conditions, and host-level triage.
+  canonicalPath: /resources/kubernetes-node-triage-checklist/
+  robots: index,follow
+featured: true
+---
+
+## Why It Matters
+
+Node incidents are easier to handle when operators follow a consistent path. This checklist keeps the first pass focused on scheduler-visible state, pressure signals, recent events, and host service health.
+
+## How to Use This Resource
+
+Start with cluster-level visibility before logging into the host. If multiple nodes show the same condition, treat it as a platform or shared infrastructure signal before draining individual nodes.
+
+```bash
+kubectl get nodes -o wide
+kubectl describe node worker-01
+kubectl get events -A --sort-by=.lastTimestamp
+```
+
+## Checklist
+
+| Area         | Question                                     | Evidence                    |
+| ------------ | -------------------------------------------- | --------------------------- |
+| Readiness    | Is the node schedulable and reporting Ready? | Node condition output       |
+| Pressure     | Is memory, disk, or PID pressure present?    | Node description and events |
+| Host service | Is kubelet healthy on the host?              | System service status       |
+
+## Related Practice
+
+Use this resource with the Kubernetes node health lab note. The lab note gives command detail; this resource keeps the response sequence readable during incident triage.

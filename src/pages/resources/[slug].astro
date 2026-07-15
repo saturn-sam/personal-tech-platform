@@ -1,0 +1,35 @@
+---
+import { render } from 'astro:content';
+
+import Callout from '@components/documentation/callout.astro';
+import CodeBlock from '@components/documentation/code-block.astro';
+import DataTable from '@components/documentation/data-table.astro';
+import MermaidDiagram from '@components/documentation/mermaid-diagram.astro';
+import ResourceLayout from '@layouts/resource-layout.astro';
+import { getResourceStaticPaths } from '@lib/content/resources';
+
+export const getStaticPaths = () => getResourceStaticPaths();
+
+const {
+  entry,
+  nextEntry,
+  previousEntry,
+  relatedArticleEntries,
+  relatedLearningPathEntries,
+  relatedProjectEntries,
+  relatedTechnologyEntries,
+} = Astro.props;
+const { Content } = await render(entry);
+---
+
+<ResourceLayout
+  entry={entry}
+  nextEntry={nextEntry}
+  previousEntry={previousEntry}
+  relatedArticleEntries={relatedArticleEntries}
+  relatedLearningPathEntries={relatedLearningPathEntries}
+  relatedProjectEntries={relatedProjectEntries}
+  relatedTechnologyEntries={relatedTechnologyEntries}
+>
+  <Content components={{ Callout, CodeBlock, DataTable, MermaidDiagram }} />
+</ResourceLayout>

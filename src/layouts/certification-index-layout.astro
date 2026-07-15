@@ -1,0 +1,125 @@
+---
+import Badge from '@components/ui/badge.astro';
+import Card from '@components/ui/card.astro';
+import Tag from '@components/ui/tag.astro';
+import EmptyState from '@components/feedback/empty-state.astro';
+import Grid from '@components/layout/grid.astro';
+import PageContainer from '@components/layout/page-container.astro';
+import Section from '@components/layout/section.astro';
+import Stack from '@components/layout/stack.astro';
+import Breadcrumb from '@components/navigation/breadcrumb.astro';
+import { certificationConfig } from '@config/certifications';
+import AppLayout from '@layouts/app-layout.astro';
+import {
+  formatCertificationDate,
+  formatCertificationMachineDate,
+  getCertificationBreadcrumbs,
+  getCertificationUrl,
+  type CertificationGroup,
+} from '@lib/content/certifications';
+
+interface Props {
+  groups: readonly CertificationGroup[];
+}
+
+const { groups } = Astro.props as Props;
+const labels = certificationConfig.labels;
+const breadcrumbs = getCertificationBreadcrumbs();
+const getIssuerId = (issuer: string): string =>
+  `certification-issuer-${issuer.toLocaleLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
+---
+
+<AppLayout
+  title={certificationConfig.seoTitle}
+  description={certificationConfig.seoDescription}
+  canonicalPath={certificationConfig.routeBase}
+  mainClass="certification-index-page"
+>
+  <Section spacing="spacious" class="certification-index">
+    <PageContainer size="wide">
+      <Stack gap="lg">
+        <Breadcrumb items={breadcrumbs} />
+
+        <header class="certification-index__header">
+          <Badge tone="accent">{certificationConfig.badgeLabel}</Badge>
+          <h1>{certificationConfig.indexTitle}</h1>
+          <p>{certificationConfig.indexDescription}</p>
+        </header>
+
+        {
+          groups.length > 0 ? (
+            <div class="certification-groups">
+              {groups.map((group) => (
+                <section class="certification-group" aria-labelledby={getIssuerId(group.issuer)}>
+                  <header class="certification-group__header">
+                    <h2 id={getIssuerId(group.issuer)}>{group.issuer}</h2>
+                    <p>
+                      {group.entries.length}{' '}
+                      {group.entries.length === 1 ? 'credential' : 'credentials'}
+                    </p>
+                  </header>
+
+                  <Grid as="ul" columns={3} gap="lg" class="certification-index__grid">
+                    {group.entries.map((entry) => {
+                      const href =
+                        entry.data.seo.canonicalPath ?? getCertificationUrl(entry.data.slug);
+
+                      return (
+                        <Card as="li" variant="interactive" class="certification-card">
+                          <article class="certification-card__article">
+                            <Stack gap="sm">
+                              <div class="certification-card__meta-row">
+                                <Badge size="sm">{entry.data.difficulty}</Badge>
+                                <span>
+                                  <time
+                                    datetime={formatCertificationMachineDate(
+                                      entry.data.certificationDate,
+                                    )}
+                                  >
+                                    {formatCertificationDate(entry.data.certificationDate)}
+                                  </time>
+                                </span>
+                              </div>
+                              <h3 class="certification-card__title">
+                                <a class="certification-card__link" href={href}>
+                                  {entry.data.title}
+                                </a>
+                              </h3>
+                              <p class="certification-card__description">
+                                {entry.data.description}
+                              </p>
+                              <dl class="certification-card__metadata">
+                                <div>
+                                  <dt>{labels.issuer}</dt>
+                                  <dd>{entry.data.issuer}</dd>
+                                </div>
+                                <div>
+                                  <dt>{labels.skills}</dt>
+                                  <dd>{entry.data.skills.length}</dd>
+                                </div>
+                              </dl>
+                              <div class="certification-card__tags" aria-label={labels.skills}>
+                                {entry.data.skills.slice(0, 3).map((skill) => (
+                                  <Tag>{skill}</Tag>
+                                ))}
+                              </div>
+                            </Stack>
+                          </article>
+                        </Card>
+                      );
+                    })}
+                  </Grid>
+                </section>
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              title={certificationConfig.emptyTitle}
+              description={certificationConfig.emptyDescription}
+            />
+          )
+        }
+      </Stack>
+    </PageContainer>
+  </Section>
+</AppLayout>

@@ -1,0 +1,35 @@
+---
+import { render } from 'astro:content';
+
+import Callout from '@components/documentation/callout.astro';
+import CodeBlock from '@components/documentation/code-block.astro';
+import DataTable from '@components/documentation/data-table.astro';
+import MermaidDiagram from '@components/documentation/mermaid-diagram.astro';
+import CertificationLayout from '@layouts/certification-layout.astro';
+import { getCertificationStaticPaths } from '@lib/content/certifications';
+
+export const getStaticPaths = () => getCertificationStaticPaths();
+
+const {
+  entry,
+  nextEntry,
+  previousEntry,
+  relatedKnowledgeEntries,
+  relatedLearningPathEntries,
+  relatedProjectEntries,
+  relatedTechnologyEntries,
+} = Astro.props;
+const { Content } = await render(entry);
+---
+
+<CertificationLayout
+  entry={entry}
+  nextEntry={nextEntry}
+  previousEntry={previousEntry}
+  relatedKnowledgeEntries={relatedKnowledgeEntries}
+  relatedLearningPathEntries={relatedLearningPathEntries}
+  relatedProjectEntries={relatedProjectEntries}
+  relatedTechnologyEntries={relatedTechnologyEntries}
+>
+  <Content components={{ Callout, CodeBlock, DataTable, MermaidDiagram }} />
+</CertificationLayout>
