@@ -3,35 +3,90 @@ assetType: technology
 title: OpenShift
 slug: openshift
 description: Enterprise Kubernetes platform for application delivery, operations, and virtualization use cases.
-summary: OpenShift extends Kubernetes with enterprise platform capabilities, integrated operations, application delivery workflows, and virtualization support.
+summary: OpenShift extends Kubernetes with integrated platform services for application delivery, policy, lifecycle management, and virtualization-focused operations.
 author: Md. Samrat Uz Zaman
-publishedDate: '2026-07-02'
-updatedDate: '2026-07-14'
+publishedDate: '2026-07-01'
+updatedDate: '2026-07-15'
 status: published
 tags:
   - Kubernetes
-  - OpenShift
+  - Platform Engineering
 technologies:
   - OpenShift
 categories:
   - Containers
 difficulty: advanced
 vendor: Red Hat
+versionInfo: OpenShift 4 release stream
+website: https://www.redhat.com/en/technologies/cloud-computing/openshift
 skillLevel: advanced
 aliases:
-  - Red Hat OpenShift
+  - OCP
 relatedAssets: []
 featuredImage:
-  src: /assets/placeholders/openshift.svg
+  src: /assets/placeholders/technology.svg
   alt: OpenShift technology reference
 seo:
   title: OpenShift
-  description: Technology placeholder for OpenShift knowledge assets.
+  description: OpenShift reference hub for Kubernetes platform operations, virtualization planning, and related PTKP assets.
   canonicalPath: /technologies/openshift/
-  robots: noindex,follow
+  robots: index,follow
 featured: true
 ---
 
-# OpenShift
+## Overview
 
-Placeholder technology content for the homepage technology overview.
+OpenShift is the enterprise Kubernetes platform used in PTKP for application delivery, cluster operations, and virtualization scenarios. The page collects related architecture notes, project records, and storage planning references.
+
+## Key Concepts
+
+- Operators package lifecycle management for platform and workload services.
+- Projects and security context constraints shape workload isolation.
+- Routes, image streams, and build workflows support application delivery.
+- OpenShift Virtualization adds virtual machine operations on top of Kubernetes primitives.
+
+## Architecture Overview
+
+```mermaid
+flowchart LR
+  Identity[Identity] --> OpenShift[OpenShift API]
+  OpenShift --> Operators[Platform Operators]
+  OpenShift --> Apps[Application Projects]
+  OpenShift --> VMs[Virtual Machines]
+  Apps --> Storage[Storage Classes]
+  VMs --> Storage
+  OpenShift --> Observability[Monitoring and Logging]
+```
+
+## Installation
+
+Installation should be planned around the supported infrastructure provider, network design, storage backend, identity provider, and lifecycle management process. Validate these inputs before onboarding application or virtual machine workloads.
+
+```bash
+oc get clusterversion
+oc get nodes
+oc get co
+```
+
+## Configuration
+
+Configuration work usually centers on identity, image registry behavior, ingress certificates, storage classes, monitoring retention, backup scope, and role boundaries between platform and application teams.
+
+## Best Practices
+
+- Keep cluster operators healthy before changing workload-facing services.
+- Document default storage classes separately for container and VM workloads.
+- Treat namespace templates, RBAC, quotas, and network policies as onboarding controls.
+- Validate virtualization storage and migration behavior with representative virtual machines.
+
+## Common Issues
+
+- Operator degradation hides dependency problems in networking, storage, or certificates.
+- Virtual machine workloads expose storage assumptions that normal container workloads do not.
+- Platform teams lose clarity when project ownership and escalation paths are not recorded.
+
+## References
+
+- [OpenShift product documentation](https://docs.openshift.com/)
+- [OpenShift Virtualization Storage Planning](/articles/openshift-virtualization-storage-planning/)
+- [Dell PowerFlex with OpenShift Virtualization](/projects/dell-powerflex-openshift-virtualization/)

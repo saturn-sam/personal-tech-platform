@@ -17,21 +17,74 @@ categories:
   - Infrastructure
 difficulty: advanced
 vendor: VMware
+versionInfo: Release bill documented per management domain
+website: https://www.vmware.com/
 skillLevel: advanced
 aliases:
   - VCF
 relatedAssets: []
 featuredImage:
-  src: /assets/placeholders/vmware-cloud-foundation.svg
+  src: /assets/placeholders/technology.svg
   alt: VMware Cloud Foundation technology reference
 seo:
   title: VMware Cloud Foundation
-  description: Technology placeholder for VMware Cloud Foundation knowledge assets.
+  description: VMware Cloud Foundation reference hub for private cloud architecture, lifecycle, and related PTKP projects.
   canonicalPath: /technologies/vmware-cloud-foundation/
-  robots: noindex,follow
+  robots: index,follow
 featured: true
 ---
 
-# VMware Cloud Foundation
+## Overview
 
-Placeholder technology content for the homepage technology overview.
+VMware Cloud Foundation provides a standardized private cloud operating model across compute, storage, networking, and management services. PTKP uses this page to connect datacenter architecture, lifecycle management, and operational baseline content.
+
+## Key Concepts
+
+- Management domains separate core platform services from workload capacity.
+- Lifecycle management coordinates validated software bill updates.
+- vSphere, vSAN, NSX, and management components work as one platform boundary.
+- Operational ownership must cover compute, network, storage, backup, and monitoring teams.
+
+## Architecture Overview
+
+```mermaid
+flowchart LR
+  SDDC[SDDC Manager] --> Management[Management Domain]
+  SDDC --> Workload[Workload Domain]
+  Management --> vCenter[vCenter]
+  Workload --> vSphere[vSphere Clusters]
+  Workload --> NSX[NSX Networking]
+  Workload --> Storage[vSAN or External Storage]
+```
+
+## Installation
+
+Installation and bring-up should follow the validated design and hardware readiness process for the environment. Confirm network planning, DNS, NTP, certificate strategy, host preparation, and lifecycle prerequisites before deployment.
+
+```bash
+nslookup sddc-manager.example.internal
+ping -n 4 ntp.example.internal
+```
+
+## Configuration
+
+Configuration should document management domain services, workload domain boundaries, network pools, certificate policy, backup responsibilities, and upgrade windows. The platform is easier to operate when lifecycle decisions are visible.
+
+## Best Practices
+
+- Keep the validated software bill and upgrade path documented.
+- Treat DNS, NTP, certificates, and backups as critical platform dependencies.
+- Separate management and workload operations clearly.
+- Record ownership for compute, networking, storage, and lifecycle tasks.
+
+## Common Issues
+
+- Lifecycle operations become risky when component versions are changed outside the platform process.
+- Troubleshooting slows down when management domain dependencies are not monitored.
+- Network and certificate assumptions can block expansion or recovery work.
+
+## References
+
+- [VMware technical documentation](https://techdocs.broadcom.com/)
+- [VMware Cloud Foundation Datacenter](/projects/vmware-cloud-foundation-datacenter/)
+- [Secure Platform Operations Baseline](/architecture/secure-platform-operations-baseline/)

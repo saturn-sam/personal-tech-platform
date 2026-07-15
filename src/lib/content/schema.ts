@@ -135,6 +135,7 @@ export const technologySchema = baseKnowledgeAssetSchema
   .extend({
     assetType: z.literal('technology'),
     vendor: nonEmptyString.optional(),
+    versionInfo: nonEmptyString.optional(),
     website: z.url().optional(),
     skillLevel: nonEmptyString,
     aliases: z.array(nonEmptyString).default([]),

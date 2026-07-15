@@ -1,0 +1,12 @@
+---
+import TechnologyIndexLayout from '@layouts/technology-index-layout.astro';
+import {
+  getPublishedTechnologyEntries,
+  groupTechnologyEntriesByCategory,
+} from '@lib/content/technologies';
+
+const entries = await getPublishedTechnologyEntries();
+const groups = groupTechnologyEntriesByCategory(entries);
+---
+
+<TechnologyIndexLayout groups={groups} />

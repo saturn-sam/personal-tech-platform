@@ -1690,6 +1690,256 @@ html[data-theme='dark'] {
     opacity: 0.68;
   }
 
+  .technology-index__header,
+  .technology-detail__header {
+    display: grid;
+    gap: var(--space-3);
+    inline-size: 100%;
+    max-inline-size: var(--layout-content-width);
+    min-inline-size: 0;
+  }
+
+  .technology-index__header h1,
+  .technology-detail__header h1 {
+    max-inline-size: 15ch;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    overflow-wrap: anywhere;
+  }
+
+  .technology-index__header > .ui-badge,
+  .technology-detail__badges {
+    justify-self: start;
+  }
+
+  .technology-index__header p,
+  .technology-detail__header > p {
+    color: var(--color-text-muted);
+    font-size: 1.125rem;
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+  }
+
+  .technology-groups,
+  .technology-group {
+    display: grid;
+    gap: var(--space-8);
+    min-inline-size: 0;
+  }
+
+  .technology-group__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--space-3);
+    border-block-end: 1px solid var(--color-border);
+    padding-block-end: var(--space-3);
+  }
+
+  .technology-group__header h2 {
+    font-size: clamp(1.35rem, 3vw, 1.85rem);
+  }
+
+  .technology-group__header p {
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    font-weight: 650;
+  }
+
+  .technology-index__grid {
+    margin: 0;
+    min-inline-size: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .technology-card,
+  .technology-card__article {
+    block-size: 100%;
+    min-inline-size: 0;
+  }
+
+  .technology-card__meta-row,
+  .technology-card__metadata,
+  .technology-card__tags,
+  .technology-detail__badges,
+  .technology-token-groups,
+  .technology-token-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .technology-card__meta-row {
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+  }
+
+  .technology-card__title {
+    font-size: 1.25rem;
+  }
+
+  .technology-card__link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .technology-card__link:hover {
+    color: var(--color-accent-strong);
+    text-decoration: underline;
+  }
+
+  .technology-card__description {
+    color: var(--color-text-muted);
+  }
+
+  .technology-card__metadata {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+  }
+
+  .technology-card__metadata div {
+    display: inline-flex;
+    gap: var(--space-1);
+  }
+
+  .technology-card__metadata dt {
+    font-weight: 700;
+  }
+
+  .technology-card__metadata dd {
+    margin: 0;
+  }
+
+  .technology-detail__article {
+    display: grid;
+    gap: var(--space-10);
+    min-inline-size: 0;
+  }
+
+  .technology-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: var(--space-3);
+    margin: var(--space-3) 0 0;
+  }
+
+  .technology-meta div {
+    display: grid;
+    gap: var(--space-1);
+    border-block-start: 1px solid var(--color-border);
+    padding-block-start: var(--space-3);
+  }
+
+  .technology-meta dt {
+    color: var(--color-text-muted);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .technology-meta dd {
+    margin: 0;
+    color: var(--color-text);
+    font-weight: 650;
+  }
+
+  .technology-content,
+  .technology-detail__footer {
+    inline-size: 100%;
+    max-inline-size: var(--layout-content-width);
+    min-inline-size: 0;
+  }
+
+  .technology-detail__footer {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .technology-related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+
+  .technology-related {
+    display: grid;
+    gap: var(--space-3);
+  }
+
+  .technology-related h2 {
+    font-size: 1rem;
+  }
+
+  .technology-related p {
+    color: var(--color-text-muted);
+  }
+
+  .technology-related-list {
+    display: grid;
+    gap: var(--space-3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .technology-related-list a,
+  .technology-certification {
+    display: grid;
+    gap: var(--space-1);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .technology-related-list a:hover {
+    color: var(--color-accent-strong);
+    text-decoration: underline;
+  }
+
+  .technology-related-list span,
+  .technology-certification span {
+    color: var(--color-text-muted);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .technology-adjacent {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+
+  .technology-adjacent__link {
+    display: grid;
+    gap: var(--space-1);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    padding: var(--space-4);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .technology-adjacent__link:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent-strong);
+  }
+
+  .technology-adjacent__link span {
+    color: var(--color-text-muted);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .technology-adjacent__link--disabled {
+    color: var(--color-text-muted);
+    opacity: 0.68;
+  }
+
   .empty-state,
   .error-state {
     border: 1px solid var(--color-border);
@@ -1973,7 +2223,9 @@ html[data-theme='dark'] {
 
   .project-section,
   .project-content,
-  .project-detail__footer {
+  .project-detail__footer,
+  .technology-content,
+  .technology-detail__footer {
     max-inline-size: none;
   }
 }
@@ -1998,7 +2250,9 @@ html[data-theme='dark'] {
   .knowledge-index__header h1,
   .knowledge-asset__header h1,
   .project-index__header h1,
-  .project-detail__header h1 {
+  .project-detail__header h1,
+  .technology-index__header h1,
+  .technology-detail__header h1 {
     max-inline-size: none;
     font-size: 2rem;
   }
@@ -2009,14 +2263,18 @@ html[data-theme='dark'] {
   .project-meta,
   .project-gallery__grid,
   .project-related-grid,
-  .project-adjacent {
+  .project-adjacent,
+  .technology-related-grid,
+  .technology-adjacent {
     grid-template-columns: 1fr;
   }
 
   .knowledge-card__metadata,
   .knowledge-token-groups,
   .project-card__metadata,
-  .project-timeline__item {
+  .project-timeline__item,
+  .technology-card__metadata,
+  .technology-token-groups {
     display: grid;
     align-items: start;
   }

@@ -1,0 +1,33 @@
+---
+import { render } from 'astro:content';
+
+import Callout from '@components/documentation/callout.astro';
+import CodeBlock from '@components/documentation/code-block.astro';
+import DataTable from '@components/documentation/data-table.astro';
+import MermaidDiagram from '@components/documentation/mermaid-diagram.astro';
+import TechnologyLayout from '@layouts/technology-layout.astro';
+import { getTechnologyStaticPaths } from '@lib/content/technologies';
+
+export const getStaticPaths = () => getTechnologyStaticPaths();
+
+const {
+  entry,
+  nextEntry,
+  previousEntry,
+  relatedCertificationEntries,
+  relatedKnowledgeEntries,
+  relatedProjectEntries,
+} = Astro.props;
+const { Content } = await render(entry);
+---
+
+<TechnologyLayout
+  entry={entry}
+  nextEntry={nextEntry}
+  previousEntry={previousEntry}
+  relatedCertificationEntries={relatedCertificationEntries}
+  relatedKnowledgeEntries={relatedKnowledgeEntries}
+  relatedProjectEntries={relatedProjectEntries}
+>
+  <Content components={{ Callout, CodeBlock, DataTable, MermaidDiagram }} />
+</TechnologyLayout>

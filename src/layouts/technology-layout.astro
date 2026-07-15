@@ -1,0 +1,300 @@
+---
+import MarkdownEnhancements from '@components/documentation/markdown-enhancements.astro';
+import Badge from '@components/ui/badge.astro';
+import Card from '@components/ui/card.astro';
+import Link from '@components/ui/link.astro';
+import Tag from '@components/ui/tag.astro';
+import PageContainer from '@components/layout/page-container.astro';
+import Section from '@components/layout/section.astro';
+import Stack from '@components/layout/stack.astro';
+import Breadcrumb from '@components/navigation/breadcrumb.astro';
+import { siteConfig } from '@config/site';
+import { technologyConfig } from '@config/technologies';
+import AppLayout from '@layouts/app-layout.astro';
+import {
+  formatTechnologyDate,
+  formatTechnologyMachineDate,
+  getRelatedKnowledgeUrl,
+  getRelatedProjectUrl,
+  getTechnologyBreadcrumbs,
+  getTechnologyUrl,
+  type TechnologyEntry,
+  type TechnologyRelatedCertificationEntry,
+  type TechnologyRelatedKnowledgeEntry,
+  type TechnologyRelatedProjectEntry,
+} from '@lib/content/technologies';
+
+interface Props {
+  entry: TechnologyEntry;
+  nextEntry?: TechnologyEntry;
+  previousEntry?: TechnologyEntry;
+  relatedCertificationEntries: readonly TechnologyRelatedCertificationEntry[];
+  relatedKnowledgeEntries: readonly TechnologyRelatedKnowledgeEntry[];
+  relatedProjectEntries: readonly TechnologyRelatedProjectEntry[];
+}
+
+interface TechnologyMetadataItem {
+  readonly dateTime?: string;
+  readonly href?: string;
+  readonly label: string;
+  readonly value: string;
+}
+
+const {
+  entry,
+  nextEntry,
+  previousEntry,
+  relatedCertificationEntries,
+  relatedKnowledgeEntries,
+  relatedProjectEntries,
+} = Astro.props as Props;
+const labels = technologyConfig.labels;
+const breadcrumbs = getTechnologyBreadcrumbs(entry.data.title);
+const canonicalPath = entry.data.seo.canonicalPath ?? getTechnologyUrl(entry.data.slug);
+const mermaidTitle = labels.mermaidDiagram;
+
+const formatWebsiteLabel = (website: string): string => {
+  try {
+    return new URL(website).hostname.replace(/^www\./, '');
+  } catch {
+    return website;
+  }
+};
+
+const metadata: TechnologyMetadataItem[] = [];
+
+if (entry.data.vendor) {
+  metadata.push({
+    label: labels.vendor,
+    value: entry.data.vendor,
+  });
+}
+
+metadata.push({
+  label: labels.skillLevel,
+  value: entry.data.skillLevel,
+});
+
+if (entry.data.versionInfo) {
+  metadata.push({
+    label: labels.versionInfo,
+    value: entry.data.versionInfo,
+  });
+}
+
+if (entry.data.website) {
+  metadata.push({
+    href: entry.data.website,
+    label: labels.website,
+    value: formatWebsiteLabel(entry.data.website),
+  });
+}
+
+metadata.push({
+  dateTime: formatTechnologyMachineDate(entry.data.updatedDate),
+  label: labels.updated,
+  value: formatTechnologyDate(entry.data.updatedDate),
+});
+
+const resolveUrl = (path: string): string | undefined =>
+  siteConfig.url ? new URL(path, siteConfig.url).toString() : undefined;
+
+const getTechnologyEntryHref = (technologyEntry: TechnologyEntry): string =>
+  technologyEntry.data.seo.canonicalPath ?? getTechnologyUrl(technologyEntry.data.slug);
+
+const formatAssetType = (assetType: string): string =>
+  assetType
+    .split('-')
+    .map((segment) => `${segment.charAt(0).toLocaleUpperCase()}${segment.slice(1)}`)
+    .join(' ');
+
+const structuredData: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  about: entry.data.technologies,
+  author: {
+    '@type': 'Person',
+    name: entry.data.author,
+  },
+  dateModified: formatTechnologyMachineDate(entry.data.updatedDate),
+  datePublished: formatTechnologyMachineDate(entry.data.publishedDate),
+  description: entry.data.description,
+  headline: entry.data.title,
+  image: resolveUrl(entry.data.featuredImage.src),
+  keywords: entry.data.tags,
+  mainEntityOfPage: resolveUrl(canonicalPath),
+  name: entry.data.title,
+  sameAs: entry.data.website,
+};
+---
+
+<AppLayout
+  title={entry.data.seo.title}
+  description={entry.data.seo.description}
+  canonicalPath={canonicalPath}
+  ogImage={entry.data.featuredImage.src}
+  ogType="article"
+  robots={entry.data.seo.robots}
+  mainClass="technology-page"
+>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  <Section spacing="compact" class="technology-detail">
+    <PageContainer size="wide">
+      <Stack gap="lg">
+        <Breadcrumb items={breadcrumbs} />
+
+        <article class="technology-detail__article">
+          <header class="technology-detail__header">
+            <div class="technology-detail__badges">
+              <Badge tone="accent">{technologyConfig.badgeLabel}</Badge>
+              {entry.data.categories.map((category) => <Badge>{category}</Badge>)}
+            </div>
+            <h1>{entry.data.title}</h1>
+            <p>{entry.data.summary}</p>
+
+            <dl class="technology-meta" aria-label={labels.technologyMetadata}>
+              {
+                metadata.map((item) => (
+                  <div>
+                    <dt>{item.label}</dt>
+                    <dd>
+                      {item.dateTime ? (
+                        <time datetime={item.dateTime}>{item.value}</time>
+                      ) : item.href ? (
+                        <Link href={item.href} target="_blank">
+                          {item.value}
+                        </Link>
+                      ) : (
+                        item.value
+                      )}
+                    </dd>
+                  </div>
+                ))
+              }
+            </dl>
+
+            <div class="technology-token-groups">
+              <div class="technology-token-group" aria-label={labels.tags}>
+                {entry.data.tags.map((tag) => <Tag>{tag}</Tag>)}
+              </div>
+              {
+                entry.data.aliases.length > 0 && (
+                  <div class="technology-token-group" aria-label={labels.aliases}>
+                    {entry.data.aliases.map((alias) => (
+                      <Tag>{alias}</Tag>
+                    ))}
+                  </div>
+                )
+              }
+            </div>
+          </header>
+
+          <div class="knowledge-content technology-content">
+            <slot />
+          </div>
+
+          <footer class="technology-detail__footer">
+            <div class="technology-related-grid">
+              <Card as="section" class="technology-related">
+                <h2>{labels.relatedKnowledge}</h2>
+                {
+                  relatedKnowledgeEntries.length > 0 ? (
+                    <ul class="technology-related-list">
+                      {relatedKnowledgeEntries.map((relatedEntry) => (
+                        <li>
+                          <a href={getRelatedKnowledgeUrl(relatedEntry)}>
+                            <span>{formatAssetType(relatedEntry.data.assetType)}</span>
+                            <strong>{relatedEntry.data.title}</strong>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>{labels.relatedKnowledgeEmpty}</p>
+                  )
+                }
+              </Card>
+
+              <Card as="section" class="technology-related">
+                <h2>{labels.relatedProjects}</h2>
+                {
+                  relatedProjectEntries.length > 0 ? (
+                    <ul class="technology-related-list">
+                      {relatedProjectEntries.map((projectEntry) => (
+                        <li>
+                          <a href={getRelatedProjectUrl(projectEntry)}>
+                            <span>{projectEntry.data.projectStatus}</span>
+                            <strong>{projectEntry.data.title}</strong>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>{labels.relatedProjectsEmpty}</p>
+                  )
+                }
+              </Card>
+
+              <Card as="section" class="technology-related">
+                <h2>{labels.relatedCertifications}</h2>
+                {
+                  relatedCertificationEntries.length > 0 ? (
+                    <ul class="technology-related-list">
+                      {relatedCertificationEntries.map((certificationEntry) => (
+                        <li>
+                          <article class="technology-certification">
+                            <span>{certificationEntry.data.issuer}</span>
+                            <strong>{certificationEntry.data.title}</strong>
+                            <Link href={certificationEntry.data.verificationUrl} target="_blank">
+                              Verification
+                            </Link>
+                          </article>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>{labels.relatedCertificationsEmpty}</p>
+                  )
+                }
+              </Card>
+            </div>
+
+            <nav class="technology-adjacent" aria-label={labels.technologyNavigation}>
+              {
+                previousEntry ? (
+                  <a class="technology-adjacent__link" href={getTechnologyEntryHref(previousEntry)}>
+                    <span>{labels.previous}</span>
+                    <strong>{previousEntry.data.title}</strong>
+                  </a>
+                ) : (
+                  <span class="technology-adjacent__link technology-adjacent__link--disabled">
+                    <span>{labels.previous}</span>
+                    <strong>No previous technology</strong>
+                  </span>
+                )
+              }
+              {
+                nextEntry ? (
+                  <a class="technology-adjacent__link" href={getTechnologyEntryHref(nextEntry)}>
+                    <span>{labels.next}</span>
+                    <strong>{nextEntry.data.title}</strong>
+                  </a>
+                ) : (
+                  <span class="technology-adjacent__link technology-adjacent__link--disabled">
+                    <span>{labels.next}</span>
+                    <strong>No next technology</strong>
+                  </span>
+                )
+              }
+            </nav>
+          </footer>
+        </article>
+      </Stack>
+    </PageContainer>
+  </Section>
+  <MarkdownEnhancements
+    codeCopiedLabel={labels.copiedCode}
+    codeCopyLabel={labels.copyCode}
+    mermaidTitle={mermaidTitle}
+  />
+</AppLayout>
