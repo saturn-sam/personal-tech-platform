@@ -1,0 +1,49 @@
+---
+import CopyToClipboardButton from '@components/utility/copy-to-clipboard-button.astro';
+
+export interface Props {
+  caption?: string;
+  class?: string;
+  code?: string;
+  fileName?: string;
+  id?: string;
+  language?: string;
+  showCopy?: boolean;
+}
+
+const {
+  caption,
+  class: className = '',
+  code,
+  fileName,
+  id,
+  language,
+  showCopy = true,
+} = Astro.props as Props;
+
+const hashValue = (value: string): string =>
+  Array.from(value)
+    .reduce((hash, character) => (hash * 31 + character.charCodeAt(0)) >>> 0, 0)
+    .toString(36);
+
+const codeId = id ?? `code-block-${hashValue(`${fileName ?? ''}:${language ?? ''}:${code ?? ''}`)}`;
+---
+
+<figure class:list={['code-block', className]}>
+  {
+    (fileName || language || showCopy) && (
+      <div class="code-block__header">
+        <span class="code-block__meta">
+          {fileName && <span class="code-block__file">{fileName}</span>}
+          {language && <span class="code-block__language">{language}</span>}
+        </span>
+        {showCopy && <CopyToClipboardButton targetId={codeId} />}
+      </div>
+    )
+  }
+  <pre
+    id={codeId}
+    class="code-block__pre"
+    tabindex="0"><code class:list={[language && `language-${language}`]}><slot>{code}</slot></code></pre>
+  {caption && <figcaption class="code-block__caption">{caption}</figcaption>}
+</figure>

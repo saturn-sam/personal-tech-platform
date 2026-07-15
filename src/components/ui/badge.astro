@@ -1,0 +1,13 @@
+---
+export interface Props {
+  class?: string;
+  size?: 'sm' | 'md';
+  tone?: 'neutral' | 'accent' | 'success' | 'warning' | 'danger';
+}
+
+const { class: className = '', size = 'md', tone = 'neutral' } = Astro.props as Props;
+---
+
+<span class:list={['ui-badge', `ui-badge--${tone}`, `ui-badge--${size}`, className]}>
+  <slot />
+</span>

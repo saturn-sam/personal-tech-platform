@@ -1,0 +1,51 @@
+---
+export interface Props {
+  as?: 'button' | 'a';
+  class?: string;
+  disabled?: boolean;
+  href?: string;
+  rel?: string;
+  size?: 'sm' | 'md' | 'lg';
+  target?: '_blank' | '_self' | '_parent' | '_top';
+  type?: 'button' | 'submit' | 'reset';
+  variant?: 'primary' | 'secondary' | 'ghost';
+  'aria-label'?: string;
+}
+
+const {
+  as,
+  class: className = '',
+  disabled = false,
+  href,
+  rel,
+  size = 'md',
+  target,
+  type = 'button',
+  variant = 'primary',
+  'aria-label': ariaLabel,
+} = Astro.props as Props;
+
+const isLink = as === 'a' || Boolean(href);
+const computedRel = rel ?? (target === '_blank' ? 'noreferrer' : undefined);
+const classes = ['ui-button', `ui-button--${variant}`, `ui-button--${size}`, className];
+---
+
+{
+  isLink ? (
+    <a
+      class:list={classes}
+      href={disabled ? undefined : href}
+      target={target}
+      rel={computedRel}
+      aria-label={ariaLabel}
+      aria-disabled={disabled ? 'true' : undefined}
+      tabindex={disabled ? '-1' : undefined}
+    >
+      <slot />
+    </a>
+  ) : (
+    <button class:list={classes} type={type} disabled={disabled} aria-label={ariaLabel}>
+      <slot />
+    </button>
+  )
+}

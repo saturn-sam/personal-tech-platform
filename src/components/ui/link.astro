@@ -1,0 +1,24 @@
+---
+export interface Props {
+  class?: string;
+  href: string;
+  rel?: string;
+  target?: '_blank' | '_self' | '_parent' | '_top';
+  variant?: 'inline' | 'subtle' | 'standalone';
+}
+
+const { class: className = '', href, rel, target, variant = 'inline' } = Astro.props as Props;
+
+const opensInNewTab = target === '_blank';
+const computedRel = rel ?? (opensInNewTab ? 'noreferrer' : undefined);
+---
+
+<a
+  class:list={['ui-link', `ui-link--${variant}`, className]}
+  href={href}
+  target={target}
+  rel={computedRel}
+>
+  <slot />
+  {opensInNewTab && <span class="sr-only"> Opens in a new tab.</span>}
+</a>

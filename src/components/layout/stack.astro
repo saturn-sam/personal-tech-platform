@@ -1,0 +1,16 @@
+---
+export interface Props {
+  align?: 'start' | 'center' | 'end' | 'stretch';
+  as?: 'div' | 'section' | 'article' | 'nav' | 'ul' | 'ol';
+  class?: string;
+  gap?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+}
+
+const { align = 'stretch', as = 'div', class: className = '', gap = 'md' } = Astro.props as Props;
+
+const Element = as;
+---
+
+<Element class:list={['stack', `stack--gap-${gap}`, `stack--align-${align}`, className]}>
+  <slot />
+</Element>

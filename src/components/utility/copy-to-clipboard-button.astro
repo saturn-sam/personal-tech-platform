@@ -1,0 +1,100 @@
+---
+export interface Props {
+  class?: string;
+  copiedLabel?: string;
+  label?: string;
+  targetId?: string;
+  text?: string;
+}
+
+const {
+  class: className = '',
+  copiedLabel = 'Copied',
+  label = 'Copy',
+  targetId,
+  text,
+} = Astro.props as Props;
+
+const disabled = !targetId && !text;
+---
+
+<button
+  class:list={['copy-button', className]}
+  type="button"
+  data-copy-button
+  data-copy-target={targetId}
+  data-copy-text={text}
+  data-copy-label={label}
+  data-copy-copied-label={copiedLabel}
+  disabled={disabled}
+  aria-label={label}
+>
+  <span data-copy-button-label>{label}</span>
+</button>
+<span class="sr-only" aria-live="polite" data-copy-button-status></span>
+
+<script>
+  const copyButtons = document.querySelectorAll<HTMLButtonElement>('[data-copy-button]');
+
+  const getTextToCopy = (button: HTMLButtonElement): string => {
+    if (button.dataset.copyText) {
+      return button.dataset.copyText;
+    }
+
+    const targetId = button.dataset.copyTarget;
+    const target = targetId ? document.getElementById(targetId) : undefined;
+
+    return target?.textContent?.trimEnd() ?? '';
+  };
+
+  copyButtons.forEach((button) => {
+    if (button.dataset.copyReady === 'true') {
+      return;
+    }
+
+    button.dataset.copyReady = 'true';
+
+    button.addEventListener('click', async () => {
+      const textToCopy = getTextToCopy(button);
+      const label = button.querySelector<HTMLElement>('[data-copy-button-label]');
+      const status = button.nextElementSibling?.matches('[data-copy-button-status]')
+        ? (button.nextElementSibling as HTMLElement)
+        : undefined;
+      const defaultLabel = button.dataset.copyLabel ?? 'Copy';
+      const copiedLabel = button.dataset.copyCopiedLabel ?? 'Copied';
+
+      if (!textToCopy) {
+        if (status) {
+          status.textContent = 'Nothing to copy.';
+        }
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(textToCopy);
+
+        if (label) {
+          label.textContent = copiedLabel;
+        }
+
+        if (status) {
+          status.textContent = copiedLabel;
+        }
+
+        window.setTimeout(() => {
+          if (label) {
+            label.textContent = defaultLabel;
+          }
+
+          if (status) {
+            status.textContent = '';
+          }
+        }, 1800);
+      } catch {
+        if (status) {
+          status.textContent = 'Copy unavailable.';
+        }
+      }
+    });
+  });
+</script>

@@ -1,0 +1,10 @@
+---
+export interface Props {
+  class?: string;
+  spacing?: 'sm' | 'md' | 'lg';
+}
+
+const { class: className = '', spacing = 'md' } = Astro.props as Props;
+---
+
+<hr class:list={['ui-divider', `ui-divider--${spacing}`, className]} />

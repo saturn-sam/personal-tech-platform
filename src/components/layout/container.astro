@@ -1,0 +1,15 @@
+---
+import PageContainer from './page-container.astro';
+
+export interface Props {
+  as?: 'div' | 'section' | 'article';
+  class?: string;
+  size?: 'content' | 'wide' | 'full';
+}
+
+const props = Astro.props as Props;
+---
+
+<PageContainer {...props}>
+  <slot />
+</PageContainer>
