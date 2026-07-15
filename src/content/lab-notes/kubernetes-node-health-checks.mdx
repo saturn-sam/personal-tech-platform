@@ -36,6 +36,41 @@ seo:
 featured: true
 ---
 
-# Kubernetes Node Health Checks
+Use this note when a Kubernetes node reports `NotReady`, shows pressure conditions, or starts rejecting scheduled workloads. The checks are ordered from cluster-level signals to host-level validation.
 
-Placeholder lab note content for the homepage recent updates preview.
+## Node Condition Snapshot
+
+Start with the scheduler-visible state. This confirms whether the problem is isolated to one node or part of a broader platform issue.
+
+```bash
+kubectl get nodes -o wide
+kubectl describe node worker-01
+kubectl get events -A --sort-by=.lastTimestamp | tail -40
+```
+
+## Pressure Signals
+
+| Signal         | Check                                        | Follow-up                                         |
+| -------------- | -------------------------------------------- | ------------------------------------------------- |
+| MemoryPressure | Review kubelet events and workload requests. | Identify pods with elevated memory usage.         |
+| DiskPressure   | Check image filesystem and container logs.   | Clear unused images only after confirming policy. |
+| PIDPressure    | Review host process count.                   | Check runaway workloads or node services.         |
+
+<Callout type="warning" title="Incident note">
+  Do not drain a node before checking whether the same condition exists across the worker pool. A
+  broad condition may indicate shared infrastructure or control plane pressure.
+</Callout>
+
+## Host Service Checks
+
+Confirm kubelet and container runtime state from the host when cluster events do not explain the condition.
+
+```bash
+sudo systemctl status kubelet --no-pager
+sudo journalctl -u kubelet -n 80 --no-pager
+sudo crictl ps
+```
+
+## Recovery Notes
+
+Record the failing condition, the commands used, and the final remediation. Lab notes stay useful when the next operator can compare a new incident against a known recovery path.

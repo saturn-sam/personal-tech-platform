@@ -1,0 +1,111 @@
+---
+import Badge from '@components/ui/badge.astro';
+import Card from '@components/ui/card.astro';
+import Tag from '@components/ui/tag.astro';
+import EmptyState from '@components/feedback/empty-state.astro';
+import Grid from '@components/layout/grid.astro';
+import PageContainer from '@components/layout/page-container.astro';
+import Section from '@components/layout/section.astro';
+import Stack from '@components/layout/stack.astro';
+import Breadcrumb from '@components/navigation/breadcrumb.astro';
+import { knowledgeAssetConfig } from '@config/knowledge-assets';
+import AppLayout from '@layouts/app-layout.astro';
+import {
+  formatKnowledgeAssetDate,
+  formatKnowledgeAssetMachineDate,
+  getKnowledgeAssetCollectionConfig,
+  getKnowledgeAssetIndexBreadcrumbs,
+  getKnowledgeAssetReadingTime,
+  getKnowledgeAssetUrl,
+  type KnowledgeAssetCollectionName,
+  type KnowledgeAssetEntry,
+} from '@lib/content/knowledge-assets';
+
+interface Props {
+  collection: KnowledgeAssetCollectionName;
+  entries: readonly KnowledgeAssetEntry[];
+}
+
+const { collection, entries } = Astro.props as Props;
+const collectionConfig = getKnowledgeAssetCollectionConfig(collection);
+const breadcrumbs = getKnowledgeAssetIndexBreadcrumbs(collection);
+const labels = knowledgeAssetConfig.labels;
+---
+
+<AppLayout
+  title={collectionConfig.seoTitle}
+  description={collectionConfig.seoDescription}
+  canonicalPath={collectionConfig.routeBase}
+  mainClass="knowledge-index-page"
+>
+  <Section spacing="spacious" class="knowledge-index">
+    <PageContainer size="wide">
+      <Stack gap="lg">
+        <Breadcrumb items={breadcrumbs} />
+
+        <header class="knowledge-index__header">
+          <Badge tone="accent">{collectionConfig.badgeLabel}</Badge>
+          <h1>{collectionConfig.indexTitle}</h1>
+          <p>{collectionConfig.indexDescription}</p>
+        </header>
+
+        {
+          entries.length > 0 ? (
+            <Grid as="ul" columns={2} gap="lg" class="knowledge-index__grid">
+              {entries.map((entry) => {
+                const href =
+                  entry.data.seo.canonicalPath ?? getKnowledgeAssetUrl(collection, entry.data.slug);
+                const readingTime = getKnowledgeAssetReadingTime(entry);
+
+                return (
+                  <Card as="li" variant="interactive" class="knowledge-card">
+                    <article class="knowledge-card__article">
+                      <Stack gap="sm">
+                        <div class="knowledge-card__meta-row">
+                          <Badge size="sm">{collectionConfig.badgeLabel}</Badge>
+                          <span>{readingTime.text}</span>
+                        </div>
+                        <h2 class="knowledge-card__title">
+                          <a class="knowledge-card__link" href={href}>
+                            {entry.data.title}
+                          </a>
+                        </h2>
+                        <p class="knowledge-card__description">{entry.data.description}</p>
+                        <dl class="knowledge-card__metadata">
+                          <div>
+                            <dt>{labels.updated}</dt>
+                            <dd>
+                              <time
+                                datetime={formatKnowledgeAssetMachineDate(entry.data.updatedDate)}
+                              >
+                                {formatKnowledgeAssetDate(entry.data.updatedDate)}
+                              </time>
+                            </dd>
+                          </div>
+                          <div>
+                            <dt>{labels.difficulty}</dt>
+                            <dd>{entry.data.difficulty}</dd>
+                          </div>
+                        </dl>
+                        <div class="knowledge-card__tags" aria-label={labels.tags}>
+                          {entry.data.tags.slice(0, 4).map((tag) => (
+                            <Tag>{tag}</Tag>
+                          ))}
+                        </div>
+                      </Stack>
+                    </article>
+                  </Card>
+                );
+              })}
+            </Grid>
+          ) : (
+            <EmptyState
+              title={collectionConfig.emptyTitle}
+              description={collectionConfig.emptyDescription}
+            />
+          )
+        }
+      </Stack>
+    </PageContainer>
+  </Section>
+</AppLayout>

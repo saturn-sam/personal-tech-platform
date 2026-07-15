@@ -33,6 +33,60 @@ seo:
 featured: true
 ---
 
-# Enterprise Kubernetes Platform Architecture
+Enterprise Kubernetes architecture should make operational boundaries visible before workload teams depend on the cluster. The platform is easier to maintain when control plane ownership, worker placement, networking, storage, and observability are documented as one operating model.
 
-Placeholder article content for the homepage knowledge preview.
+<Callout type="important" title="Operating principle">
+  Design the cluster so ownership, failure domains, and recovery actions are clear during incidents,
+  not only during initial deployment.
+</Callout>
+
+## Control Plane Boundaries
+
+The control plane should remain isolated from tenant workloads and routine platform services. Administrative access, certificate rotation, backup posture, and audit logging need explicit ownership because failures in this layer affect every workload on the platform.
+
+<DataTable caption="Baseline control plane ownership">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Area</th>
+        <th scope="col">Primary owner</th>
+        <th scope="col">Operational check</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>API availability</td>
+        <td>Platform engineering</td>
+        <td>Validate API latency, quorum, and certificate expiry.</td>
+      </tr>
+      <tr>
+        <td>Cluster networking</td>
+        <td>Network and platform teams</td>
+        <td>Review ingress, egress, and policy enforcement paths.</td>
+      </tr>
+      <tr>
+        <td>Cluster backup</td>
+        <td>Platform operations</td>
+        <td>Confirm restore procedures for cluster state and critical namespaces.</td>
+      </tr>
+    </tbody>
+  </table>
+</DataTable>
+
+## Worker Segmentation
+
+Worker pools should reflect workload risk and operational behavior. Separating infrastructure services, application workloads, and specialized compute nodes reduces noisy neighbor risk and simplifies maintenance windows.
+
+```yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: platform-observability
+  labels:
+    ownership.ptkp.io/team: platform
+    workload.ptkp.io/class: infrastructure
+```
+
+## Operational Ownership
+
+The operating model should define who responds to platform alerts, who approves cluster changes, and which recovery steps are safe to run during an incident. Architecture documents become useful only when they connect design decisions to repeatable operations.
