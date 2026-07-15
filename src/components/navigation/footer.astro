@@ -10,17 +10,34 @@ const currentYear = new Date().getFullYear();
   <div class="site-footer__inner">
     <div class="site-footer__meta">
       <p class="site-footer__title">{siteConfig.fullName}</p>
+      <p class="site-footer__text">{siteConfig.footer.description}</p>
       <p class="site-footer__text">
-        Documentation-first engineering knowledge, organized for long-term reference.
+        {siteConfig.footer.copyrightLabel}
+        {currentYear}
+        {siteConfig.author}.
       </p>
-      <p class="site-footer__text">Copyright {currentYear} {siteConfig.author}.</p>
     </div>
 
-    <NavigationMenu
-      currentPath={Astro.url.pathname}
-      items={primaryNavigation}
-      label="Footer navigation"
-      variant="mobile"
-    />
+    <div class="site-footer__navigation">
+      <NavigationMenu
+        currentPath={Astro.url.pathname}
+        items={primaryNavigation}
+        label={siteConfig.footer.navigationLabel}
+        variant="mobile"
+      />
+      <nav class="site-footer__links" aria-label={siteConfig.footer.linksLabel}>
+        <ul class="site-footer__link-list">
+          {
+            siteConfig.footer.links.map((link) => (
+              <li>
+                <a class="site-footer__link" href={link.href}>
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
   </div>
 </footer>
