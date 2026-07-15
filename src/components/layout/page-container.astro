@@ -1,0 +1,14 @@
+---
+interface Props {
+  as?: 'div' | 'section' | 'article';
+  class?: string;
+  size?: 'content' | 'wide' | 'full';
+}
+
+const { as = 'div', class: className = '', size = 'wide' } = Astro.props as Props;
+const Element = as;
+---
+
+<Element class:list={['page-container', `page-container--${size}`, className]}>
+  <slot />
+</Element>

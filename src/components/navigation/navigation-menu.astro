@@ -1,0 +1,40 @@
+---
+import { primaryNavigation, type NavigationItem } from '@config/navigation';
+import { isActivePath } from '@utils/navigation';
+
+interface Props {
+  currentPath?: string;
+  items?: readonly NavigationItem[];
+  label?: string;
+  variant?: 'desktop' | 'mobile';
+}
+
+const {
+  currentPath = Astro.url.pathname,
+  items = primaryNavigation,
+  label = 'Primary navigation',
+  variant = 'desktop',
+} = Astro.props;
+---
+
+<nav class:list={['navigation-menu', `navigation-menu--${variant}`]} aria-label={label}>
+  <ul class="navigation-menu__list">
+    {
+      items.map((item) => {
+        const isActive = isActivePath(currentPath, item.href);
+
+        return (
+          <li>
+            <a
+              class="navigation-menu__link"
+              href={item.href}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</nav>
