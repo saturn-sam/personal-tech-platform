@@ -25,7 +25,25 @@ startDate: '2026-05-01'
 outcomes:
   - Centralized infrastructure health and inventory views.
   - Created a foundation for operational reporting and workflow automation.
-relatedAssets: []
+gallery:
+  - src: /assets/placeholders/django-monitoring.svg
+    alt: Django infrastructure monitoring system workflow
+timeline:
+  - date: '2026-05-01'
+    title: Monitoring data model
+    description: Defined inventory, health check, and reporting entities for infrastructure operations.
+  - date: '2026-06-10'
+    title: Django application baseline
+    description: Built the initial Django structure for infrastructure state and operational views.
+  - date: '2026-07-11'
+    title: Reporting workflow review
+    description: Reviewed how operators consume health, inventory, and reporting data.
+diagram:
+  language: mermaid
+  title: Infrastructure monitoring data flow
+relatedAssets:
+  - collection: architecture-guides
+    slug: secure-platform-operations-baseline
 featuredImage:
   src: /assets/placeholders/django-monitoring.svg
   alt: Django infrastructure monitoring system project
@@ -37,6 +55,38 @@ seo:
 featured: true
 ---
 
-# Django Infrastructure Monitoring System
+## Architecture Diagram
 
-Placeholder project content for the homepage project preview.
+```mermaid
+flowchart LR
+  Inventory[Infrastructure Inventory] --> Django[Django Application]
+  Health[Health Checks] --> Django
+  Django --> Database[(PostgreSQL)]
+  Database --> Reports[Operational Reports]
+  Reports --> Operators[Operations Team]
+```
+
+## Project Overview
+
+This project organizes infrastructure health, inventory, and reporting data through a Django application. The goal is to give operations teams a reliable place to inspect platform state and prepare repeatable reporting workflows.
+
+## Implementation Details
+
+The application model separates inventory records, health observations, and report views. Django provides a maintainable structure for operational workflows while PostgreSQL stores the historical state needed for reporting.
+
+<Callout type="tip" title="Design note">
+  Monitoring applications stay useful when the data model reflects operator questions rather than
+  only raw collection output.
+</Callout>
+
+## Challenges
+
+- Keeping health checks actionable instead of turning the tool into a generic dashboard.
+- Modeling infrastructure inventory in a way that supports future automation.
+- Separating reporting needs from real-time alerting responsibilities.
+
+## Lessons Learned
+
+- Inventory quality determines the usefulness of operational reporting.
+- Health checks need ownership and remediation context.
+- A small internal tool can reduce repeated manual reporting work when the workflow is clear.

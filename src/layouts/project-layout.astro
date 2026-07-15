@@ -1,0 +1,256 @@
+---
+import MarkdownEnhancements from '@components/documentation/markdown-enhancements.astro';
+import Badge from '@components/ui/badge.astro';
+import Card from '@components/ui/card.astro';
+import Tag from '@components/ui/tag.astro';
+import PageContainer from '@components/layout/page-container.astro';
+import Section from '@components/layout/section.astro';
+import Stack from '@components/layout/stack.astro';
+import Breadcrumb from '@components/navigation/breadcrumb.astro';
+import { projectConfig } from '@config/projects';
+import { siteConfig } from '@config/site';
+import AppLayout from '@layouts/app-layout.astro';
+import {
+  formatProjectDate,
+  formatProjectMachineDate,
+  formatProjectWindow,
+  getProjectBreadcrumbs,
+  getProjectGallery,
+  getProjectTimeline,
+  getProjectUrl,
+  getRelatedKnowledgeUrl,
+  type ProjectEntry,
+  type ProjectRelatedKnowledgeEntry,
+} from '@lib/content/projects';
+
+interface Props {
+  entry: ProjectEntry;
+  nextEntry?: ProjectEntry;
+  previousEntry?: ProjectEntry;
+  relatedKnowledgeEntries: readonly ProjectRelatedKnowledgeEntry[];
+}
+
+const { entry, nextEntry, previousEntry, relatedKnowledgeEntries } = Astro.props as Props;
+const labels = projectConfig.labels;
+const breadcrumbs = getProjectBreadcrumbs(entry.data.title);
+const canonicalPath = entry.data.seo.canonicalPath ?? getProjectUrl(entry.data.slug);
+const gallery = getProjectGallery(entry);
+const timeline = getProjectTimeline(entry);
+const mermaidTitle = entry.data.diagram?.title ?? labels.mermaidDiagram;
+
+const metadata = [
+  {
+    label: labels.status,
+    value: entry.data.projectStatus,
+  },
+  {
+    label: labels.environment,
+    value: entry.data.environment,
+  },
+  {
+    label: labels.implementationWindow,
+    value: formatProjectWindow(entry),
+  },
+  {
+    dateTime: formatProjectMachineDate(entry.data.updatedDate),
+    label: labels.updated,
+    value: formatProjectDate(entry.data.updatedDate),
+  },
+];
+
+const resolveUrl = (path: string): string | undefined =>
+  siteConfig.url ? new URL(path, siteConfig.url).toString() : undefined;
+
+const getProjectEntryHref = (projectEntry: ProjectEntry): string =>
+  projectEntry.data.seo.canonicalPath ?? getProjectUrl(projectEntry.data.slug);
+
+const structuredData: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  about: entry.data.technologies,
+  author: {
+    '@type': 'Person',
+    name: entry.data.author,
+  },
+  dateModified: formatProjectMachineDate(entry.data.updatedDate),
+  datePublished: formatProjectMachineDate(entry.data.publishedDate),
+  description: entry.data.description,
+  image: resolveUrl(entry.data.featuredImage.src),
+  keywords: entry.data.tags,
+  mainEntityOfPage: resolveUrl(canonicalPath),
+  name: entry.data.title,
+};
+---
+
+<AppLayout
+  title={entry.data.seo.title}
+  description={entry.data.seo.description}
+  canonicalPath={canonicalPath}
+  ogImage={entry.data.featuredImage.src}
+  ogType="article"
+  robots={entry.data.seo.robots}
+  mainClass="project-page"
+>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  <Section spacing="compact" class="project-detail">
+    <PageContainer size="wide">
+      <Stack gap="lg">
+        <Breadcrumb items={breadcrumbs} />
+
+        <article class="project-detail__article">
+          <header class="project-detail__header">
+            <div class="project-detail__badges">
+              <Badge tone="accent">{projectConfig.badgeLabel}</Badge>
+              <Badge>{entry.data.projectStatus}</Badge>
+            </div>
+            <h1>{entry.data.title}</h1>
+            <p>{entry.data.summary}</p>
+
+            <dl class="project-meta" aria-label={labels.projectMetadata}>
+              {
+                metadata.map((item) => (
+                  <div>
+                    <dt>{item.label}</dt>
+                    <dd>
+                      {item.dateTime ? (
+                        <time datetime={item.dateTime}>{item.value}</time>
+                      ) : (
+                        item.value
+                      )}
+                    </dd>
+                  </div>
+                ))
+              }
+            </dl>
+          </header>
+
+          <section class="project-section project-stack" aria-labelledby="project-stack-title">
+            <h2 id="project-stack-title">{labels.technologies}</h2>
+            <div class="project-token-group">
+              {entry.data.technologies.map((technology) => <Tag>{technology}</Tag>)}
+            </div>
+          </section>
+
+          <section class="project-section project-gallery" aria-labelledby="project-gallery-title">
+            <h2 id="project-gallery-title">{labels.gallery}</h2>
+            <div class="project-gallery__grid">
+              {
+                gallery.map((image, index) => (
+                  <figure class="project-gallery__figure">
+                    <img
+                      src={image.src}
+                      alt={image.alt}
+                      loading={index === 0 ? 'eager' : 'lazy'}
+                      decoding="async"
+                      sizes="(min-width: 64rem) 34rem, 100vw"
+                    />
+                    <figcaption>{image.alt}</figcaption>
+                  </figure>
+                ))
+              }
+            </div>
+          </section>
+
+          <section
+            class="project-section project-timeline"
+            aria-labelledby="project-timeline-title"
+          >
+            <h2 id="project-timeline-title">{labels.timeline}</h2>
+            <ol class="project-timeline__list">
+              {
+                timeline.map((item) => (
+                  <li class="project-timeline__item">
+                    <time datetime={formatProjectMachineDate(item.date)}>
+                      {formatProjectDate(item.date)}
+                    </time>
+                    <div>
+                      <h3>{item.title}</h3>
+                      <p>{item.description}</p>
+                    </div>
+                  </li>
+                ))
+              }
+            </ol>
+          </section>
+
+          <div class="knowledge-content project-content">
+            <slot />
+          </div>
+
+          <footer class="project-detail__footer">
+            <section
+              class="project-section project-outcomes"
+              aria-labelledby="project-outcomes-title"
+            >
+              <h2 id="project-outcomes-title">{labels.outcomes}</h2>
+              <ul>
+                {entry.data.outcomes.map((outcome) => <li>{outcome}</li>)}
+              </ul>
+            </section>
+
+            <div class="project-related-grid">
+              <Card as="section" class="project-related-knowledge">
+                <h2>{labels.relatedKnowledge}</h2>
+                {
+                  relatedKnowledgeEntries.length > 0 ? (
+                    <ul class="project-related-list">
+                      {relatedKnowledgeEntries.map((relatedEntry) => (
+                        <li>
+                          <a href={getRelatedKnowledgeUrl(relatedEntry)}>
+                            <span>{relatedEntry.data.assetType}</span>
+                            <strong>{relatedEntry.data.title}</strong>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>{labels.relatedKnowledgeEmpty}</p>
+                  )
+                }
+              </Card>
+
+              <Card as="section" class="project-related-projects">
+                <h2>{labels.relatedProjects}</h2>
+                <p>{labels.relatedProjectsPlaceholder}</p>
+              </Card>
+            </div>
+
+            <nav class="project-adjacent" aria-label={labels.projectNavigation}>
+              {
+                previousEntry ? (
+                  <a class="project-adjacent__link" href={getProjectEntryHref(previousEntry)}>
+                    <span>{labels.previous}</span>
+                    <strong>{previousEntry.data.title}</strong>
+                  </a>
+                ) : (
+                  <span class="project-adjacent__link project-adjacent__link--disabled">
+                    <span>{labels.previous}</span>
+                    <strong>No previous project</strong>
+                  </span>
+                )
+              }
+              {
+                nextEntry ? (
+                  <a class="project-adjacent__link" href={getProjectEntryHref(nextEntry)}>
+                    <span>{labels.next}</span>
+                    <strong>{nextEntry.data.title}</strong>
+                  </a>
+                ) : (
+                  <span class="project-adjacent__link project-adjacent__link--disabled">
+                    <span>{labels.next}</span>
+                    <strong>No next project</strong>
+                  </span>
+                )
+              }
+            </nav>
+          </footer>
+        </article>
+      </Stack>
+    </PageContainer>
+  </Section>
+  <MarkdownEnhancements
+    codeCopiedLabel={labels.copiedCode}
+    codeCopyLabel={labels.copyCode}
+    mermaidTitle={mermaidTitle}
+  />
+</AppLayout>

@@ -40,7 +40,7 @@ export const homepageConfig = {
       description:
         'Engineering implementations focused on enterprise platforms, automation, observability, and operations.',
       statusLabel: 'Status',
-      linkLabel: 'Project page planned',
+      linkLabel: 'View Project',
       limit: 5,
     },
     technologyOverview: {

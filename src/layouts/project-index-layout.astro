@@ -1,0 +1,103 @@
+---
+import Badge from '@components/ui/badge.astro';
+import Card from '@components/ui/card.astro';
+import Tag from '@components/ui/tag.astro';
+import EmptyState from '@components/feedback/empty-state.astro';
+import Grid from '@components/layout/grid.astro';
+import PageContainer from '@components/layout/page-container.astro';
+import Section from '@components/layout/section.astro';
+import Stack from '@components/layout/stack.astro';
+import Breadcrumb from '@components/navigation/breadcrumb.astro';
+import { projectConfig } from '@config/projects';
+import AppLayout from '@layouts/app-layout.astro';
+import {
+  formatProjectDate,
+  formatProjectMachineDate,
+  formatProjectWindow,
+  getProjectBreadcrumbs,
+  getProjectUrl,
+  type ProjectEntry,
+} from '@lib/content/projects';
+
+interface Props {
+  entries: readonly ProjectEntry[];
+}
+
+const { entries } = Astro.props as Props;
+const labels = projectConfig.labels;
+const breadcrumbs = getProjectBreadcrumbs();
+---
+
+<AppLayout
+  title={projectConfig.seoTitle}
+  description={projectConfig.seoDescription}
+  canonicalPath={projectConfig.routeBase}
+  mainClass="project-index-page"
+>
+  <Section spacing="spacious" class="project-index">
+    <PageContainer size="wide">
+      <Stack gap="lg">
+        <Breadcrumb items={breadcrumbs} />
+
+        <header class="project-index__header">
+          <Badge tone="accent">{projectConfig.badgeLabel}</Badge>
+          <h1>{projectConfig.indexTitle}</h1>
+          <p>{projectConfig.indexDescription}</p>
+        </header>
+
+        {
+          entries.length > 0 ? (
+            <Grid as="ul" columns={2} gap="lg" class="project-index__grid">
+              {entries.map((entry) => {
+                const href = entry.data.seo.canonicalPath ?? getProjectUrl(entry.data.slug);
+
+                return (
+                  <Card as="li" variant="interactive" class="project-card">
+                    <article class="project-card__article">
+                      <Stack gap="sm">
+                        <div class="project-card__meta-row">
+                          <Badge size="sm">{entry.data.projectStatus}</Badge>
+                          <span>{formatProjectWindow(entry)}</span>
+                        </div>
+                        <h2 class="project-card__title">
+                          <a class="project-card__link" href={href}>
+                            {entry.data.title}
+                          </a>
+                        </h2>
+                        <p class="project-card__description">{entry.data.description}</p>
+                        <dl class="project-card__metadata">
+                          <div>
+                            <dt>{labels.environment}</dt>
+                            <dd>{entry.data.environment}</dd>
+                          </div>
+                          <div>
+                            <dt>{labels.updated}</dt>
+                            <dd>
+                              <time datetime={formatProjectMachineDate(entry.data.updatedDate)}>
+                                {formatProjectDate(entry.data.updatedDate)}
+                              </time>
+                            </dd>
+                          </div>
+                        </dl>
+                        <div class="project-card__tags" aria-label={labels.technologies}>
+                          {entry.data.technologies.slice(0, 4).map((technology) => (
+                            <Tag>{technology}</Tag>
+                          ))}
+                        </div>
+                      </Stack>
+                    </article>
+                  </Card>
+                );
+              })}
+            </Grid>
+          ) : (
+            <EmptyState
+              title={projectConfig.emptyTitle}
+              description={projectConfig.emptyDescription}
+            />
+          )
+        }
+      </Stack>
+    </PageContainer>
+  </Section>
+</AppLayout>
