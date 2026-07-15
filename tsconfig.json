@@ -1,0 +1,32 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "noEmit": true,
+    "types": ["astro/client", "node"],
+    "paths": {
+      "@/*": ["src/*"],
+      "@assets/*": ["src/assets/*"],
+      "@components/*": ["src/components/*"],
+      "@config/*": ["src/config/*"],
+      "@content/*": ["src/content/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@lib/*": ["src/lib/*"],
+      "@styles/*": ["src/styles/*"],
+      "@types/*": ["src/types/*"],
+      "@utils/*": ["src/utils/*"]
+    }
+  },
+  "include": [
+    ".astro/types.d.ts",
+    "astro.config.mjs",
+    "eslint.config.mjs",
+    "lint-staged.config.mjs",
+    "postcss.config.mjs",
+    "prettier.config.mjs",
+    "src/**/*",
+    "tailwind.config.mjs"
+  ],
+  "exclude": ["dist", "node_modules"]
+}

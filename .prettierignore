@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.astro/
+AGENTS.md
+docs/
+prompts/
+package-lock.json
