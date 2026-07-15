@@ -1,0 +1,26 @@
+---
+import { primaryNavigation } from '@config/navigation';
+import { siteConfig } from '@config/site';
+import NavigationMenu from './navigation-menu.astro';
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div class="site-footer__meta">
+      <p class="site-footer__title">{siteConfig.fullName}</p>
+      <p class="site-footer__text">
+        Documentation-first engineering knowledge, organized for long-term reference.
+      </p>
+      <p class="site-footer__text">Copyright {currentYear} {siteConfig.author}.</p>
+    </div>
+
+    <NavigationMenu
+      currentPath={Astro.url.pathname}
+      items={primaryNavigation}
+      label="Footer navigation"
+      variant="mobile"
+    />
+  </div>
+</footer>

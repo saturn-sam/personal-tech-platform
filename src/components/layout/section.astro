@@ -1,0 +1,23 @@
+---
+interface Props {
+  as?: 'section' | 'div' | 'article';
+  ariaLabel?: string;
+  class?: string;
+  spacing?: 'compact' | 'default' | 'spacious';
+}
+
+const {
+  as = 'section',
+  ariaLabel,
+  class: className = '',
+  spacing = 'default',
+} = Astro.props as Props;
+const Element = as;
+---
+
+<Element
+  class:list={['section', spacing !== 'default' && `section--${spacing}`, className]}
+  aria-label={ariaLabel}
+>
+  <slot />
+</Element>

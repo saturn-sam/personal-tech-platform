@@ -1,0 +1,34 @@
+---
+import { siteConfig } from '@config/site';
+import ThemeToggle from '@components/utility/theme-toggle.astro';
+import NavigationMenu from './navigation-menu.astro';
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="site-brand" href="/" aria-label={`${siteConfig.fullName} home`}>
+      <span class="site-brand__name">{siteConfig.name}</span>
+      <span class="site-brand__description">{siteConfig.fullName}</span>
+    </a>
+
+    <div class="site-header__desktop">
+      <NavigationMenu currentPath={currentPath} />
+    </div>
+
+    <div class="site-header__actions">
+      <ThemeToggle />
+      <details class="site-header__mobile mobile-navigation">
+        <summary class="mobile-navigation__summary">Menu</summary>
+        <div class="mobile-navigation__panel">
+          <NavigationMenu
+            currentPath={currentPath}
+            label="Mobile primary navigation"
+            variant="mobile"
+          />
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
