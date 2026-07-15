@@ -1,0 +1,40 @@
+---
+import Button from '@components/ui/button.astro';
+
+export interface Props {
+  actionHref?: string;
+  actionLabel?: string;
+  class?: string;
+  description?: string;
+  title?: string;
+}
+
+const {
+  actionHref,
+  actionLabel,
+  class: className = '',
+  description = 'The requested content could not be displayed.',
+  title = 'Unable to Load Content',
+} = Astro.props as Props;
+
+const titleId = `${title
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/^-|-$/g, '')}-error-title`;
+---
+
+<section class:list={['error-state', className]} role="alert" aria-labelledby={titleId}>
+  <div class="error-state__body">
+    <h2 class="error-state__title" id={titleId}>{title}</h2>
+    <p class="error-state__description">{description}</p>
+    {
+      actionHref && actionLabel && (
+        <div class="error-state__action">
+          <Button href={actionHref} variant="secondary">
+            {actionLabel}
+          </Button>
+        </div>
+      )
+    }
+  </div>
+</section>

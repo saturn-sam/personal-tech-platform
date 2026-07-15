@@ -1,0 +1,18 @@
+---
+export interface Props {
+  class?: string;
+  label?: string;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const { class: className = '', label, size = 'md' } = Astro.props as Props;
+---
+
+<span
+  class:list={['ui-icon', `ui-icon--${size}`, className]}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+>
+  <slot />
+</span>

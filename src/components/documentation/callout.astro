@@ -1,0 +1,27 @@
+---
+export interface Props {
+  class?: string;
+  title?: string;
+  type?: 'note' | 'tip' | 'warning' | 'important' | 'success';
+}
+
+const { class: className = '', title, type = 'note' } = Astro.props as Props;
+
+const defaultTitles = {
+  note: 'Note',
+  tip: 'Tip',
+  warning: 'Warning',
+  important: 'Important',
+  success: 'Success',
+} as const;
+---
+
+<aside
+  class:list={['callout', `callout--${type}`, className]}
+  aria-label={title ?? defaultTitles[type]}
+>
+  <p class="callout__title">{title ?? defaultTitles[type]}</p>
+  <div class="callout__content">
+    <slot />
+  </div>
+</aside>

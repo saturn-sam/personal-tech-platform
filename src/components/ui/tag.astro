@@ -1,0 +1,21 @@
+---
+export interface Props {
+  class?: string;
+  href?: string;
+}
+
+const { class: className = '', href } = Astro.props as Props;
+const classes = ['ui-tag', className];
+---
+
+{
+  href ? (
+    <a class:list={classes} href={href}>
+      <slot />
+    </a>
+  ) : (
+    <span class:list={classes}>
+      <slot />
+    </span>
+  )
+}

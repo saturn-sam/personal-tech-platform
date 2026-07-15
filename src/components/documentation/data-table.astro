@@ -1,0 +1,15 @@
+---
+export interface Props {
+  caption?: string;
+  class?: string;
+}
+
+const { caption, class: className = '' } = Astro.props as Props;
+---
+
+<figure class:list={['data-table', className]}>
+  {caption && <figcaption class="data-table__caption">{caption}</figcaption>}
+  <div class="data-table__scroll" tabindex="0">
+    <slot />
+  </div>
+</figure>

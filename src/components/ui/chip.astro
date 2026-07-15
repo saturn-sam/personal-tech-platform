@@ -1,0 +1,22 @@
+---
+export interface Props {
+  class?: string;
+  href?: string;
+  selected?: boolean;
+}
+
+const { class: className = '', href, selected = false } = Astro.props as Props;
+const classes = ['ui-chip', selected && 'ui-chip--selected', className];
+---
+
+{
+  href ? (
+    <a class:list={classes} href={href} aria-current={selected ? 'true' : undefined}>
+      <slot />
+    </a>
+  ) : (
+    <span class:list={classes}>
+      <slot />
+    </span>
+  )
+}

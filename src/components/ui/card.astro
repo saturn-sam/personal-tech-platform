@@ -1,0 +1,21 @@
+---
+export interface Props {
+  as?: 'article' | 'section' | 'div' | 'li';
+  class?: string;
+  padding?: 'none' | 'sm' | 'md' | 'lg';
+  variant?: 'default' | 'muted' | 'interactive';
+}
+
+const {
+  as = 'div',
+  class: className = '',
+  padding = 'md',
+  variant = 'default',
+} = Astro.props as Props;
+
+const Element = as;
+---
+
+<Element class:list={['ui-card', `ui-card--${variant}`, `ui-card--padding-${padding}`, className]}>
+  <slot />
+</Element>
