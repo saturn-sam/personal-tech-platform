@@ -1,4 +1,6 @@
 ---
+import { getLinkPrefetchStrategy } from '@utils/prefetch';
+
 export interface Props {
   class?: string;
   href: string;
@@ -11,6 +13,7 @@ const { class: className = '', href, rel, target, variant = 'inline' } = Astro.p
 
 const opensInNewTab = target === '_blank';
 const computedRel = rel ?? (opensInNewTab ? 'noreferrer' : undefined);
+const prefetchStrategy = getLinkPrefetchStrategy(href, target);
 ---
 
 <a
@@ -18,6 +21,7 @@ const computedRel = rel ?? (opensInNewTab ? 'noreferrer' : undefined);
   href={href}
   target={target}
   rel={computedRel}
+  data-astro-prefetch={prefetchStrategy}
 >
   <slot />
   {opensInNewTab && <span class="sr-only"> Opens in a new tab.</span>}

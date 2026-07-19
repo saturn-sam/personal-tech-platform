@@ -1,0 +1,4 @@
+rich>=14.0
+questionary>=2.0
+python-slugify>=8.0
+PyYAML>=6.0

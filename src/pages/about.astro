@@ -1,0 +1,51 @@
+---
+import AppLayout from '@layouts/app-layout.astro';
+import PageContainer from '@components/layout/page-container.astro';
+import Section from '@components/layout/section.astro';
+import Stack from '@components/layout/stack.astro';
+import Breadcrumb from '@components/navigation/breadcrumb.astro';
+import PersonSchema from '@components/seo/person-schema.astro';
+
+const breadcrumbs = [
+  { href: '/', label: 'Home' },
+  { current: true, label: 'About' },
+];
+---
+
+<AppLayout
+  title="About"
+  description="About the Personal Technical Knowledge Platform and its purpose as an engineering knowledge base."
+  canonicalPath="/about/"
+  pageSchemaType="AboutPage"
+  mainClass="about-page"
+>
+  <PersonSchema />
+  <Section spacing="compact">
+    <PageContainer size="content">
+      <Stack gap="lg">
+        <Breadcrumb items={breadcrumbs} />
+
+        <header class="page-intro">
+          <p class="page-intro__eyebrow">About PTKP</p>
+          <h1>Documentation-first engineering knowledge</h1>
+          <p>
+            PTKP is a static-first platform for sharing practical infrastructure knowledge, project
+            experience, and technical reference material in a consistent, preserveable format.
+          </p>
+        </header>
+
+        <div class="knowledge-content">
+          <p>
+            The platform is organized around articles, architecture guidance, projects,
+            technologies, certifications, resources, and lab notes so engineers can navigate from
+            context to implementation without leaving the site.
+          </p>
+          <p>
+            Navigation is designed to stay lightweight, accessible, and resilient across desktop and
+            mobile devices while preserving the calm documentation aesthetic of the platform.
+          </p>
+        </div>
+      </Stack>
+    </PageContainer>
+  </Section>
+</AppLayout>

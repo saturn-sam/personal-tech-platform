@@ -1,6 +1,7 @@
 ---
 import { primaryNavigation, type NavigationItem } from '@config/navigation';
 import { isActivePath } from '@utils/navigation';
+import { getLinkPrefetchStrategy } from '@utils/prefetch';
 
 interface Props {
   currentPath?: string;
@@ -29,6 +30,7 @@ const {
               class="navigation-menu__link"
               href={item.href}
               aria-current={isActive ? 'page' : undefined}
+              data-astro-prefetch={getLinkPrefetchStrategy(item.href)}
             >
               {item.label}
             </a>

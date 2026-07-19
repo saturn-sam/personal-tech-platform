@@ -11,5 +11,6 @@ export const primaryNavigation: readonly NavigationItem[] = [
   { label: 'Learning Paths', href: '/learning-paths/' },
   { label: 'Certifications', href: '/certifications/' },
   { label: 'Resources', href: '/resources/' },
+  { label: 'Search', href: '/search/' },
   { label: 'About', href: '/about/' },
 ] as const;

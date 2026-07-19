@@ -1,0 +1,28 @@
+---
+import { siteConfig } from '@config/site';
+
+export interface Props {
+  description: string;
+  title: string;
+  type?: 'AboutPage' | 'CollectionPage' | 'SearchResultsPage' | 'WebPage';
+  url?: string;
+}
+
+const { description, title, type = 'WebPage', url = siteConfig.url } = Astro.props;
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': type,
+  description,
+  inLanguage: siteConfig.language,
+  isPartOf: {
+    '@type': 'WebSite',
+    name: siteConfig.fullName,
+    url: siteConfig.url,
+  },
+  name: title,
+  url,
+};
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />

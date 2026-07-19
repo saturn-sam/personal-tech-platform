@@ -1,4 +1,6 @@
 ---
+import { getLinkPrefetchStrategy } from '@utils/prefetch';
+
 interface PaginationTarget {
   readonly href: string;
   readonly label?: string;
@@ -32,7 +34,11 @@ const {
     <li>
       {
         first ? (
-          <a class="pagination__link" href={first.href}>
+          <a
+            class="pagination__link"
+            href={first.href}
+            data-astro-prefetch={getLinkPrefetchStrategy(first.href)}
+          >
             {first.label ?? 'First'}
           </a>
         ) : (
@@ -45,7 +51,11 @@ const {
     <li>
       {
         previous ? (
-          <a class="pagination__link" href={previous.href}>
+          <a
+            class="pagination__link"
+            href={previous.href}
+            data-astro-prefetch={getLinkPrefetchStrategy(previous.href)}
+          >
             {previous.label ?? 'Previous'}
           </a>
         ) : (
@@ -65,7 +75,11 @@ const {
     <li>
       {
         next ? (
-          <a class="pagination__link" href={next.href}>
+          <a
+            class="pagination__link"
+            href={next.href}
+            data-astro-prefetch={getLinkPrefetchStrategy(next.href)}
+          >
             {next.label ?? 'Next'}
           </a>
         ) : (
@@ -78,7 +92,11 @@ const {
     <li>
       {
         last ? (
-          <a class="pagination__link" href={last.href}>
+          <a
+            class="pagination__link"
+            href={last.href}
+            data-astro-prefetch={getLinkPrefetchStrategy(last.href)}
+          >
             {last.label ?? 'Last'}
           </a>
         ) : (

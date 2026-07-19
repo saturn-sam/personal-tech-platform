@@ -7,6 +7,7 @@ import {
   sortByUpdatedDate,
   type KnowledgeAssetEntry,
 } from './queries';
+import { resolveRelatedEntries } from './relationships';
 
 export type ProjectEntry = CollectionEntry<'projects'>;
 
@@ -140,10 +141,17 @@ const getRelatedKnowledgeEntries = (
   entry: ProjectEntry,
   lookup: ReadonlyMap<string, ProjectRelatedKnowledgeEntry>,
 ): ProjectRelatedKnowledgeEntry[] =>
-  entry.data.relatedAssets
-    .filter((reference) => isProjectRelatedKnowledgeCollection(reference.collection))
-    .map((reference) => lookup.get(`${reference.collection}:${reference.slug}`))
-    .filter((relatedEntry): relatedEntry is ProjectRelatedKnowledgeEntry => Boolean(relatedEntry));
+  resolveRelatedEntries(
+    {
+      collection: entry.collection,
+      slug: entry.data.slug,
+    },
+    entry.data.relatedAssets,
+    lookup,
+    {
+      filter: (reference) => isProjectRelatedKnowledgeCollection(reference.collection),
+    },
+  );
 
 export const getProjectStaticPaths = async () => {
   const entries = await getPublishedProjectEntries();

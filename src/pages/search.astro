@@ -1,0 +1,39 @@
+---
+import SearchPanel from '@components/search/search-panel.astro';
+import AppLayout from '@layouts/app-layout.astro';
+import Section from '@components/layout/section.astro';
+import PageContainer from '@components/layout/page-container.astro';
+import Stack from '@components/layout/stack.astro';
+const initialQuery = Astro.url.searchParams.get('q') ?? '';
+---
+
+<AppLayout
+  title="Search"
+  description="Search the PTKP knowledge base by keyword, technology, or category."
+  canonicalPath="/search/"
+  pageSchemaType="SearchResultsPage"
+  robots="noindex,follow"
+>
+  <Section spacing="spacious">
+    <PageContainer size="wide">
+      <Stack gap="lg">
+        <div class="search-page__header">
+          <p class="search-page__eyebrow">Search</p>
+          <h1>Find the knowledge you need</h1>
+          <p>
+            Search across articles, lab notes, architecture guides, projects, technologies,
+            certifications, resources, and learning paths.
+          </p>
+        </div>
+
+        <SearchPanel surface="page" inputId="site-search" initialQuery={initialQuery} />
+
+        <noscript>
+          <p class="search-page__noscript">
+            Search requires JavaScript to load the static index in your browser.
+          </p>
+        </noscript>
+      </Stack>
+    </PageContainer>
+  </Section>
+</AppLayout>

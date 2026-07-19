@@ -1,0 +1,54 @@
+---
+import EmptyState from '@components/feedback/empty-state.astro';
+import PageContainer from '@components/layout/page-container.astro';
+import Section from '@components/layout/section.astro';
+import Stack from '@components/layout/stack.astro';
+import Badge from '@components/ui/badge.astro';
+import Button from '@components/ui/button.astro';
+import { errorExperienceConfig } from '@config/error-experience';
+import AppLayout from '@layouts/app-layout.astro';
+
+const notFoundConfig = errorExperienceConfig.notFound;
+---
+
+<AppLayout
+  title={notFoundConfig.title}
+  description={notFoundConfig.description}
+  canonicalPath="/404.html"
+  robots="noindex,nofollow"
+  mainClass="not-found-page"
+>
+  <Section spacing="spacious" class="not-found">
+    <PageContainer size="content">
+      <Stack gap="lg">
+        <header class="not-found__header">
+          <Badge tone="accent">{notFoundConfig.badgeLabel}</Badge>
+          <h1>{notFoundConfig.title}</h1>
+          <p>{notFoundConfig.description}</p>
+        </header>
+
+        <EmptyState
+          title={notFoundConfig.recoveryTitle}
+          description={notFoundConfig.recoveryDescription}
+          primaryAction={notFoundConfig.primaryAction}
+          secondaryAction={notFoundConfig.secondaryAction}
+        />
+
+        <nav class="not-found__recovery" aria-labelledby="not-found-recovery-title">
+          <h2 id="not-found-recovery-title">{notFoundConfig.navigationLabel}</h2>
+          <ul class="not-found__link-list">
+            {
+              notFoundConfig.links.map((link) => (
+                <li>
+                  <Button href={link.href} size="sm" variant="secondary">
+                    {link.label}
+                  </Button>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </Stack>
+    </PageContainer>
+  </Section>
+</AppLayout>

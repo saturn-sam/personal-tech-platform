@@ -2,6 +2,7 @@
 import type { MarkdownHeading } from 'astro';
 
 import MarkdownEnhancements from '@components/documentation/markdown-enhancements.astro';
+import BreadcrumbSchema from '@components/seo/breadcrumb-schema.astro';
 import Badge from '@components/ui/badge.astro';
 import Card from '@components/ui/card.astro';
 import Tag from '@components/ui/tag.astro';
@@ -9,6 +10,8 @@ import PageContainer from '@components/layout/page-container.astro';
 import Section from '@components/layout/section.astro';
 import Stack from '@components/layout/stack.astro';
 import Breadcrumb from '@components/navigation/breadcrumb.astro';
+import DocumentationSidebar from '@components/navigation/documentation-sidebar.astro';
+import TableOfContents from '@components/navigation/table-of-contents.astro';
 import { knowledgeAssetConfig } from '@config/knowledge-assets';
 import { siteConfig } from '@config/site';
 import AppLayout from '@layouts/app-layout.astro';
@@ -18,8 +21,8 @@ import {
   getKnowledgeAssetBreadcrumbs,
   getKnowledgeAssetCollectionConfig,
   getKnowledgeAssetReadingTime,
-  getKnowledgeAssetTocHeadings,
   getKnowledgeAssetUrl,
+  getPublishedKnowledgeAssetEntries,
   type KnowledgeAssetCollectionName,
   type KnowledgeAssetEntry,
 } from '@lib/content/knowledge-assets';
@@ -29,14 +32,14 @@ interface Props {
   headings: readonly MarkdownHeading[];
   nextEntry?: KnowledgeAssetEntry;
   previousEntry?: KnowledgeAssetEntry;
+  relatedAssetCount: number;
 }
 
-const { entry, headings, nextEntry, previousEntry } = Astro.props as Props;
+const { entry, headings, nextEntry, previousEntry, relatedAssetCount } = Astro.props as Props;
 const collection = entry.collection as KnowledgeAssetCollectionName;
 const collectionConfig = getKnowledgeAssetCollectionConfig(collection);
 const labels = knowledgeAssetConfig.labels;
 const breadcrumbs = getKnowledgeAssetBreadcrumbs(collection, entry.data.title);
-const tocHeadings = getKnowledgeAssetTocHeadings(headings);
 const readingTime = getKnowledgeAssetReadingTime(entry);
 const canonicalPath =
   entry.data.seo.canonicalPath ?? getKnowledgeAssetUrl(collection, entry.data.slug);
@@ -94,16 +97,23 @@ const getEntryHref = (targetEntry: KnowledgeAssetEntry): string =>
   );
 
 const relatedText =
-  entry.data.relatedAssets.length > 0
-    ? `${entry.data.relatedAssets.length} ${labels.relatedWithCount}`
-    : labels.relatedEmpty;
+  relatedAssetCount > 0 ? `${relatedAssetCount} ${labels.relatedWithCount}` : labels.relatedEmpty;
+
+const sidebarItems = (await getPublishedKnowledgeAssetEntries(collection)).map((item) => ({
+  href: getEntryHref(item),
+  title: item.data.title,
+  current: item.data.slug === entry.data.slug,
+}));
 
 const resolveUrl = (path: string): string | undefined =>
   siteConfig.url ? new URL(path, siteConfig.url).toString() : undefined;
 
+const structuredDataType =
+  collection === 'articles' || collection === 'lab-notes' ? 'Article' : 'TechArticle';
+
 const structuredData: Record<string, unknown> = {
   '@context': 'https://schema.org',
-  '@type': 'TechArticle',
+  '@type': structuredDataType,
   about: entry.data.technologies,
   author: {
     '@type': 'Person',
@@ -114,14 +124,18 @@ const structuredData: Record<string, unknown> = {
   description: entry.data.description,
   headline: entry.data.title,
   image: resolveUrl(entry.data.featuredImage.src),
+  inLanguage: siteConfig.language,
   keywords: entry.data.tags,
   mainEntityOfPage: resolveUrl(canonicalPath),
+  name: entry.data.title,
 };
 ---
 
 <AppLayout
   title={entry.data.seo.title}
   description={entry.data.seo.description}
+  keywords={entry.data.tags}
+  author={entry.data.author}
   canonicalPath={canonicalPath}
   ogImage={entry.data.featuredImage.src}
   ogType="article"
@@ -129,6 +143,7 @@ const structuredData: Record<string, unknown> = {
   mainClass="knowledge-asset-page"
 >
   <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+  <BreadcrumbSchema items={breadcrumbs} />
   <Section spacing="compact" class="knowledge-asset">
     <PageContainer size="wide">
       <Stack gap="lg">
@@ -168,29 +183,17 @@ const structuredData: Record<string, unknown> = {
           </header>
 
           <div class="knowledge-asset__body">
-            <aside class="knowledge-toc" aria-labelledby="knowledge-toc-title">
-              <h2 id="knowledge-toc-title">{labels.tableOfContents}</h2>
-              {
-                tocHeadings.length > 0 ? (
-                  <ol class="knowledge-toc__list">
-                    {tocHeadings.map((heading) => (
-                      <li
-                        class:list={[
-                          'knowledge-toc__item',
-                          `knowledge-toc__item--depth-${heading.depth}`,
-                        ]}
-                      >
-                        <a class="knowledge-toc__link" href={`#${heading.slug}`}>
-                          {heading.text}
-                        </a>
-                      </li>
-                    ))}
-                  </ol>
-                ) : (
-                  <p>{labels.noTableOfContents}</p>
-                )
-              }
-            </aside>
+            <div class="knowledge-asset__sidebar">
+              <DocumentationSidebar
+                currentPageHref={canonicalPath}
+                currentPageTitle={entry.data.title}
+                items={sidebarItems}
+                sectionHref={collectionConfig.routeBase}
+                sectionLabel={collectionConfig.indexTitle}
+                title={collectionConfig.indexTitle}
+              />
+              <TableOfContents headings={headings} title={labels.tableOfContents} />
+            </div>
 
             <div class="knowledge-asset__main">
               <div class="knowledge-content">

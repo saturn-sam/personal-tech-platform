@@ -11,6 +11,8 @@ import Grid from '@components/layout/grid.astro';
 import Section from '@components/layout/section.astro';
 import PageContainer from '@components/layout/page-container.astro';
 import Stack from '@components/layout/stack.astro';
+import PersonSchema from '@components/seo/person-schema.astro';
+import WebsiteSchema from '@components/seo/website-schema.astro';
 import { homepageConfig } from '@config/homepage';
 import AppLayout from '@layouts/app-layout.astro';
 import {
@@ -88,6 +90,8 @@ const recentEntries = sortByUpdatedDate([
   canonicalPath={seo.canonicalPath}
   mainClass="homepage"
 >
+  <WebsiteSchema />
+  <PersonSchema />
   <Section spacing="spacious">
     <PageContainer size="wide">
       <div class="homepage-hero">

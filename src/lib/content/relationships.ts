@@ -1,5 +1,15 @@
 import type { CollectionEntry } from 'astro:content';
 
+export interface AssetReferenceLike {
+  collection: string;
+  slug: string;
+}
+
+export interface ReferenceOwner {
+  collection: string;
+  slug: string;
+}
+
 export type RelatedKnowledgeCollection = 'articles' | 'lab-notes' | 'architecture-guides';
 
 export type RelatedKnowledgeEntry = {
@@ -7,7 +17,12 @@ export type RelatedKnowledgeEntry = {
 }[RelatedKnowledgeCollection];
 
 export type RoutableCollection =
-  RelatedKnowledgeCollection | 'projects' | 'technologies' | 'certifications' | 'resources';
+  | RelatedKnowledgeCollection
+  | 'projects'
+  | 'technologies'
+  | 'certifications'
+  | 'resources'
+  | 'learning-paths';
 
 export type RoutableEntry = {
   [CollectionName in RoutableCollection]: CollectionEntry<CollectionName>;
@@ -27,6 +42,7 @@ const routeBases = {
   technologies: '/technologies/',
   certifications: '/certifications/',
   resources: '/resources/',
+  'learning-paths': '/learning-paths/',
 } satisfies Record<RoutableCollection, string>;
 
 export const isRelatedKnowledgeCollection = (value: string): value is RelatedKnowledgeCollection =>
@@ -54,3 +70,56 @@ export const getReferenceKey = (collection: string, slug: string): string =>
 
 export const createTermSet = (values: readonly string[]): ReadonlySet<string> =>
   new Set(values.map(normalizeTerm));
+
+const warnedMissingReferences = new Set<string>();
+
+const warnMissingReference = (owner: ReferenceOwner, reference: AssetReferenceLike): void => {
+  const warningKey = `${getReferenceKey(owner.collection, owner.slug)}->${getReferenceKey(
+    reference.collection,
+    reference.slug,
+  )}`;
+
+  if (warnedMissingReferences.has(warningKey)) {
+    return;
+  }
+
+  warnedMissingReferences.add(warningKey);
+  console.warn(
+    `[content] Missing related asset reference "${reference.collection}/${reference.slug}" in "${owner.collection}/${owner.slug}". The reference will be omitted.`,
+  );
+};
+
+export const resolveRelatedEntries = <
+  ResolvedEntry,
+  Reference extends AssetReferenceLike = AssetReferenceLike,
+>(
+  owner: ReferenceOwner,
+  references: readonly Reference[],
+  lookup: ReadonlyMap<string, ResolvedEntry>,
+  options: {
+    filter?: (reference: Reference) => boolean;
+    getLookupKey?: (reference: Reference) => string;
+  } = {},
+): ResolvedEntry[] => {
+  const resolvedEntries: ResolvedEntry[] = [];
+
+  references.forEach((reference) => {
+    if (options.filter && !options.filter(reference)) {
+      return;
+    }
+
+    const lookupKey = options.getLookupKey
+      ? options.getLookupKey(reference)
+      : getReferenceKey(reference.collection, reference.slug);
+    const relatedEntry = lookup.get(lookupKey);
+
+    if (relatedEntry) {
+      resolvedEntries.push(relatedEntry);
+      return;
+    }
+
+    warnMissingReference(owner, reference);
+  });
+
+  return resolvedEntries;
+};

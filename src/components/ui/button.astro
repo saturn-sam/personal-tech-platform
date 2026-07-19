@@ -1,4 +1,6 @@
 ---
+import { getLinkPrefetchStrategy } from '@utils/prefetch';
+
 export interface Props {
   as?: 'button' | 'a';
   class?: string;
@@ -28,6 +30,7 @@ const {
 const isLink = as === 'a' || Boolean(href);
 const computedRel = rel ?? (target === '_blank' ? 'noreferrer' : undefined);
 const classes = ['ui-button', `ui-button--${variant}`, `ui-button--${size}`, className];
+const prefetchStrategy = getLinkPrefetchStrategy(disabled ? undefined : href, target);
 ---
 
 {
@@ -37,6 +40,7 @@ const classes = ['ui-button', `ui-button--${variant}`, `ui-button--${size}`, cla
       href={disabled ? undefined : href}
       target={target}
       rel={computedRel}
+      data-astro-prefetch={prefetchStrategy}
       aria-label={ariaLabel}
       aria-disabled={disabled ? 'true' : undefined}
       tabindex={disabled ? '-1' : undefined}

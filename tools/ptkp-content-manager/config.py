@@ -1,0 +1,6 @@
+from constants import CONTENT_DIR
+from constants import TEMPLATE_DIR
+
+CONTENT_ROOT = CONTENT_DIR
+
+TEMPLATES = TEMPLATE_DIR

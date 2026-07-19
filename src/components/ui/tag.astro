@@ -1,4 +1,6 @@
 ---
+import { getLinkPrefetchStrategy } from '@utils/prefetch';
+
 export interface Props {
   class?: string;
   href?: string;
@@ -6,11 +8,12 @@ export interface Props {
 
 const { class: className = '', href } = Astro.props as Props;
 const classes = ['ui-tag', className];
+const prefetchStrategy = getLinkPrefetchStrategy(href);
 ---
 
 {
   href ? (
-    <a class:list={classes} href={href}>
+    <a class:list={classes} href={href} data-astro-prefetch={prefetchStrategy}>
       <slot />
     </a>
   ) : (

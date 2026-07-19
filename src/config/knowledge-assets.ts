@@ -64,6 +64,19 @@ export const knowledgeAssetConfig = {
       emptyTitle: 'No published architecture guides',
       emptyDescription: 'Published architecture guides will appear here after technical review.',
     },
+    'learning-paths': {
+      badgeLabel: 'Learning Path',
+      indexTitle: 'Learning Paths',
+      indexDescription:
+        'Structured learning sequences that connect articles, architecture guidance, lab notes, and supporting resources into an ordered study path.',
+      routeBase: '/learning-paths/',
+      seoTitle: 'Learning Paths',
+      seoDescription:
+        'Learning paths that connect PTKP knowledge assets into guided study sequences for platform and infrastructure topics.',
+      emptyTitle: 'No published learning paths',
+      emptyDescription:
+        'Published learning paths will appear here after the first guided learning sequence is released.',
+    },
   },
 } as const;
 

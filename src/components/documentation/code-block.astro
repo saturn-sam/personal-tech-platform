@@ -6,6 +6,7 @@ export interface Props {
   class?: string;
   code?: string;
   fileName?: string;
+  highlightLines?: (number | [number, number])[];
   id?: string;
   language?: string;
   showCopy?: boolean;
@@ -16,6 +17,7 @@ const {
   class: className = '',
   code,
   fileName,
+  highlightLines = [],
   id,
   language,
   showCopy = true,
@@ -27,13 +29,43 @@ const hashValue = (value: string): string =>
     .toString(36);
 
 const codeId = id ?? `code-block-${hashValue(`${fileName ?? ''}:${language ?? ''}:${code ?? ''}`)}`;
+const metadataId = `${codeId}-metadata`;
+const captionId = caption ? `${codeId}-caption` : undefined;
+const hintId = `${codeId}-hint`;
+const describedBy = [captionId, hintId].filter(Boolean).join(' ') || undefined;
+const codeLabel = [fileName, language ? `${language} code example` : 'Code example']
+  .filter(Boolean)
+  .join(', ');
+
+const formatCodeWithHighlights = (): string => {
+  if (highlightLines.length === 0) {
+    return code ?? '';
+  }
+
+  const shouldHighlight = (lineNumber: number): boolean =>
+    highlightLines.some((line) =>
+      Array.isArray(line) ? lineNumber >= line[0] && lineNumber <= line[1] : lineNumber === line,
+    );
+
+  return (code ?? '')
+    .split('\n')
+    .map((line, index) => {
+      const lineNumber = index + 1;
+      const highlighted = shouldHighlight(lineNumber);
+      if (highlighted) {
+        return `<span class="code-line code-line--highlighted">${line}</span>`;
+      }
+      return `<span class="code-line">${line}</span>`;
+    })
+    .join('\n');
+};
 ---
 
 <figure class:list={['code-block', className]}>
   {
     (fileName || language || showCopy) && (
       <div class="code-block__header">
-        <span class="code-block__meta">
+        <span class="code-block__meta" id={metadataId}>
           {fileName && <span class="code-block__file">{fileName}</span>}
           {language && <span class="code-block__language">{language}</span>}
         </span>
@@ -41,9 +73,44 @@ const codeId = id ?? `code-block-${hashValue(`${fileName ?? ''}:${language ?? ''
       </div>
     )
   }
-  <pre
-    id={codeId}
-    class="code-block__pre"
-    tabindex="0"><code class:list={[language && `language-${language}`]}><slot>{code}</slot></code></pre>
-  {caption && <figcaption class="code-block__caption">{caption}</figcaption>}
+  <p class="sr-only" id={hintId}>Scrollable code example. Use arrow keys to review the code.</p>
+  {
+    highlightLines.length > 0 ? (
+      <pre
+        id={codeId}
+        class="code-block__pre"
+        tabindex="0"
+        role="region"
+        aria-label={codeLabel}
+        aria-labelledby={fileName || language ? metadataId : undefined}
+        aria-describedby={describedBy}
+      >
+        <code
+          class:list={[language && `language-${language}`]}
+          set:html={formatCodeWithHighlights()}
+        />
+      </pre>
+    ) : (
+      <pre
+        id={codeId}
+        class="code-block__pre"
+        tabindex="0"
+        role="region"
+        aria-label={codeLabel}
+        aria-labelledby={fileName || language ? metadataId : undefined}
+        aria-describedby={describedBy}
+      >
+        <code class:list={[language && `language-${language}`]}>
+          <slot>{code}</slot>
+        </code>
+      </pre>
+    )
+  }
+  {
+    caption && (
+      <figcaption class="code-block__caption" id={captionId}>
+        {caption}
+      </figcaption>
+    )
+  }
 </figure>

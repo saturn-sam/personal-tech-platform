@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Platform operations placeholder</title>
+  <desc id="desc">Placeholder artwork for platform operations content.</desc>
+  <rect width="1200" height="675" fill="#121b18" />
+  <rect x="100" y="104" width="1000" height="467" rx="30" fill="#1a2b26" stroke="#6bb8c0" stroke-width="2" />
+  <rect x="172" y="188" width="256" height="154" rx="18" fill="#203a33" />
+  <rect x="472" y="188" width="256" height="154" rx="18" fill="#203a33" />
+  <rect x="772" y="188" width="256" height="154" rx="18" fill="#203a33" />
+  <path d="M220 402h656" stroke="#9bd4d9" stroke-width="20" stroke-linecap="round" opacity="0.55" />
+  <path d="M940 404l38 40 64-86" fill="none" stroke="#6bb8c0" stroke-width="18" stroke-linecap="round" stroke-linejoin="round" />
+  <text x="172" y="510" font-family="Segoe UI, Arial, sans-serif" font-size="54" font-weight="700" fill="#edf3ef">Platform Operations</text>
+  <text x="172" y="560" font-family="Segoe UI, Arial, sans-serif" font-size="26" fill="#b2c0b8">Operational baselines, ownership, monitoring, and recovery patterns</text>
+</svg>

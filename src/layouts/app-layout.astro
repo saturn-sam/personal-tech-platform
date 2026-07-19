@@ -1,6 +1,9 @@
 ---
+import BackToTop from '@components/navigation/back-to-top.astro';
 import Footer from '@components/navigation/footer.astro';
 import Header from '@components/navigation/header.astro';
+import SearchPanel from '@components/search/search-panel.astro';
+import WebPageSchema from '@components/seo/webpage-schema.astro';
 import { siteConfig } from '@config/site';
 import '@styles/global.css';
 
@@ -8,9 +11,12 @@ interface Props {
   canonicalPath?: string;
   title?: string;
   description?: string;
+  keywords?: string[];
+  author?: string;
   mainClass?: string;
   ogImage?: string;
   ogType?: 'website' | 'article';
+  pageSchemaType?: 'AboutPage' | 'CollectionPage' | 'SearchResultsPage' | 'WebPage';
   robots?: 'index,follow' | 'noindex,follow' | 'noindex,nofollow';
 }
 
@@ -18,9 +24,12 @@ const {
   canonicalPath,
   title = siteConfig.fullName,
   description = siteConfig.description,
+  keywords = [],
+  author = siteConfig.author,
   mainClass = '',
   ogImage = siteConfig.openGraphImage,
   ogType = 'website',
+  pageSchemaType = 'WebPage',
   robots = 'index,follow',
 } = Astro.props;
 
@@ -33,7 +42,7 @@ const resolveUrl = (path: string): string => {
   return siteConfig.url ? new URL(path, siteConfig.url).toString() : path;
 };
 
-const canonicalUrl = canonicalPath ? resolveUrl(canonicalPath) : undefined;
+const canonicalUrl = canonicalPath ? resolveUrl(canonicalPath) : siteConfig.url;
 const openGraphImageUrl = resolveUrl(ogImage);
 
 const themeInitScript = `
@@ -73,10 +82,18 @@ const themeInitScript = `
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="robots" content={robots} />
+    <meta name="author" content={author} />
+    <meta name="language" content={siteConfig.language} />
+    {keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
     <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#1f6f78" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/site.webmanifest" />
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={siteConfig.fullName} />
+    <meta property="og:locale" content={siteConfig.locale} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={openGraphImageUrl} />
@@ -93,9 +110,50 @@ const themeInitScript = `
     <div class="site-shell">
       <Header />
       <main id="main-content" class:list={['site-main', mainClass]}>
+        <WebPageSchema
+          title={pageTitle}
+          description={description}
+          type={pageSchemaType}
+          url={canonicalUrl}
+        />
         <slot />
       </main>
+      <BackToTop />
       <Footer />
     </div>
+
+    <div class="search-dialog__backdrop" data-search-backdrop hidden></div>
+    <div
+      class="search-dialog"
+      data-search-dialog
+      id="site-search-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="site-search-dialog-title"
+      aria-describedby="site-search-dialog-description"
+      hidden
+    >
+      <div class="search-dialog__panel">
+        <div class="search-dialog__header">
+          <div>
+            <p class="search-page__eyebrow">Quick search</p>
+            <h2 id="site-search-dialog-title">Search the platform</h2>
+            <p id="site-search-dialog-description" class="sr-only">
+              Search results update as you type. Press Escape to close the dialog.
+            </p>
+          </div>
+          <button class="search-dialog__close" type="button" data-search-close>Close</button>
+        </div>
+        <SearchPanel
+          surface="dialog"
+          inputId="site-search-dialog-input"
+          defaultStatus="Use Ctrl+K or Cmd+K to open search anywhere."
+        />
+      </div>
+    </div>
+
+    <script>
+      import '../scripts/app-shell';
+    </script>
   </body>
 </html>

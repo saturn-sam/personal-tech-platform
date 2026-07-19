@@ -3,6 +3,7 @@ import Badge from '@components/ui/badge.astro';
 import Card from '@components/ui/card.astro';
 import Tag from '@components/ui/tag.astro';
 import EmptyState from '@components/feedback/empty-state.astro';
+import BreadcrumbSchema from '@components/seo/breadcrumb-schema.astro';
 import Grid from '@components/layout/grid.astro';
 import PageContainer from '@components/layout/page-container.astro';
 import Section from '@components/layout/section.astro';
@@ -38,6 +39,7 @@ const labels = knowledgeAssetConfig.labels;
   canonicalPath={collectionConfig.routeBase}
   mainClass="knowledge-index-page"
 >
+  <BreadcrumbSchema items={breadcrumbs} />
   <Section spacing="spacious" class="knowledge-index">
     <PageContainer size="wide">
       <Stack gap="lg">

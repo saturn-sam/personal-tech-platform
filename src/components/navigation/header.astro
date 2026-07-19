@@ -1,14 +1,16 @@
 ---
 import { siteConfig } from '@config/site';
 import ThemeToggle from '@components/utility/theme-toggle.astro';
+import { getLinkPrefetchStrategy } from '@utils/prefetch';
 import NavigationMenu from './navigation-menu.astro';
 
 const currentPath = Astro.url.pathname;
+const brandPrefetch = getLinkPrefetchStrategy('/');
 ---
 
 <header class="site-header">
   <div class="site-header__inner">
-    <a class="site-brand" href="/" aria-label={`${siteConfig.fullName} home`}>
+    <a class="site-brand" href="/" data-astro-prefetch={brandPrefetch}>
       <span class="site-brand__name">{siteConfig.name}</span>
       <span class="site-brand__description">{siteConfig.fullName}</span>
     </a>
@@ -18,17 +20,35 @@ const currentPath = Astro.url.pathname;
     </div>
 
     <div class="site-header__actions">
+      <button
+        class="site-header__search-trigger"
+        type="button"
+        data-search-open
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-controls="site-search-dialog"
+      >
+        Search
+      </button>
       <ThemeToggle />
-      <details class="site-header__mobile mobile-navigation">
-        <summary class="mobile-navigation__summary">Menu</summary>
-        <div class="mobile-navigation__panel">
+      <div class="site-header__mobile mobile-navigation">
+        <button
+          class="mobile-navigation__toggle"
+          type="button"
+          aria-label="Open navigation menu"
+          aria-expanded="false"
+          aria-controls="mobile-navigation-panel"
+        >
+          <span aria-hidden="true">Menu</span>
+        </button>
+        <div id="mobile-navigation-panel" class="mobile-navigation__panel" hidden>
           <NavigationMenu
             currentPath={currentPath}
             label="Mobile primary navigation"
             variant="mobile"
           />
         </div>
-      </details>
+      </div>
     </div>
   </div>
 </header>
