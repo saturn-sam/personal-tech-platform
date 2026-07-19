@@ -1,10 +1,27 @@
 # PTKP Content Manager
 
-## Install
+## Features
+
+- Create new content
+- Generate frontmatter automatically
+- Generate slug automatically
+- Generate filename automatically
+- Publish drafts
+- Update modified date
+- Validate metadata
+- Repository health report
+
+---
+
+## Installation
 
 ```bash
 python -m venv .venv
+```
 
+Linux/macOS
+
+```bash
 source .venv/bin/activate
 ```
 
@@ -28,10 +45,17 @@ pip install -r requirements.txt
 python content.py
 ```
 
-The tool will:
+The application provides an interactive terminal interface for managing PTKP content.
 
-- Ask for the content type
-- Collect metadata
-- Generate the slug
-- Create the MDX file
-- Save it in the correct content collection
+---
+
+## Supported Content
+
+- Articles
+- Lab Notes
+- Architecture Guides
+- Projects
+- Technologies
+- Certifications
+- Resources
+- Learning Paths

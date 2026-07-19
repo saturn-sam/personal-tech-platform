@@ -10,6 +10,8 @@ from updater import update_modified_date
 from utils import success, info
 from writer import create_content
 
+from doctor import repository_health
+
 console = Console()
 
 
@@ -69,6 +71,23 @@ def cmd_update():
     success("Updated modified date.")
 
 
+def cmd_doctor():
+    report = repository_health()
+
+    console.print()
+
+    console.print("[bold cyan]Repository Health[/bold cyan]\n")
+
+    console.print(f"Total Content        : {report['total']}")
+    console.print(f"Published            : {report['published']}")
+    console.print(f"Drafts               : {report['draft']}")
+    console.print(f"Featured             : {report['featured']}")
+    console.print(f"Missing Description  : {report['missing_description']}")
+    console.print(f"Missing Tags         : {report['missing_tags']}")
+
+    console.print()
+
+
 def main():
     banner()
 
@@ -78,6 +97,7 @@ def main():
             "New Content",
             "Publish Draft",
             "Update Modified Date",
+            "Repository Health",
         ],
     ).ask()
 
@@ -89,6 +109,8 @@ def main():
 
     elif action == "Update Modified Date":
         cmd_update()
+    elif action == "Repository Health":
+        cmd_doctor()
 
 
 if __name__ == "__main__":
