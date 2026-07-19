@@ -1,32 +1,20 @@
-from datetime import date
+from __future__ import annotations
+
 from pathlib import Path
 
+from utils import build_mdx_document, load_frontmatter_file, today_string, write_text
 
-def publish(file: Path):
-    """
-    Publish a draft.
-    """
 
-    today = date.today().isoformat()
+def publish(path: Path) -> None:
+    frontmatter, body = load_frontmatter_file(path)
+    today = today_string()
 
-    text = file.read_text(encoding="utf-8")
+    frontmatter["status"] = "published"
+    frontmatter["publishedDate"] = today
+    frontmatter["updatedDate"] = today
 
-    text = text.replace(
-        "draft: true",
-        "draft: false",
-        1,
-    )
+    seo = frontmatter.get("seo")
+    if isinstance(seo, dict):
+        seo["robots"] = "index,follow"
 
-    if "published: YYYY-MM-DD" in text:
-        text = text.replace(
-            "published: YYYY-MM-DD",
-            f"published: {today}",
-        )
-
-    if "updated: YYYY-MM-DD" in text:
-        text = text.replace(
-            "updated: YYYY-MM-DD",
-            f"updated: {today}",
-        )
-
-    file.write_text(text, encoding="utf-8")
+    write_text(path, build_mdx_document(frontmatter, body))

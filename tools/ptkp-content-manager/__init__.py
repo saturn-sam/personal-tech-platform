@@ -1,5 +1,3 @@
-"""
-PTKP Content Manager
+__all__ = ["__version__"]
 
-Utility for creating and maintaining PTKP content.
-"""
+__version__ = "1.0.0"
