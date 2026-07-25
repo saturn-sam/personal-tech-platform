@@ -163,7 +163,7 @@ const buildMetaContentSecurityPolicy = (inlineScriptHashes) =>
     "media-src 'self'",
     `script-src 'self' ${inlineScriptHashes.join(' ')}`.trim(),
     "script-src-attr 'none'",
-    "style-src 'self'",
+    "style-src 'self' 'unsafe-inline'",
     "worker-src 'self'",
   ].join('; ');
 

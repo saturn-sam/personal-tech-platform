@@ -186,6 +186,8 @@ The generated `_headers` file must include:
 
 The HTTP-delivered CSP should remain short and carry directives that must be enforced as response headers, including clickjacking protection. Page-specific inline script authorization should be emitted as build-time hashes in the generated HTML meta policy.
 
+Mermaid diagrams render client-side SVG with inline CSS, so the generated HTML CSP must allow inline styles even though inline scripts remain hash-restricted.
+
 This split is required because Cloudflare Pages enforces a 2000-character limit on individual `_headers` lines.
 
 ---
