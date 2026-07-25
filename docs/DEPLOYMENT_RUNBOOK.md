@@ -166,16 +166,16 @@ Verify:
 - Sitemap
 - robots.txt
 - Security headers
-- CSP
+- CSP header and HTML meta policy
 - Cache headers
 
 ---
 
 # Security Headers
 
-Production builds must emit a hardened `dist/_headers` file for Cloudflare Pages.
+Production builds must emit a hardened `dist/_headers` file for Cloudflare Pages and inject a page-specific CSP meta tag into every generated HTML document.
 
-The generated headers must include:
+The generated `_headers` file must include:
 
 - Content-Security-Policy
 - X-Content-Type-Options
@@ -184,7 +184,9 @@ The generated headers must include:
 - X-Frame-Options
 - Strict-Transport-Security
 
-The CSP should remain restrictive and permit inline scripts only through explicit build-time hashes where required for structured data or critical initialization.
+The HTTP-delivered CSP should remain short and carry directives that must be enforced as response headers, including clickjacking protection. Page-specific inline script authorization should be emitted as build-time hashes in the generated HTML meta policy.
+
+This split is required because Cloudflare Pages enforces a 2000-character limit on individual `_headers` lines.
 
 ---
 

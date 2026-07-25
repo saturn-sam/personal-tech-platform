@@ -7,6 +7,7 @@ import process from 'node:process';
 const DIST_DIR = resolve(process.cwd(), 'dist');
 const PUBLIC_HEADERS_PATH = resolve(process.cwd(), 'public', '_headers');
 const LOCAL_ORIGIN = 'https://ptkp.local';
+const CLOUDFLARE_HEADERS_LINE_LIMIT = 2000;
 const COMPRESSIBLE_EXTENSIONS = new Set([
   '.css',
   '.html',
@@ -19,6 +20,9 @@ const COMPRESSIBLE_EXTENSIONS = new Set([
   '.xml',
 ]);
 const INLINE_SCRIPT_PATTERN = /<script\b(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi;
+const CSP_META_TAG_PATTERN = /\s*<meta\b[^>]*http-equiv="Content-Security-Policy"[^>]*\/?>\s*/i;
+const CHARSET_META_TAG_PATTERN = /<meta\b[^>]*charset="[^"]+"[^>]*\/?>/i;
+const HEAD_OPEN_TAG_PATTERN = /<head\b[^>]*>/i;
 const ID_PATTERN = /\sid="([^"]+)"/gi;
 const CANONICAL_PATTERN = /<link\b[^>]*rel="canonical"[^>]*href="([^"]+)"/i;
 const LINK_PATTERN = /<a\b[^>]*href="([^"]+)"/gi;
@@ -73,22 +77,18 @@ const getHtmlRouteVariants = (filePath) => {
 
 const readTextFile = (path) => readFileSync(path, 'utf8');
 
-const getInlineScriptHashes = (htmlFiles) => {
+const getInlineScriptHashes = (html) => {
   const hashSet = new Set();
 
-  for (const htmlFile of htmlFiles) {
-    const html = readTextFile(resolve(DIST_DIR, htmlFile));
+  for (const match of html.matchAll(INLINE_SCRIPT_PATTERN)) {
+    const contents = match[1] ?? '';
 
-    for (const match of html.matchAll(INLINE_SCRIPT_PATTERN)) {
-      const contents = match[1]?.trim();
-
-      if (!contents) {
-        continue;
-      }
-
-      const hash = createHash('sha256').update(contents).digest('base64');
-      hashSet.add(`'sha256-${hash}'`);
+    if (!contents.trim()) {
+      continue;
     }
+
+    const hash = createHash('sha256').update(contents, 'utf8').digest('base64');
+    hashSet.add(`'sha256-${hash}'`);
   }
 
   return Array.from(hashSet).sort();
@@ -144,23 +144,27 @@ const getSiteOrigin = () => {
   return new URL(canonicalUrl, LOCAL_ORIGIN).origin;
 };
 
-const buildContentSecurityPolicy = (inlineScriptHashes) =>
+const buildHeaderContentSecurityPolicy = () =>
   [
-    "default-src 'self'",
     "base-uri 'self'",
-    "connect-src 'self'",
-    "font-src 'self'",
     "form-action 'self'",
     "frame-ancestors 'none'",
+    "object-src 'none'",
+    'upgrade-insecure-requests',
+  ].join('; ');
+
+const buildMetaContentSecurityPolicy = (inlineScriptHashes) =>
+  [
+    "default-src 'self'",
+    "connect-src 'self'",
+    "font-src 'self'",
     "img-src 'self' data:",
     "manifest-src 'self'",
     "media-src 'self'",
-    "object-src 'none'",
     `script-src 'self' ${inlineScriptHashes.join(' ')}`.trim(),
     "script-src-attr 'none'",
     "style-src 'self'",
     "worker-src 'self'",
-    'upgrade-insecure-requests',
   ].join('; ');
 
 const updateRootHeaders = (blocks, securityHeaders) => {
@@ -187,6 +191,42 @@ const renderHeadersFile = (blocks) =>
   `${blocks
     .map((block) => [block.pattern, ...block.headers.map((header) => `  ${header}`)].join('\n'))
     .join('\n\n')}\n`;
+
+const validateHeadersLineLengths = (headersFile) => {
+  const offendingLines = headersFile
+    .split(/\r?\n/)
+    .map((line, index) => ({
+      lineNumber: index + 1,
+      length: line.length,
+    }))
+    .filter(({ length }) => length > CLOUDFLARE_HEADERS_LINE_LIMIT);
+
+  if (offendingLines.length === 0) {
+    return;
+  }
+
+  fail(
+    [
+      `Generated dist/_headers contains lines longer than Cloudflare's ${CLOUDFLARE_HEADERS_LINE_LIMIT}-character limit.`,
+      ...offendingLines.map(({ lineNumber, length }) => `Line ${lineNumber}: ${length} characters`),
+    ].join('\n'),
+  );
+};
+
+const injectContentSecurityPolicyMeta = (html, contentSecurityPolicy) => {
+  const metaTag = `\n    <meta http-equiv="Content-Security-Policy" content="${contentSecurityPolicy}" />`;
+  const sanitizedHtml = html.replace(CSP_META_TAG_PATTERN, '\n');
+
+  if (CHARSET_META_TAG_PATTERN.test(sanitizedHtml)) {
+    return sanitizedHtml.replace(CHARSET_META_TAG_PATTERN, (match) => `${match}${metaTag}`);
+  }
+
+  if (HEAD_OPEN_TAG_PATTERN.test(sanitizedHtml)) {
+    return sanitizedHtml.replace(HEAD_OPEN_TAG_PATTERN, (match) => `${match}${metaTag}`);
+  }
+
+  fail('Expected every generated HTML document to contain a <head> element.');
+};
 
 const extractMatches = (pattern, html) =>
   Array.from(html.matchAll(pattern), (match) => match[1]).filter(Boolean);
@@ -487,14 +527,14 @@ const getCompressionSummary = (files) => {
 
 const formatBytes = (value) => `${(value / 1024).toFixed(1)} KiB`;
 
-const writeHeadersFile = (inlineScriptHashes) => {
+const writeHeadersFile = () => {
   if (!existsSync(PUBLIC_HEADERS_PATH)) {
     fail('Expected public/_headers to exist before production hardening.');
   }
 
   const blocks = parseHeadersFile(readTextFile(PUBLIC_HEADERS_PATH));
   const securityHeaders = [
-    `Content-Security-Policy: ${buildContentSecurityPolicy(inlineScriptHashes)}`,
+    `Content-Security-Policy: ${buildHeaderContentSecurityPolicy()}`,
     'Cross-Origin-Opener-Policy: same-origin',
     'Cross-Origin-Resource-Policy: same-origin',
     'Permissions-Policy: accelerometer=(), autoplay=(), camera=(), display-capture=(), fullscreen=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), publickey-credentials-get=(), usb=(), xr-spatial-tracking=()',
@@ -505,7 +545,34 @@ const writeHeadersFile = (inlineScriptHashes) => {
   ];
 
   updateRootHeaders(blocks, securityHeaders);
-  writeFileSync(resolve(DIST_DIR, '_headers'), renderHeadersFile(blocks), 'utf8');
+  const renderedHeaders = renderHeadersFile(blocks);
+  validateHeadersLineLengths(renderedHeaders);
+  writeFileSync(resolve(DIST_DIR, '_headers'), renderedHeaders, 'utf8');
+};
+
+const writeHtmlContentSecurityPolicies = (htmlFiles) => {
+  const inlineScriptHashCount = new Set();
+  let maxPolicyLength = 0;
+
+  for (const filePath of htmlFiles) {
+    const htmlPath = resolve(DIST_DIR, filePath);
+    const html = readTextFile(htmlPath);
+    const inlineScriptHashes = getInlineScriptHashes(html);
+
+    for (const hash of inlineScriptHashes) {
+      inlineScriptHashCount.add(hash);
+    }
+
+    const contentSecurityPolicy = buildMetaContentSecurityPolicy(inlineScriptHashes);
+    maxPolicyLength = Math.max(maxPolicyLength, contentSecurityPolicy.length);
+
+    writeFileSync(htmlPath, injectContentSecurityPolicyMeta(html, contentSecurityPolicy), 'utf8');
+  }
+
+  return {
+    maxPolicyLength,
+    uniqueInlineScriptHashes: inlineScriptHashCount.size,
+  };
 };
 
 const main = () => {
@@ -520,13 +587,8 @@ const main = () => {
     fail('No HTML files were found in dist/.');
   }
 
-  const inlineScriptHashes = getInlineScriptHashes(htmlFiles);
-
-  if (inlineScriptHashes.length === 0) {
-    fail('No inline scripts were found to authorize in the generated CSP.');
-  }
-
-  writeHeadersFile(inlineScriptHashes);
+  const cspSummary = writeHtmlContentSecurityPolicies(htmlFiles);
+  writeHeadersFile();
 
   const { idsByRoute, routeSet } = buildHtmlAnalysis(htmlFiles);
   const assetSet = buildAssetSet(files);
@@ -557,7 +619,8 @@ const main = () => {
   console.log(
     [
       '[production-hardening] Hardened Cloudflare headers generated.',
-      `[production-hardening] Inline CSP hashes: ${inlineScriptHashes.length}.`,
+      `[production-hardening] HTML CSP meta tags generated for ${htmlFiles.length} pages (max policy length ${cspSummary.maxPolicyLength} characters).`,
+      `[production-hardening] Inline CSP hashes: ${cspSummary.uniqueInlineScriptHashes}.`,
       `[production-hardening] Validated ${htmlFiles.length} HTML pages, ${routeSet.size} routable paths, and ${assetSet.size} static assets.`,
       `[production-hardening] Compression summary: raw ${formatBytes(compressionSummary.rawBytes)}, gzip ${formatBytes(compressionSummary.gzipBytes)}, brotli ${formatBytes(compressionSummary.brotliBytes)} across ${compressionSummary.files} text assets.`,
     ].join('\n'),

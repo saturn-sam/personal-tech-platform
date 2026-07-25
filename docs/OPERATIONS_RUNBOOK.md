@@ -117,7 +117,7 @@ npm run preview
 
 Resolve all issues before deployment.
 
-`npm run build` must also verify the generated static output, including internal links, manifest assets, sitemap references, and the hardened Cloudflare `_headers` file.
+`npm run build` must also verify the generated static output, including internal links, manifest assets, sitemap references, the hardened Cloudflare `_headers` file, and the generated HTML CSP meta tags.
 
 ---
 
