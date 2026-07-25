@@ -3,8 +3,10 @@ import { glob } from 'astro/loaders';
 import type { BaseSchema } from 'astro/content/config';
 
 import {
+  aboutSchema,
   architectureGuideSchema,
   articleSchema,
+  caseStudySchema,
   certificationSchema,
   labNoteSchema,
   learningPathSchema,
@@ -25,9 +27,11 @@ const createContentCollection = <Schema extends BaseSchema>(directory: string, s
   });
 
 export const collections = {
+  about: createContentCollection('about', aboutSchema),
   articles: createContentCollection('articles', articleSchema),
   'lab-notes': createContentCollection('lab-notes', labNoteSchema),
   'architecture-guides': createContentCollection('architecture-guides', architectureGuideSchema),
+  'case-studies': createContentCollection('case-studies', caseStudySchema),
   projects: createContentCollection('projects', projectSchema),
   technologies: createContentCollection('technologies', technologySchema),
   certifications: createContentCollection('certifications', certificationSchema),

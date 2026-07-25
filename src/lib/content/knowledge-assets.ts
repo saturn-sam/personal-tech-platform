@@ -3,7 +3,7 @@ import type { CollectionEntry } from 'astro:content';
 
 import { knowledgeAssetConfig, type KnowledgeAssetCollectionName } from '@config/knowledge-assets';
 
-import { getReferenceKey, resolveRelatedEntries } from './relationships';
+import { getReferenceKey, resolveRelatedEntries, type RoutableEntry } from './relationships';
 import {
   getPublishedCollectionEntries,
   getPublishedKnowledgeAssets,
@@ -25,7 +25,7 @@ export interface KnowledgeAssetStaticPathProps<
   readonly entry: KnowledgeAssetEntryForCollection<CollectionName>;
   readonly nextEntry?: KnowledgeAssetEntryForCollection<CollectionName>;
   readonly previousEntry?: KnowledgeAssetEntryForCollection<CollectionName>;
-  readonly relatedAssetCount: number;
+  readonly relatedEntries: readonly RoutableEntry[];
 }
 
 export const knowledgeAssetCollectionNames = Object.keys(
@@ -121,10 +121,10 @@ export const getKnowledgeAssetStaticPaths = async <
     getPublishedKnowledgeAssetEntries(collection),
     getPublishedKnowledgeAssets(),
   ]);
-  const relatedAssetLookup = new Map(
+  const relatedAssetLookup = new Map<string, RoutableEntry>(
     publishedAssets.map((publishedEntry) => [
       getReferenceKey(publishedEntry.collection, publishedEntry.data.slug),
-      publishedEntry,
+      publishedEntry as RoutableEntry,
     ]),
   );
 
@@ -136,14 +136,14 @@ export const getKnowledgeAssetStaticPaths = async <
       entry,
       nextEntry: entries[index + 1],
       previousEntry: entries[index - 1],
-      relatedAssetCount: resolveRelatedEntries(
+      relatedEntries: resolveRelatedEntries(
         {
           collection: entry.collection,
           slug: entry.data.slug,
         },
         entry.data.relatedAssets,
         relatedAssetLookup,
-      ).length,
+      ),
     } satisfies KnowledgeAssetStaticPathProps<CollectionName>,
   }));
 };

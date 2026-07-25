@@ -1,0 +1,83 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 5 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 891 >>
+stream
+BT
+/F1 24 Tf
+72 742 Td
+(
+Md. Samrat Uz Zaman
+) Tj
+0 -28 Td
+/F1 13 Tf
+(
+Infrastructure Engineer, Kubernetes Architect, and Technical Knowledge Author
+) Tj
+0 -34 Td
+/F1 12 Tf
+(
+Focused on secure, resilient, and automated enterprise platforms across
+) Tj
+0 -18 Td
+(
+virtualization, Kubernetes, cloud, and infrastructure operations.
+) Tj
+0 -32 Td
+/F1 14 Tf
+(
+Core Focus Areas
+) Tj
+0 -22 Td
+/F1 12 Tf
+(
+- Kubernetes and OpenShift platform engineering
+) Tj
+0 -18 Td
+(
+- GitOps, CI/CD, and repeatable delivery workflows
+) Tj
+0 -18 Td
+(
+- Observability, resilience, and infrastructure operations
+) Tj
+0 -18 Td
+(
+- Architecture guidance, technical writing, and knowledge systems
+) Tj
+0 -34 Td
+/F1 14 Tf
+(
+Resume Note
+) Tj
+0 -22 Td
+/F1 12 Tf
+(
+This downloadable version is generated from the PTKP repository.
+) Tj
+0 -18 Td
+(
+Replace this file with the latest finalized resume PDF when needed.
+) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n `n0000000058 00000 n `n0000000115 00000 n `n0000000241 00000 n `n0000001165 00000 n `n0000001182 00000 n `ntrailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+1252
+%%EOF

@@ -182,67 +182,71 @@ const structuredData: Record<string, unknown> = {
           </div>
 
           <footer class="resource-detail__footer">
-            <div class="resource-related-grid">
-              <Card as="section" class="resource-related">
-                <h2>{labels.relatedArticles}</h2>
-                {
-                  relatedArticleEntries.length > 0 ? (
-                    <ul class="resource-related-list">
-                      {relatedArticleEntries.map((articleEntry) => (
-                        <li>
-                          <a href={getResourceEntryUrl(articleEntry)}>
-                            <span>Article</span>
-                            <strong>{articleEntry.data.title}</strong>
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>{labels.relatedArticlesEmpty}</p>
-                  )
-                }
-              </Card>
+            <Card as="section" class="content-related-card resource-related">
+              <h2>{labels.relatedContent}</h2>
 
-              <Card as="section" class="resource-related">
-                <h2>{labels.relatedProjects}</h2>
-                {
-                  relatedProjectEntries.length > 0 ? (
-                    <ul class="resource-related-list">
-                      {relatedProjectEntries.map((projectEntry) => (
-                        <li>
-                          <a href={getResourceEntryUrl(projectEntry)}>
-                            <span>{projectEntry.data.projectStatus}</span>
-                            <strong>{projectEntry.data.title}</strong>
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>{labels.relatedProjectsEmpty}</p>
-                  )
-                }
-              </Card>
+              <div class="content-related-groups">
+                <section class="content-related-group">
+                  <h3>{labels.relatedArticles}</h3>
+                  {
+                    relatedArticleEntries.length > 0 ? (
+                      <ul class="resource-related-list">
+                        {relatedArticleEntries.map((articleEntry) => (
+                          <li>
+                            <a href={getResourceEntryUrl(articleEntry)}>
+                              <span>Article</span>
+                              <strong>{articleEntry.data.title}</strong>
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>{labels.relatedArticlesEmpty}</p>
+                    )
+                  }
+                </section>
 
-              <Card as="section" class="resource-related">
-                <h2>{labels.relatedLearningPaths}</h2>
-                {
-                  relatedLearningPathEntries.length > 0 ? (
-                    <ul class="resource-related-list">
-                      {relatedLearningPathEntries.map((learningPathEntry) => (
-                        <li>
-                          <article class="resource-learning-path">
-                            <span>Learning Path</span>
-                            <strong>{learningPathEntry.data.title}</strong>
-                          </article>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>{labels.relatedLearningPathsEmpty}</p>
-                  )
-                }
-              </Card>
-            </div>
+                <section class="content-related-group">
+                  <h3>{labels.relatedProjects}</h3>
+                  {
+                    relatedProjectEntries.length > 0 ? (
+                      <ul class="resource-related-list">
+                        {relatedProjectEntries.map((projectEntry) => (
+                          <li>
+                            <a href={getResourceEntryUrl(projectEntry)}>
+                              <span>{projectEntry.data.projectStatus}</span>
+                              <strong>{projectEntry.data.title}</strong>
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>{labels.relatedProjectsEmpty}</p>
+                    )
+                  }
+                </section>
+
+                <section class="content-related-group">
+                  <h3>{labels.relatedLearningPaths}</h3>
+                  {
+                    relatedLearningPathEntries.length > 0 ? (
+                      <ul class="resource-related-list">
+                        {relatedLearningPathEntries.map((learningPathEntry) => (
+                          <li>
+                            <article class="resource-learning-path">
+                              <span>Learning Path</span>
+                              <strong>{learningPathEntry.data.title}</strong>
+                            </article>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>{labels.relatedLearningPathsEmpty}</p>
+                    )
+                  }
+                </section>
+              </div>
+            </Card>
 
             <Card as="section" class="resource-external">
               <h2>{labels.externalReferences}</h2>

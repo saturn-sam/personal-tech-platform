@@ -26,16 +26,17 @@ import {
   type KnowledgeAssetCollectionName,
   type KnowledgeAssetEntry,
 } from '@lib/content/knowledge-assets';
+import { formatAssetType, getEntryUrl, type RoutableEntry } from '@lib/content/relationships';
 
 interface Props {
   entry: KnowledgeAssetEntry;
   headings: readonly MarkdownHeading[];
   nextEntry?: KnowledgeAssetEntry;
   previousEntry?: KnowledgeAssetEntry;
-  relatedAssetCount: number;
+  relatedEntries: readonly RoutableEntry[];
 }
 
-const { entry, headings, nextEntry, previousEntry, relatedAssetCount } = Astro.props as Props;
+const { entry, headings, nextEntry, previousEntry, relatedEntries } = Astro.props as Props;
 const collection = entry.collection as KnowledgeAssetCollectionName;
 const collectionConfig = getKnowledgeAssetCollectionConfig(collection);
 const labels = knowledgeAssetConfig.labels;
@@ -96,8 +97,7 @@ const getEntryHref = (targetEntry: KnowledgeAssetEntry): string =>
     targetEntry.data.slug,
   );
 
-const relatedText =
-  relatedAssetCount > 0 ? `${relatedAssetCount} ${labels.relatedWithCount}` : labels.relatedEmpty;
+const getRelatedEntryHref = (targetEntry: RoutableEntry): string => getEntryUrl(targetEntry);
 
 const sidebarItems = (await getPublishedKnowledgeAssetEntries(collection)).map((item) => ({
   href: getEntryHref(item),
@@ -233,11 +233,25 @@ const structuredData: Record<string, unknown> = {
                 <div class="knowledge-footer-grid">
                   <Card as="section" class="knowledge-related">
                     <h2 id="knowledge-related-title">{labels.relatedContent}</h2>
-                    <p>{relatedText}</p>
+                    {
+                      relatedEntries.length > 0 ? (
+                        <ul class="knowledge-related-list">
+                          {relatedEntries.map((relatedEntry) => (
+                            <li>
+                              <a href={getRelatedEntryHref(relatedEntry)}>
+                                <span>{formatAssetType(relatedEntry.data.assetType)}</span>
+                                <strong>{relatedEntry.data.title}</strong>
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p>{labels.relatedEmpty}</p>
+                      )
+                    }
                   </Card>
 
-                  <Card as="section" class="knowledge-edit-metadata">
-                    <h2 id="knowledge-edit-metadata-title">{labels.editMetadata}</h2>
+                  <Card as="section" class="knowledge-edit-metadata" aria-label="Metadata">
                     <dl>
                       {
                         editorialMetadata.map((item) => (

@@ -11,7 +11,8 @@ import { resolveRelatedEntries } from './relationships';
 
 export type ProjectEntry = CollectionEntry<'projects'>;
 
-export type ProjectRelatedKnowledgeCollection = 'articles' | 'lab-notes' | 'architecture-guides';
+export type ProjectRelatedKnowledgeCollection =
+  'articles' | 'lab-notes' | 'architecture-guides' | 'case-studies';
 
 export type ProjectRelatedKnowledgeEntry = {
   [CollectionName in ProjectRelatedKnowledgeCollection]: CollectionEntry<CollectionName>;
@@ -39,12 +40,14 @@ export const projectRelatedKnowledgeCollections = [
   'articles',
   'lab-notes',
   'architecture-guides',
+  'case-studies',
 ] as const;
 
 const relatedKnowledgeRoutes = {
   articles: '/articles/',
   'lab-notes': '/lab-notes/',
   'architecture-guides': '/architecture/',
+  'case-studies': '/case-studies/',
 } satisfies Record<ProjectRelatedKnowledgeCollection, string>;
 
 export const isProjectRelatedKnowledgeCollection = (

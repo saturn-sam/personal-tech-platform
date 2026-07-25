@@ -45,6 +45,44 @@ class WriterTests(unittest.TestCase):
         self.assertEqual(generated.frontmatter["slug"], "writer-test-article")
         self.assertIn("## Context", generated.body)
 
+    def test_case_study_generation_matches_discovered_schema(self) -> None:
+        paths = discover_paths()
+        repository = inspect_repository(paths)
+        collection = repository.collections["case-studies"]
+        generated = build_generated_content(
+            paths,
+            repository,
+            ContentAnswers(
+                collection=collection,
+                values={
+                    "today": "2026-07-19",
+                    "title": "Writer Test Case Study",
+                    "description": "Validation case study for the PTKP content manager writer.",
+                    "summary": "Validation case study for the PTKP content manager writer.",
+                    "difficulty": "advanced",
+                    "tags": ["Validation"],
+                    "technologies": ["Kubernetes"],
+                    "categories": ["Containers"],
+                    "featured": False,
+                    "draft": True,
+                    "relatedAssets": [],
+                    "context": "Shared release workflows needed a documented decision trail.",
+                    "requirements": ["Keep release review repeatable."],
+                    "constraints": ["Approval steps could not be removed."],
+                    "alternativesConsidered": ["Manual release review in chat."],
+                    "decision": "Standardize the workflow in version-controlled documentation.",
+                    "implementationSummary": "Captured the decision as a reusable operating pattern.",
+                    "outcome": "Release reviews became easier to audit.",
+                    "lessonsLearned": ["Decision records are useful only when they stay current."],
+                    "futureImprovements": ["Link future revisions to deployment evidence."],
+                },
+            ),
+        )
+
+        self.assertEqual(generated.frontmatter["assetType"], "case-study")
+        self.assertEqual(generated.frontmatter["slug"], "writer-test-case-study")
+        self.assertIn("## Alternatives Considered", generated.body)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,36 @@
+---
+import Card from '@components/ui/card.astro';
+import type { AboutData } from '@lib/content/about';
+
+import AboutSectionHeader from './about-section-header.astro';
+
+interface Props {
+  id: string;
+  section: AboutData['careerTimeline'];
+}
+
+const { id, section } = Astro.props as Props;
+---
+
+<section class="about-section about-timeline" aria-labelledby={id}>
+  <AboutSectionHeader id={id} title={section.title} intro={section.intro} />
+
+  <ol class="about-timeline__list">
+    {
+      section.entries.map((entry) => (
+        <li class="about-timeline__item">
+          <div class="about-timeline__period">{entry.period}</div>
+          <Card as="article" class="about-timeline__card">
+            <h3>{entry.role}</h3>
+            <p class="about-timeline__organization">{entry.organization}</p>
+            <ul class="about-timeline__highlights">
+              {entry.highlights.map((highlight) => (
+                <li>{highlight}</li>
+              ))}
+            </ul>
+          </Card>
+        </li>
+      ))
+    }
+  </ol>
+</section>

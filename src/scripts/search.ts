@@ -462,7 +462,7 @@ const getResultSummary = (
   if (!query.trim()) {
     return count > 0
       ? `Showing ${count} featured result${count === 1 ? '' : 's'} across the platform.`
-      : 'Search across articles, lab notes, architecture guides, projects, technologies, certifications, resources, and learning paths.';
+      : 'Search across articles, lab notes, architecture guides, case studies, projects, technologies, certifications, resources, and learning paths.';
   }
 
   const scope = [collectionLabel, category].filter(Boolean).join(' / ');

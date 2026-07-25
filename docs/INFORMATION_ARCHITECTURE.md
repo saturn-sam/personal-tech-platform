@@ -67,6 +67,7 @@ It contains:
 
 - Articles
 - Lab Notes
+- Case Studies
 - Tutorials
 - Learning Paths
 
@@ -119,6 +120,7 @@ Each project should contain:
 - Related Knowledge
 
 Projects should reference Articles, Lab Notes, Architecture, Technologies, and Certifications wherever applicable.
+Case Studies should be linked when a project includes important decision trade-offs or implementation outcomes worth preserving separately.
 
 ---
 
@@ -187,13 +189,18 @@ Contains:
 - Biography
 - Professional Timeline
 - Current Focus Areas
+- Technical Expertise
+- Certifications
+- Featured Projects
+- Learning Journey
+- Philosophy
 - Speaking (future)
 - Contact
 - Resume
 
-This section is intentionally concise.
+This section should remain closely connected to the author's real engineering work.
 
-The platform should emphasize knowledge over biography.
+The page may be long-form, but it should still reinforce the platform's documentation-first identity rather than becoming a detached personal profile.
 
 ---
 
@@ -252,6 +259,8 @@ Examples:
 
 /architecture/vks-network-design/
 
+/case-studies/shared-platform-governance/
+
 /technologies/kubernetes/
 
 /certifications/aws-solutions-architect/
@@ -270,6 +279,7 @@ Searchable content includes:
 
 - Articles
 - Lab Notes
+- Case Studies
 - Tutorials
 - Projects
 - Architecture

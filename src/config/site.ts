@@ -12,7 +12,7 @@ const normalizeSiteUrl = (value: string | undefined): string | undefined => {
   return normalized.endsWith('/') ? normalized.slice(0, -1) : normalized;
 };
 
-const defaultSiteUrl = 'https://personal-tech-platform.pages.dev';
+const defaultSiteUrl = 'https://samrat.pages.dev';
 const resolvedSiteUrl =
   normalizeSiteUrl(process.env.PUBLIC_SITE_URL) ??
   normalizeSiteUrl(process.env.SITE_URL) ??
@@ -34,11 +34,15 @@ export const siteConfig = {
     { label: 'RSS', href: '/rss.xml' },
   ],
   footer: {
-    description: 'Documentation-first engineering knowledge, organized for long-term reference.',
+    title: 'Lifetime student.',
+    description: 'Always learning. Always building. Always sharing.',
     copyrightLabel: 'Copyright',
     navigationLabel: 'Footer navigation',
-    builtWithLabel: 'Built with Astro.',
-    designedForLabel: 'Designed for engineers.',
+    statements: [
+      'Every deployment teaches a lesson.',
+      'Every problem has a solution.',
+      'Every solution deserves documentation.',
+    ],
     sections: [
       {
         title: 'Platform',

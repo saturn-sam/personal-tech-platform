@@ -73,6 +73,7 @@ const contentTypeLabels: Record<string, string> = {
   article: 'Article',
   'lab-note': 'Lab Note',
   'architecture-guide': 'Architecture Guide',
+  'case-study': 'Case Study',
   project: 'Project',
   technology: 'Technology',
   certification: 'Certification',

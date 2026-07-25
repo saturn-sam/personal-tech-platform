@@ -1,35 +1,17 @@
 ---
-import { siteConfig } from '@config/site';
 import ThemeToggle from '@components/utility/theme-toggle.astro';
-import { getLinkPrefetchStrategy } from '@utils/prefetch';
 import NavigationMenu from './navigation-menu.astro';
 
 const currentPath = Astro.url.pathname;
-const brandPrefetch = getLinkPrefetchStrategy('/');
 ---
 
 <header class="site-header">
   <div class="site-header__inner">
-    <a class="site-brand" href="/" data-astro-prefetch={brandPrefetch}>
-      <span class="site-brand__name">{siteConfig.name}</span>
-      <span class="site-brand__description">{siteConfig.fullName}</span>
-    </a>
-
     <div class="site-header__desktop">
       <NavigationMenu currentPath={currentPath} />
     </div>
 
     <div class="site-header__actions">
-      <button
-        class="site-header__search-trigger"
-        type="button"
-        data-search-open
-        aria-haspopup="dialog"
-        aria-expanded="false"
-        aria-controls="site-search-dialog"
-      >
-        Search
-      </button>
       <ThemeToggle />
       <div class="site-header__mobile mobile-navigation">
         <button

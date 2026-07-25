@@ -17,13 +17,14 @@ const escapeXml = (value: string): string =>
 const resolveUrl = (path: string): string => new URL(path, siteConfig.url).toString();
 
 export const GET: APIRoute = async () => {
-  const [articles, labNotes, architectureGuides] = await Promise.all([
+  const [articles, labNotes, architectureGuides, caseStudies] = await Promise.all([
     getPublishedCollectionEntries('articles'),
     getPublishedCollectionEntries('lab-notes'),
     getPublishedCollectionEntries('architecture-guides'),
+    getPublishedCollectionEntries('case-studies'),
   ]);
 
-  const items = [...articles, ...labNotes, ...architectureGuides]
+  const items = [...articles, ...labNotes, ...architectureGuides, ...caseStudies]
     .sort((first, second) => second.data.updatedDate.getTime() - first.data.updatedDate.getTime())
     .slice(0, 20);
 

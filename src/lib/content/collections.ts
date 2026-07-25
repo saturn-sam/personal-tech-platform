@@ -2,6 +2,7 @@ export const contentCollectionNames = [
   'articles',
   'lab-notes',
   'architecture-guides',
+  'case-studies',
   'projects',
   'technologies',
   'certifications',
@@ -16,6 +17,7 @@ export interface ContentCollectionDefinition {
     | 'article'
     | 'lab-note'
     | 'architecture-guide'
+    | 'case-study'
     | 'project'
     | 'technology'
     | 'certification'
@@ -36,6 +38,10 @@ export const contentCollections = {
   'architecture-guides': {
     assetType: 'architecture-guide',
     label: 'Architecture Guides',
+  },
+  'case-studies': {
+    assetType: 'case-study',
+    label: 'Case Studies',
   },
   projects: {
     assetType: 'project',

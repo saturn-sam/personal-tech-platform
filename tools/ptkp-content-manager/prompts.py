@@ -82,6 +82,24 @@ def collect_collection_specific_metadata(
         values["includeDiagram"] = ask_confirm("Include a Mermaid diagram block?", default=True)
         return
 
+    if asset_type == "case-study":
+        values["context"] = ask_text("Context:")
+        values["requirements"] = ask_csv("Requirements (comma separated):", required=True)
+        values["constraints"] = ask_csv("Constraints (comma separated):", required=True)
+        values["alternativesConsidered"] = ask_csv(
+            "Alternatives considered (comma separated):",
+            required=True,
+        )
+        values["decision"] = ask_text("Decision:")
+        values["implementationSummary"] = ask_text("Implementation summary:")
+        values["outcome"] = ask_text("Outcome:")
+        values["lessonsLearned"] = ask_csv("Lessons learned (comma separated):", required=True)
+        values["futureImprovements"] = ask_csv(
+            "Future improvements (comma separated, optional):",
+            required=False,
+        )
+        return
+
     if asset_type == "project":
         values["projectStatus"] = ask_select(
             "Project status:",

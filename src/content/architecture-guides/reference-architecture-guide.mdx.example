@@ -1,0 +1,78 @@
+---
+assetType: architecture-guide
+title: Example Architecture Guide
+slug: example-architecture-guide
+description: Production-focused architecture guide for a complete platform design.
+summary: A long-form guide covering business context, requirements, assumptions, architecture, and operations.
+author: Md. Samrat Uz Zaman
+publishedDate: '2026-07-25'
+updatedDate: '2026-07-25'
+reviewedDate: '2026-07-25'
+revision: '1.0'
+status: draft
+tags:
+  - Architecture
+  - Kubernetes
+  - Platform Engineering
+technologies:
+  - Kubernetes
+  - OpenShift
+categories:
+  - Architecture
+  - Containers
+difficulty: advanced
+readingTime:
+  minutes: 15
+  text: 15 min read
+businessContext: Shared application platform for multiple engineering teams.
+requirements:
+  - Isolate control plane responsibilities from tenant workloads.
+  - Support repeatable recovery workflows.
+assumptions:
+  - Identity integration is already available.
+  - Backup tooling is already approved.
+diagram:
+  language: mermaid
+  title: Example platform architecture
+relatedAssets:
+  - collection: projects
+    slug: enterprise-kubernetes-platform
+  - collection: technologies
+    slug: openshift
+featuredImage:
+  src: /assets/placeholders/architecture-guide.svg
+  alt: Example architecture guide illustration
+seo:
+  title: Example Architecture Guide
+  description: Production-focused architecture guide for a complete platform design.
+  canonicalPath: /architecture/example-architecture-guide/
+  robots: noindex,follow
+featured: false
+---
+
+## Introduction
+
+Explain the architecture scope and why it matters.
+
+## Architecture
+
+```mermaid
+flowchart LR
+  Users[Application Teams] --> Git[Git]
+  Git --> Pipeline[CI/CD Pipeline]
+  Pipeline --> Cluster[Kubernetes Platform]
+  Cluster --> Observability[Observability Stack]
+```
+
+## Components
+
+Describe the major technical layers and responsibilities.
+
+## Security
+
+Describe access boundaries and secrets handling.
+
+## Operations
+
+Document operational ownership and recurring checks.
+```

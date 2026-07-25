@@ -12,6 +12,7 @@ const staticRoutes = [
   { path: '/articles/', priority: '0.9' },
   { path: '/lab-notes/', priority: '0.85' },
   { path: '/architecture/', priority: '0.9' },
+  { path: '/case-studies/', priority: '0.85' },
   { path: '/projects/', priority: '0.9' },
   { path: '/technologies/', priority: '0.9' },
   { path: '/certifications/', priority: '0.8' },

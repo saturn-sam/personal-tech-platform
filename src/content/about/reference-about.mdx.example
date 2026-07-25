@@ -1,0 +1,187 @@
+---
+# Copy this file to about.mdx only when you want to replace the current About page content.
+title: About
+seo:
+  title: About Your Name
+  description: Biography, technical focus, featured work, and contact information.
+  canonicalPath: /about/
+  robots: index,follow
+
+hero:
+  eyebrow: About Me
+  fullName: Your Full Name
+  professionalTitle: Infrastructure Engineer, Kubernetes Architect, and Technical Knowledge Author
+  introduction: Focused on secure, resilient, and automated enterprise platforms across virtualization, Kubernetes, cloud, and infrastructure operations.
+  photo:
+    src: /assets/placeholders/about-profile.svg
+    alt: Professional portrait placeholder
+  currentRole:
+    label: Current Position
+    value: Infrastructure Engineer
+  currentOrganization:
+    label: Current Organization
+    value: Example Organization
+    href: https://example.com/
+  location:
+    label: Location
+    value: Bangladesh
+  additionalDetails:
+    - label: Core Focus
+      value: Platform engineering, observability, and knowledge systems
+
+sections:
+  - id: hero
+  - id: professional-summary
+  - id: personal-story
+  - id: career-timeline
+  - id: technical-expertise
+  - id: certifications
+  - id: projects
+  - id: learning-journey
+  - id: achievements
+  - id: philosophy
+  - id: personal-interests
+  - id: technology-stack
+  - id: current-focus
+  - id: contact
+  - id: call-to-action
+
+professionalSummary:
+  title: Professional Summary
+  intro: A documentation-first engineering practice shaped by platform operations and maintainability.
+  paragraphs:
+    - Replace this with your long-form professional summary.
+    - Explain your strengths, responsibilities, and technical interests.
+
+personalStory:
+  title: Personal Story
+  intro: Describe how your interest in technology became practical engineering work.
+  paragraphs:
+    - Replace this with your background and progression.
+    - Support multiple paragraphs.
+
+careerTimeline:
+  title: Career Timeline
+  intro: Key milestones in chronological order.
+  entries:
+    - period: 2020
+      role: Example Role
+      organization: Example Organization
+      highlights:
+        - Example milestone one.
+        - Example milestone two.
+
+technicalExpertise:
+  title: Technical Expertise
+  intro: Grouped links to real technology pages.
+  groups:
+    - title: Infrastructure and Virtualization
+      technologies:
+        - vmware-vsphere
+        - vmware-cloud-foundation
+    - title: Containers and Platform Engineering
+      technologies:
+        - kubernetes
+        - openshift
+
+certifications:
+  title: Certifications
+  intro: Reuse certification collection entries here.
+  limit: 3
+  mode: all
+  slugs: []
+  viewAll:
+    label: View all certifications
+    href: /certifications/
+    variant: secondary
+
+projects:
+  title: Featured Projects
+  intro: Reuse selected project entries here.
+  limit: 2
+  slugs:
+    - enterprise-kubernetes-platform
+    - vmware-cloud-foundation-datacenter
+  viewAll:
+    label: View all projects
+    href: /projects/
+    variant: secondary
+
+learningJourney:
+  title: Learning Journey
+  intro: Explain how you keep learning and publishing knowledge.
+  paragraphs:
+    - Replace with your learning process.
+
+achievements:
+  title: Achievements
+  intro: Credentials, platform work, and meaningful milestones.
+  items:
+    - label: Certification
+      title: Example Achievement
+      value: Example value
+      description: Replace with a concise explanation.
+      href: /certifications/cka/
+
+philosophy:
+  title: Philosophy
+  intro: Describe your engineering and learning philosophy.
+  paragraphs:
+    - Replace with your principles for engineering work.
+
+personalInterests:
+  title: Personal Interests
+  intro: Interests that support technical depth and long-form thinking.
+  groups:
+    - title: Reading and Research
+      items:
+        - Architecture patterns
+        - Reliability practices
+
+technologyStack:
+  title: Technology Stack
+  intro: Grouped links to the technology collection.
+  groups:
+    - title: Core Technologies
+      technologies:
+        - kubernetes
+        - terraform
+        - prometheus
+  viewAll:
+    label: View all technologies
+    href: /technologies/
+    variant: secondary
+
+currentFocus:
+  title: Current Focus
+  intro: Current study and implementation priorities.
+  groups:
+    - title: Active Themes
+      items:
+        - Secure Kubernetes operating models
+        - Documentation systems that connect architecture and operations
+
+contact:
+  title: Contact
+  intro: Ways to connect and review public work.
+  methods:
+    - label: Email
+      value: you@example.com
+      href: mailto:you@example.com
+      description: Best for direct communication.
+    - label: GitHub
+      value: github.com/example
+      href: https://github.com/example
+      description: Source repositories and technical work.
+
+callToAction:
+  title: Continue Exploring
+  intro: Direct readers toward your main content areas.
+  actions:
+    - label: Read Articles
+      href: /articles/
+      variant: primary
+    - label: Explore Projects
+      href: /projects/
+      variant: secondary
+---

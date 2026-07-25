@@ -75,6 +75,7 @@ Templates exist per asset type:
 - `templates/article.md`
 - `templates/lab-note.md`
 - `templates/architecture-guide.md`
+- `templates/case-study.md`
 - `templates/project.md`
 - `templates/technology.md`
 - `templates/certification.md`

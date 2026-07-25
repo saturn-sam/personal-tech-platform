@@ -1,0 +1,27 @@
+---
+import Button from '@components/ui/button.astro';
+import type { AboutData } from '@lib/content/about';
+
+import AboutSectionHeader from './about-section-header.astro';
+
+interface Props {
+  id: string;
+  section: AboutData['callToAction'];
+}
+
+const { id, section } = Astro.props as Props;
+---
+
+<section class="about-section about-cta" aria-labelledby={id}>
+  <AboutSectionHeader id={id} title={section.title} intro={section.intro} />
+
+  <div class="about-cta__actions" aria-label={section.title}>
+    {
+      section.actions.map((action) => (
+        <Button href={action.href} variant={action.variant}>
+          {action.label}
+        </Button>
+      ))
+    }
+  </div>
+</section>

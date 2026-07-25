@@ -10,7 +10,8 @@ export interface ReferenceOwner {
   slug: string;
 }
 
-export type RelatedKnowledgeCollection = 'articles' | 'lab-notes' | 'architecture-guides';
+export type RelatedKnowledgeCollection =
+  'articles' | 'lab-notes' | 'architecture-guides' | 'case-studies';
 
 export type RelatedKnowledgeEntry = {
   [CollectionName in RelatedKnowledgeCollection]: CollectionEntry<CollectionName>;
@@ -32,12 +33,14 @@ export const relatedKnowledgeCollections = [
   'articles',
   'lab-notes',
   'architecture-guides',
+  'case-studies',
 ] as const;
 
 const routeBases = {
   articles: '/articles/',
   'lab-notes': '/lab-notes/',
   'architecture-guides': '/architecture/',
+  'case-studies': '/case-studies/',
   projects: '/projects/',
   technologies: '/technologies/',
   certifications: '/certifications/',

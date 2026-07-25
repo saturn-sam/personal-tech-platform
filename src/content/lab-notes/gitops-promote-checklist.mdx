@@ -49,6 +49,18 @@ Use this note before promoting a GitOps change into a shared environment. The go
 - Validate required approvals and release ownership.
 - Check whether the change affects observability, storage, or ingress behavior.
 
+Read the [GitOps Promotion Checklist](/lab-notes/gitops-promotion-checklist/).
+
+- Platform work
+  - Kubernetes
+  - GitOps
+
+1. Review
+2. Approve
+   - Security check
+   - Rollback check
+3. Promote
+
 ```bash
 git diff origin/main...HEAD
 kubectl diff -f manifests/

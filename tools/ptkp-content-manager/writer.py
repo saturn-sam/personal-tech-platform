@@ -286,6 +286,31 @@ def architecture_guide_context(values: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def case_study_context(values: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "summary": values["summary"],
+        "context": values["context"],
+        "requirements_bullets": bullet_list(values["requirements"], "- Add at least one requirement."),
+        "constraints_bullets": bullet_list(values["constraints"], "- Add at least one constraint."),
+        "alternatives_bullets": bullet_list(
+            values["alternativesConsidered"],
+            "- Add at least one alternative.",
+        ),
+        "decision": values["decision"],
+        "implementation_summary": values["implementationSummary"],
+        "outcome": values["outcome"],
+        "lessons_learned_bullets": bullet_list(
+            values["lessonsLearned"],
+            "- Add at least one lesson learned.",
+        ),
+        "future_improvements_bullets": bullet_list(
+            values.get("futureImprovements", []),
+            "- Future improvements will be documented during the next review.",
+        ),
+        "related_assets_bullets": asset_reference_lines(values["relatedAssets"]),
+    }
+
+
 def project_context(values: dict[str, Any]) -> dict[str, Any]:
     return {
         "summary": values["summary"],
@@ -352,6 +377,7 @@ TEMPLATE_CONTEXT_BUILDERS = {
     "article": article_context,
     "lab-note": lab_note_context,
     "architecture-guide": architecture_guide_context,
+    "case-study": case_study_context,
     "project": project_context,
     "technology": technology_context,
     "certification": certification_context,

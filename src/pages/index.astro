@@ -79,6 +79,7 @@ const certifications = (await getPublishedCollectionEntries('certifications'))
 const recentEntries = sortByUpdatedDate([
   ...(await getPublishedCollectionEntries('articles')),
   ...(await getPublishedCollectionEntries('lab-notes')),
+  ...(await getPublishedCollectionEntries('case-studies')),
 ])
   .filter((entry) => entry.data.featured)
   .slice(0, recentUpdatesConfig.limit);
@@ -106,6 +107,13 @@ const recentEntries = sortByUpdatedDate([
             <Button href={hero.primaryAction.href}>{hero.primaryAction.label}</Button>
             <Button href={hero.secondaryAction.href} variant="secondary">
               {hero.secondaryAction.label}
+            </Button>
+            <Button
+              href={hero.tertiaryAction.href}
+              variant="ghost"
+              download={hero.tertiaryAction.download}
+            >
+              {hero.tertiaryAction.label}
             </Button>
           </div>
         </Stack>

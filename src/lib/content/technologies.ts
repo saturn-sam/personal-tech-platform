@@ -11,7 +11,8 @@ import { resolveRelatedEntries } from './relationships';
 
 export type TechnologyEntry = CollectionEntry<'technologies'>;
 
-export type TechnologyRelatedKnowledgeCollection = 'articles' | 'lab-notes' | 'architecture-guides';
+export type TechnologyRelatedKnowledgeCollection =
+  'articles' | 'lab-notes' | 'architecture-guides' | 'case-studies';
 
 export type TechnologyRelatedKnowledgeEntry = {
   [CollectionName in TechnologyRelatedKnowledgeCollection]: CollectionEntry<CollectionName>;
@@ -38,12 +39,14 @@ export const technologyRelatedKnowledgeCollections = [
   'articles',
   'lab-notes',
   'architecture-guides',
+  'case-studies',
 ] as const;
 
 const relatedKnowledgeRoutes = {
   articles: '/articles/',
   'lab-notes': '/lab-notes/',
   'architecture-guides': '/architecture/',
+  'case-studies': '/case-studies/',
 } satisfies Record<TechnologyRelatedKnowledgeCollection, string>;
 
 const titleCollator = new Intl.Collator(technologyConfig.locale, {

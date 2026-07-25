@@ -64,6 +64,18 @@ export const knowledgeAssetConfig = {
       emptyTitle: 'No published architecture guides',
       emptyDescription: 'Published architecture guides will appear here after technical review.',
     },
+    'case-studies': {
+      badgeLabel: 'Case Study',
+      indexTitle: 'Case Studies',
+      indexDescription:
+        'Decision-focused engineering narratives that document context, trade-offs, implementation choices, and lessons learned.',
+      routeBase: '/case-studies/',
+      seoTitle: 'Case Studies',
+      seoDescription:
+        'Engineering case studies covering technical decisions, implementation trade-offs, and operating outcomes.',
+      emptyTitle: 'No published case studies',
+      emptyDescription: 'Published case studies will appear here after editorial review.',
+    },
     'learning-paths': {
       badgeLabel: 'Learning Path',
       indexTitle: 'Learning Paths',

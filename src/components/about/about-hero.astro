@@ -1,0 +1,95 @@
+---
+import Card from '@components/ui/card.astro';
+import Link from '@components/ui/link.astro';
+import type { AboutData } from '@lib/content/about';
+
+import AboutSectionHeader from './about-section-header.astro';
+
+interface EmbeddedNarrativeSection {
+  id: string;
+  section: AboutData['professionalSummary'] | AboutData['personalStory'];
+}
+
+interface Props {
+  hero: AboutData['hero'];
+  personalStory?: EmbeddedNarrativeSection;
+  professionalSummary?: EmbeddedNarrativeSection;
+}
+
+const { hero, personalStory, professionalSummary } = Astro.props as Props;
+const details = [
+  hero.currentRole,
+  hero.currentOrganization,
+  hero.location,
+  ...hero.additionalDetails,
+];
+const embeddedNarratives = [professionalSummary, personalStory].filter(
+  (section): section is EmbeddedNarrativeSection => Boolean(section),
+);
+const getTarget = (href: string | undefined): '_blank' | undefined =>
+  href?.startsWith('http') ? '_blank' : undefined;
+---
+
+<header class="about-hero" aria-labelledby="about-hero-title">
+  <div class="about-hero__content">
+    <p class="about-hero__eyebrow">{hero.eyebrow}</p>
+    <h1 id="about-hero-title">{hero.fullName}</h1>
+    <p class="about-hero__title">{hero.professionalTitle}</p>
+    <p class="about-hero__intro">{hero.introduction}</p>
+
+    {
+      embeddedNarratives.length > 0 && (
+        <div class="about-hero__narratives">
+          {embeddedNarratives.map((item) => (
+            <section class="about-hero__narrative" aria-labelledby={item.id}>
+              <AboutSectionHeader
+                id={item.id}
+                title={item.section.title}
+                intro={item.section.intro}
+              />
+
+              <div class="knowledge-content about-prose">
+                {item.section.paragraphs.map((paragraph) => (
+                  <p>{paragraph}</p>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      )
+    }
+  </div>
+
+  <div class="about-hero__side">
+    <Card as="figure" padding="none" class="about-hero__photo-card">
+      <img
+        src={hero.photo.src}
+        alt={hero.photo.alt}
+        loading="eager"
+        decoding="async"
+        sizes="(min-width: 80rem) 22rem, (min-width: 48rem) 20rem, 100vw"
+      />
+    </Card>
+
+    <Card as="section" class="about-hero__details-card">
+      <dl class="about-hero__details">
+        {
+          details.map((item) => (
+            <div>
+              <dt>{item.label}</dt>
+              <dd>
+                {item.href ? (
+                  <Link href={item.href} target={getTarget(item.href)}>
+                    {item.value}
+                  </Link>
+                ) : (
+                  item.value
+                )}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </Card>
+  </div>
+</header>

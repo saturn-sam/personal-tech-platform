@@ -1,3 +1,5 @@
+import DOMPurify from 'dompurify';
+
 import { mermaidConfig } from '@config/mermaid';
 
 interface MarkdownEnhancementConfig {
@@ -9,10 +11,13 @@ interface MarkdownEnhancementConfig {
 type BrowserWindow = Window & {
   __ptkpMermaidLoader?: Promise<(typeof import('mermaid'))['default']>;
   __ptkpReadingProgressBound?: boolean;
+  DOMPurify?: {
+    addHook: (...args: unknown[]) => unknown;
+    sanitize: (...args: unknown[]) => unknown;
+  };
 };
 
-let mermaidObserver: IntersectionObserver | undefined;
-let mermaidRenderIndex = 0;
+type MermaidModule = typeof import('mermaid');
 
 const getConfig = (): MarkdownEnhancementConfig => {
   const config = document.querySelector<HTMLElement>('[data-markdown-enhancements]');
@@ -95,15 +100,80 @@ const isMermaidPre = (pre: HTMLPreElement): boolean => {
   );
 };
 
+const hasMermaidSanitizerApi = (
+  value: unknown,
+): value is {
+  addHook: (...args: unknown[]) => unknown;
+  sanitize: (...args: unknown[]) => unknown;
+} =>
+  (typeof value === 'function' || typeof value === 'object') &&
+  value !== null &&
+  'addHook' in value &&
+  typeof value.addHook === 'function' &&
+  'sanitize' in value &&
+  typeof value.sanitize === 'function';
+
+const ensureMermaidSanitizer = async (): Promise<void> => {
+  const browserWindow = window as BrowserWindow;
+  const sanitizer = DOMPurify as unknown;
+
+  if (hasMermaidSanitizerApi(sanitizer)) {
+    browserWindow.DOMPurify = sanitizer;
+    return;
+  }
+
+  if (typeof sanitizer !== 'function') {
+    return;
+  }
+
+  const normalizedSanitizer = sanitizer(window);
+
+  if (!hasMermaidSanitizerApi(normalizedSanitizer)) {
+    return;
+  }
+
+  Object.assign(sanitizer, normalizedSanitizer);
+  browserWindow.DOMPurify = normalizedSanitizer;
+};
+
 const getMermaid = async () => {
   const browserWindow = window as BrowserWindow;
 
-  browserWindow.__ptkpMermaidLoader ??= import('mermaid').then(({ default: mermaid }) => {
-    mermaid.initialize(mermaidConfig);
-    return mermaid;
-  });
+  browserWindow.__ptkpMermaidLoader ??= ensureMermaidSanitizer()
+    .then(() => import('mermaid/dist/mermaid.esm.mjs') as Promise<MermaidModule>)
+    .then(({ default: mermaid }) => {
+      mermaid.initialize(mermaidConfig);
+      return mermaid;
+    })
+    .catch((error) => {
+      delete browserWindow.__ptkpMermaidLoader;
+      throw error;
+    });
 
   return browserWindow.__ptkpMermaidLoader;
+};
+
+const renderMermaidSvg = async (definition: string): Promise<string> => {
+  const mermaid = await getMermaid();
+  const renderHost = document.createElement('div');
+
+  renderHost.className = 'mermaid mermaid-diagram__render-host';
+  renderHost.textContent = definition;
+  document.body.append(renderHost);
+
+  try {
+    await mermaid.run({ nodes: [renderHost] });
+
+    const svg = renderHost.querySelector('svg');
+
+    if (!svg) {
+      throw new Error('Mermaid did not produce an SVG output.');
+    }
+
+    return svg.outerHTML;
+  } finally {
+    renderHost.remove();
+  }
 };
 
 const renderMermaidCodeBlock = async (pre: HTMLPreElement): Promise<void> => {
@@ -120,7 +190,6 @@ const renderMermaidCodeBlock = async (pre: HTMLPreElement): Promise<void> => {
   pre.dataset.mermaidPending = 'true';
 
   const { mermaidTitle } = getConfig();
-  const mermaid = await getMermaid();
   const figure = document.createElement('figure');
   const caption = document.createElement('figcaption');
   const title = document.createElement('span');
@@ -139,19 +208,24 @@ const renderMermaidCodeBlock = async (pre: HTMLPreElement): Promise<void> => {
   canvas.setAttribute('aria-label', mermaidTitle);
   source.classList.add('mermaid-diagram__source');
   source.setAttribute('hidden', '');
+  delete source.dataset.mermaidPending;
+  delete source.dataset.mermaidObserved;
+  delete source.dataset.mermaidRendered;
+  delete source.dataset.mermaidError;
   sourceHint.className = 'sr-only';
   sourceHint.textContent = 'Scrollable diagram source. Scroll horizontally to review all code.';
 
   try {
-    const result = await mermaid.render(`knowledge-mermaid-${mermaidRenderIndex++}`, definition);
+    const svg = await renderMermaidSvg(definition);
 
-    canvas.innerHTML = result.svg;
+    canvas.innerHTML = svg;
     caption.append(title);
     figure.append(caption, sourceHint, source, canvas);
     pre.dataset.mermaidRendered = 'true';
     pre.replaceWith(figure);
-  } catch {
+  } catch (error) {
     pre.dataset.mermaidError = 'true';
+    console.error('PTKP Mermaid render failed for markdown code block.', error);
   } finally {
     delete pre.dataset.mermaidPending;
   }
@@ -173,19 +247,30 @@ const renderMermaidDiagramComponent = async (diagram: HTMLElement): Promise<void
   diagram.dataset.mermaidPending = 'true';
 
   try {
-    const mermaid = await getMermaid();
-    const result = await mermaid.render(`mermaid-diagram-${mermaidRenderIndex++}`, definition);
+    const svg = await renderMermaidSvg(definition);
 
-    canvas.innerHTML = result.svg;
+    canvas.innerHTML = svg;
     canvas.removeAttribute('hidden');
     canvas.setAttribute('role', 'img');
     canvas.setAttribute('aria-label', diagram.dataset.mermaidTitle ?? 'Mermaid diagram');
     source.setAttribute('hidden', '');
     diagram.dataset.mermaidRendered = 'true';
-  } catch {
+  } catch (error) {
     diagram.dataset.mermaidError = 'true';
+    console.error('PTKP Mermaid render failed for diagram component.', error);
   } finally {
     delete diagram.dataset.mermaidPending;
+  }
+};
+
+const renderMermaidTarget = (target: HTMLElement): void => {
+  if (target.matches('[data-mermaid-diagram]')) {
+    void renderMermaidDiagramComponent(target);
+    return;
+  }
+
+  if (target instanceof HTMLPreElement) {
+    void renderMermaidCodeBlock(target);
   }
 };
 
@@ -205,37 +290,13 @@ const observeMermaidTargets = (): void => {
     return;
   }
 
-  mermaidObserver ??= new IntersectionObserver(
-    (entries) => {
-      entries
-        .filter((entry) => entry.isIntersecting)
-        .forEach((entry) => {
-          const target = entry.target as HTMLElement;
-          mermaidObserver?.unobserve(target);
-
-          if (target.matches('[data-mermaid-diagram]')) {
-            void renderMermaidDiagramComponent(target);
-            return;
-          }
-
-          if (target instanceof HTMLPreElement) {
-            void renderMermaidCodeBlock(target);
-          }
-        });
-    },
-    {
-      rootMargin: '200px 0px',
-      threshold: 0.1,
-    },
-  );
-
   targets.forEach((target) => {
     if (target.dataset.mermaidObserved === 'true') {
       return;
     }
 
     target.dataset.mermaidObserved = 'true';
-    mermaidObserver?.observe(target);
+    renderMermaidTarget(target);
   });
 };
 

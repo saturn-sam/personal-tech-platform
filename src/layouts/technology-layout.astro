@@ -194,70 +194,74 @@ const structuredData: Record<string, unknown> = {
           </div>
 
           <footer class="technology-detail__footer">
-            <div class="technology-related-grid">
-              <Card as="section" class="technology-related">
-                <h2>{labels.relatedKnowledge}</h2>
-                {
-                  relatedKnowledgeEntries.length > 0 ? (
-                    <ul class="technology-related-list">
-                      {relatedKnowledgeEntries.map((relatedEntry) => (
-                        <li>
-                          <a href={getRelatedKnowledgeUrl(relatedEntry)}>
-                            <span>{formatAssetType(relatedEntry.data.assetType)}</span>
-                            <strong>{relatedEntry.data.title}</strong>
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>{labels.relatedKnowledgeEmpty}</p>
-                  )
-                }
-              </Card>
+            <Card as="section" class="content-related-card technology-related">
+              <h2>{labels.relatedContent}</h2>
 
-              <Card as="section" class="technology-related">
-                <h2>{labels.relatedProjects}</h2>
-                {
-                  relatedProjectEntries.length > 0 ? (
-                    <ul class="technology-related-list">
-                      {relatedProjectEntries.map((projectEntry) => (
-                        <li>
-                          <a href={getRelatedProjectUrl(projectEntry)}>
-                            <span>{projectEntry.data.projectStatus}</span>
-                            <strong>{projectEntry.data.title}</strong>
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>{labels.relatedProjectsEmpty}</p>
-                  )
-                }
-              </Card>
+              <div class="content-related-groups">
+                <section class="content-related-group">
+                  <h3>{labels.relatedKnowledge}</h3>
+                  {
+                    relatedKnowledgeEntries.length > 0 ? (
+                      <ul class="technology-related-list">
+                        {relatedKnowledgeEntries.map((relatedEntry) => (
+                          <li>
+                            <a href={getRelatedKnowledgeUrl(relatedEntry)}>
+                              <span>{formatAssetType(relatedEntry.data.assetType)}</span>
+                              <strong>{relatedEntry.data.title}</strong>
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>{labels.relatedKnowledgeEmpty}</p>
+                    )
+                  }
+                </section>
 
-              <Card as="section" class="technology-related">
-                <h2>{labels.relatedCertifications}</h2>
-                {
-                  relatedCertificationEntries.length > 0 ? (
-                    <ul class="technology-related-list">
-                      {relatedCertificationEntries.map((certificationEntry) => (
-                        <li>
-                          <article class="technology-certification">
-                            <span>{certificationEntry.data.issuer}</span>
-                            <strong>{certificationEntry.data.title}</strong>
-                            <Link href={certificationEntry.data.verificationUrl} target="_blank">
-                              Verification
-                            </Link>
-                          </article>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>{labels.relatedCertificationsEmpty}</p>
-                  )
-                }
-              </Card>
-            </div>
+                <section class="content-related-group">
+                  <h3>{labels.relatedProjects}</h3>
+                  {
+                    relatedProjectEntries.length > 0 ? (
+                      <ul class="technology-related-list">
+                        {relatedProjectEntries.map((projectEntry) => (
+                          <li>
+                            <a href={getRelatedProjectUrl(projectEntry)}>
+                              <span>{projectEntry.data.projectStatus}</span>
+                              <strong>{projectEntry.data.title}</strong>
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>{labels.relatedProjectsEmpty}</p>
+                    )
+                  }
+                </section>
+
+                <section class="content-related-group">
+                  <h3>{labels.relatedCertifications}</h3>
+                  {
+                    relatedCertificationEntries.length > 0 ? (
+                      <ul class="technology-related-list">
+                        {relatedCertificationEntries.map((certificationEntry) => (
+                          <li>
+                            <article class="technology-certification">
+                              <span>{certificationEntry.data.issuer}</span>
+                              <strong>{certificationEntry.data.title}</strong>
+                              <Link href={certificationEntry.data.verificationUrl} target="_blank">
+                                Verification
+                              </Link>
+                            </article>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>{labels.relatedCertificationsEmpty}</p>
+                    )
+                  }
+                </section>
+              </div>
+            </Card>
 
             <nav class="technology-adjacent" aria-label={labels.technologyNavigation}>
               {

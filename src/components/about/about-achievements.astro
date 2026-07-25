@@ -1,0 +1,44 @@
+---
+import Badge from '@components/ui/badge.astro';
+import Card from '@components/ui/card.astro';
+import Grid from '@components/layout/grid.astro';
+import Link from '@components/ui/link.astro';
+import type { AboutData } from '@lib/content/about';
+
+import AboutSectionHeader from './about-section-header.astro';
+
+interface Props {
+  id: string;
+  section: AboutData['achievements'];
+}
+
+const { id, section } = Astro.props as Props;
+const columns: 2 | 3 = section.items.length >= 3 ? 3 : 2;
+const getTarget = (href: string | undefined): '_blank' | undefined =>
+  href?.startsWith('http') ? '_blank' : undefined;
+---
+
+<section class="about-section about-achievements" aria-labelledby={id}>
+  <AboutSectionHeader id={id} title={section.title} intro={section.intro} />
+
+  <Grid columns={columns} gap="lg" class="about-achievement-grid">
+    {
+      section.items.map((item) => (
+        <Card as="section" class="about-achievement-card">
+          {item.label && <Badge size="sm">{item.label}</Badge>}
+          <h3>
+            {item.href ? (
+              <Link href={item.href} target={getTarget(item.href)}>
+                {item.title}
+              </Link>
+            ) : (
+              item.title
+            )}
+          </h3>
+          {item.value && <p class="about-achievement__value">{item.value}</p>}
+          <p>{item.description}</p>
+        </Card>
+      ))
+    }
+  </Grid>
+</section>

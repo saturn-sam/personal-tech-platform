@@ -1,0 +1,96 @@
+---
+assetType: case-study
+title: GitOps Promotion Governance for a Shared Kubernetes Platform
+slug: gitops-promotion-governance
+description: A case study on standardizing GitOps promotion decisions for a shared Kubernetes platform without slowing delivery teams down.
+summary: This case study explains why release governance was standardized for a shared Kubernetes platform, which alternatives were considered, and how the final operating model improved traceability.
+author: Md. Samrat Uz Zaman
+publishedDate: '2026-07-19'
+updatedDate: '2026-07-19'
+status: published
+tags:
+  - GitOps
+  - Platform Engineering
+  - Release Governance
+technologies:
+  - Kubernetes
+  - GitLab CI/CD
+categories:
+  - Delivery
+  - Containers
+difficulty: advanced
+readingTime:
+  minutes: 5
+  text: 5 min read
+relatedAssets:
+  - collection: projects
+    slug: enterprise-kubernetes-platform
+  - collection: articles
+    slug: enterprise-kubernetes-platform-architecture
+  - collection: lab-notes
+    slug: gitops-promotion-checklist
+  - collection: technologies
+    slug: kubernetes
+featuredImage:
+  src: /assets/placeholders/case-study.svg
+  alt: GitOps promotion governance case study illustration
+seo:
+  title: GitOps Promotion Governance for a Shared Kubernetes Platform
+  description: A case study on GitOps promotion governance, release controls, and traceable change decisions for a shared Kubernetes platform.
+  canonicalPath: /case-studies/gitops-promotion-governance/
+  robots: index,follow
+featured: true
+---
+
+# GitOps Promotion Governance for a Shared Kubernetes Platform
+
+## Context
+
+The shared Kubernetes platform needed a consistent release decision process. Application teams were deploying through GitOps, but the promotion criteria between environments were still interpreted differently by platform operators, delivery teams, and approvers.
+
+## Requirements
+
+- Keep promotion checks consistent across staging and production.
+- Preserve delivery-team autonomy for routine releases.
+- Leave a clear audit trail for approval and rollback decisions.
+
+## Constraints
+
+- The workflow had to work with the existing GitLab CI/CD and GitOps repositories.
+- Approval steps could not rely on informal chat history.
+- Operators needed a review pattern that was fast enough for repeated use.
+
+## Alternatives Considered
+
+- Continue with team-specific promotion checklists stored in separate repositories.
+- Require platform engineers to perform every promotion manually.
+- Add more automation first and postpone the governance model.
+
+## Decision
+
+The platform adopted a single promotion checklist and release-note pattern that every team follows before moving changes forward. The decision favored repeatable review over custom team workflows so release evidence stayed comparable across environments.
+
+## Implementation
+
+The governance model was documented directly in PTKP and linked to the platform project. Promotion reviews now check manifest diffs, required approvals, expected observability impact, and rollback readiness before a change advances. The checklist is intentionally compact so it remains usable during normal operations rather than only during formal audits.
+
+<Callout type="important" title="Why the operating model mattered">
+  The issue was not a lack of deployment tooling. The issue was inconsistent decision-making around
+  when a change was ready to move forward.
+</Callout>
+
+## Outcome
+
+Promotion reviews became easier to audit, platform operators spent less time reconstructing release intent, and teams gained a documented path for proving that a deployment met the shared readiness bar.
+
+## Lessons Learned
+
+- Release governance should be written for routine use, not only for exceptional changes.
+- Decision evidence is easier to maintain when it lives next to the technical guidance it supports.
+- Lightweight checklists are more sustainable than approval workflows that depend on memory.
+
+## Future Improvements
+
+- Link deployment evidence from CI pipelines directly into the promotion record.
+- Add a short retrospective template for failed promotions so lessons are captured consistently.
+- Expand the pattern for multi-cluster promotion windows and maintenance freezes.

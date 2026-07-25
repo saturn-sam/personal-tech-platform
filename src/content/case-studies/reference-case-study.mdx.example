@@ -1,0 +1,70 @@
+---
+assetType: case-study
+title: Example Case Study
+slug: example-case-study
+description: Decision-focused case study documenting a real engineering change.
+summary: A structured case study covering context, constraints, decisions, implementation, outcome, and lessons learned.
+author: Md. Samrat Uz Zaman
+publishedDate: '2026-07-25'
+updatedDate: '2026-07-25'
+reviewedDate: '2026-07-25'
+revision: '1.0'
+status: draft
+tags:
+  - GitOps
+  - Platform Engineering
+technologies:
+  - Kubernetes
+  - GitLab CI/CD
+categories:
+  - Delivery
+  - Governance
+difficulty: advanced
+readingTime:
+  minutes: 10
+  text: 10 min read
+relatedAssets:
+  - collection: projects
+    slug: enterprise-kubernetes-platform
+  - collection: technologies
+    slug: gitlab-cicd
+featuredImage:
+  src: /assets/placeholders/case-study.svg
+  alt: Example case study illustration
+seo:
+  title: Example Case Study
+  description: Decision-focused case study documenting a real engineering change.
+  canonicalPath: /case-studies/example-case-study/
+  robots: noindex,follow
+featured: false
+---
+
+## Context
+
+Describe the environment and why the decision was necessary.
+
+## Requirements
+
+- Safe promotion flow
+- Clear approval boundaries
+
+## Constraints
+
+- Existing pipeline had to remain in place.
+
+## Decision
+
+Explain what was chosen and why.
+
+## Implementation
+
+Describe the technical implementation.
+
+## Outcome
+
+Summarize the practical result.
+
+## Lessons Learned
+
+- Record what should be repeated or changed next time.
+```

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 1200" role="img" aria-labelledby="title desc">
+  <title id="title">Profile photo placeholder</title>
+  <desc id="desc">A neutral placeholder portrait for the About page profile image.</desc>
+  <rect width="960" height="1200" fill="#f5f2ea"/>
+  <rect x="72" y="72" width="816" height="1056" rx="40" fill="#fbfaf6" stroke="#d7d0c3" stroke-width="8"/>
+  <circle cx="480" cy="380" r="168" fill="#d9dde2"/>
+  <path d="M252 930c18-168 126-276 228-276s210 108 228 276" fill="#d9dde2"/>
+  <path d="M480 228c88 0 160 72 160 160 0 12-2 24-4 36-42 18-96 30-156 30-60 0-114-12-156-30-2-12-4-24-4-36 0-88 72-160 160-160Z" fill="#aeb7c1"/>
+  <text x="480" y="1042" fill="#38434d" font-family="Arial, Helvetica, sans-serif" font-size="42" font-weight="700" text-anchor="middle">
+    Replace with professional portrait
+  </text>
+</svg>

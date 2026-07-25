@@ -1,0 +1,24 @@
+---
+import type { AboutData } from '@lib/content/about';
+
+import AboutSectionHeader from './about-section-header.astro';
+
+interface Props {
+  id: string;
+  section:
+    | AboutData['professionalSummary']
+    | AboutData['personalStory']
+    | AboutData['learningJourney']
+    | AboutData['philosophy'];
+}
+
+const { id, section } = Astro.props as Props;
+---
+
+<section class="about-section about-narrative" aria-labelledby={id}>
+  <AboutSectionHeader id={id} title={section.title} intro={section.intro} />
+
+  <div class="knowledge-content about-prose">
+    {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+  </div>
+</section>
