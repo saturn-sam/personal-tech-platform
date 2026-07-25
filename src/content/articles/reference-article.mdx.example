@@ -1,0 +1,86 @@
+---
+assetType: article
+title: Example Article
+slug: example-article
+description: Concise description for list views and SEO snippets.
+summary: A longer summary that explains the engineering purpose, scope, and expected reader outcome.
+author: Md. Samrat Uz Zaman
+publishedDate: '2026-07-25'
+updatedDate: '2026-07-25'
+reviewedDate: '2026-07-25'
+revision: '1.0'
+status: draft
+tags:
+  - Kubernetes
+  - Observability
+  - Platform Engineering
+technologies:
+  - Kubernetes
+  - Prometheus
+categories:
+  - Containers
+  - Monitoring
+difficulty: intermediate
+readingTime:
+  minutes: 8
+  text: 8 min read
+series: Platform Operations Baselines
+relatedAssets:
+  - collection: projects
+    slug: enterprise-kubernetes-platform
+  - collection: technologies
+    slug: kubernetes
+  - collection: resources
+    slug: kubernetes-node-triage-checklist
+featuredImage:
+  src: /assets/placeholders/article.svg
+  alt: Example article illustration
+seo:
+  title: Example Article
+  description: Concise description for list views and SEO snippets.
+  canonicalPath: /articles/example-article/
+  robots: noindex,follow
+featured: false
+---
+
+Replace this introduction with one short opening paragraph.
+
+<Callout type="important" title="Author note">
+  Replace this callout if your article needs an important warning or operating principle.
+</Callout>
+
+## Problem
+
+Describe the exact engineering problem.
+
+## Background
+
+Give only the context needed to understand the solution.
+
+## Solution
+
+Explain the intended technical approach.
+
+## Implementation
+
+```bash
+kubectl get pods -A
+kubectl top nodes
+```
+
+![Example section image](/assets/placeholders/kubernetes-platform.svg)
+
+## Validation
+
+- Describe what you tested.
+- Describe the success signals.
+
+## Best Practices
+
+- Prefer repeatable operational patterns.
+- Record ownership boundaries clearly.
+
+## References
+
+- [Kubernetes documentation](https://kubernetes.io/docs/)
+```

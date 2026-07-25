@@ -259,6 +259,27 @@ Never store secrets in client-accessible variables.
 
 ---
 
+# Production Readiness Notes
+
+The site is generated as a fully static Astro application and is compatible with Cloudflare Pages.
+
+The deployment build should use:
+
+- Build command: npm run build
+- Output directory: dist
+- Static asset generation: enabled by default for Astro static output
+
+The project also ships production-facing assets such as:
+
+- robots.txt
+- sitemap-index.xml
+- rss.xml
+- site.webmanifest
+
+These files support crawling, discovery, and better platform integration when deployed.
+
+---
+
 # Secrets
 
 Secrets must only exist within GitHub or Cloudflare secret management.

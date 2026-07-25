@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Architecture guide placeholder</title>
+  <desc id="desc">Placeholder artwork for architecture guides.</desc>
+  <rect width="1200" height="675" fill="#0f1f22" />
+  <rect x="84" y="84" width="1032" height="507" rx="28" fill="#16343a" stroke="#6bb8c0" stroke-width="2" />
+  <path d="M210 220h780M210 320h540M210 420h640" stroke="#9bd4d9" stroke-width="18" stroke-linecap="round" opacity="0.55" />
+  <circle cx="920" cy="360" r="96" fill="#1f6f78" />
+  <path d="M880 360h80M920 320v80" stroke="#fbfaf8" stroke-width="18" stroke-linecap="round" />
+  <text x="210" y="520" font-family="Segoe UI, Arial, sans-serif" font-size="54" font-weight="700" fill="#edf3ef">Architecture Guide</text>
+  <text x="210" y="570" font-family="Segoe UI, Arial, sans-serif" font-size="26" fill="#b2c0b8">Documented platform decisions, requirements, and operating guidance</text>
+</svg>

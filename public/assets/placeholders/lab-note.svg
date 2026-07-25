@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Lab note placeholder</title>
+  <desc id="desc">Placeholder artwork for lab notes.</desc>
+  <rect width="1200" height="675" fill="#171a14" />
+  <rect x="144" y="90" width="912" height="495" rx="28" fill="#232920" stroke="#98c379" stroke-width="2" />
+  <path d="M242 198h504M242 272h612M242 346h428" stroke="#ebf4df" stroke-width="20" stroke-linecap="round" opacity="0.7" />
+  <path d="M768 220h176v176H768z" fill="none" stroke="#98c379" stroke-width="18" />
+  <path d="M810 304h92" stroke="#98c379" stroke-width="18" stroke-linecap="round" />
+  <text x="242" y="520" font-family="Segoe UI, Arial, sans-serif" font-size="54" font-weight="700" fill="#f0f6eb">Lab Note</text>
+  <text x="242" y="570" font-family="Segoe UI, Arial, sans-serif" font-size="26" fill="#cad7be">Short operational references, commands, and troubleshooting checks</text>
+</svg>

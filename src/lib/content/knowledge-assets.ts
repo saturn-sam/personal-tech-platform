@@ -3,7 +3,12 @@ import type { CollectionEntry } from 'astro:content';
 
 import { knowledgeAssetConfig, type KnowledgeAssetCollectionName } from '@config/knowledge-assets';
 
-import { getPublishedCollectionEntries, sortByUpdatedDate } from './queries';
+import { getReferenceKey, resolveRelatedEntries, type RoutableEntry } from './relationships';
+import {
+  getPublishedCollectionEntries,
+  getPublishedKnowledgeAssets,
+  sortByUpdatedDate,
+} from './queries';
 
 export type { KnowledgeAssetCollectionName };
 
@@ -20,6 +25,7 @@ export interface KnowledgeAssetStaticPathProps<
   readonly entry: KnowledgeAssetEntryForCollection<CollectionName>;
   readonly nextEntry?: KnowledgeAssetEntryForCollection<CollectionName>;
   readonly previousEntry?: KnowledgeAssetEntryForCollection<CollectionName>;
+  readonly relatedEntries: readonly RoutableEntry[];
 }
 
 export const knowledgeAssetCollectionNames = Object.keys(
@@ -82,7 +88,7 @@ export const calculateReadingTime = (content: string, wordsPerMinute = 225) => {
 };
 
 export const getKnowledgeAssetReadingTime = (entry: KnowledgeAssetEntry) => {
-  if (entry.data.readingTime) {
+  if ('readingTime' in entry.data && entry.data.readingTime) {
     return entry.data.readingTime;
   }
 
@@ -111,7 +117,16 @@ export const getKnowledgeAssetStaticPaths = async <
 >(
   collection: CollectionName,
 ) => {
-  const entries = await getPublishedKnowledgeAssetEntries(collection);
+  const [entries, publishedAssets] = await Promise.all([
+    getPublishedKnowledgeAssetEntries(collection),
+    getPublishedKnowledgeAssets(),
+  ]);
+  const relatedAssetLookup = new Map<string, RoutableEntry>(
+    publishedAssets.map((publishedEntry) => [
+      getReferenceKey(publishedEntry.collection, publishedEntry.data.slug),
+      publishedEntry as RoutableEntry,
+    ]),
+  );
 
   return entries.map((entry, index) => ({
     params: {
@@ -121,6 +136,14 @@ export const getKnowledgeAssetStaticPaths = async <
       entry,
       nextEntry: entries[index + 1],
       previousEntry: entries[index - 1],
+      relatedEntries: resolveRelatedEntries(
+        {
+          collection: entry.collection,
+          slug: entry.data.slug,
+        },
+        entry.data.relatedAssets,
+        relatedAssetLookup,
+      ),
     } satisfies KnowledgeAssetStaticPathProps<CollectionName>,
   }));
 };

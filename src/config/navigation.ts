@@ -6,10 +6,11 @@ export interface NavigationItem {
 export const primaryNavigation: readonly NavigationItem[] = [
   { label: 'Home', href: '/' },
   { label: 'Articles', href: '/articles/' },
+  { label: 'Case Studies', href: '/case-studies/' },
   { label: 'Projects', href: '/projects/' },
   { label: 'Technologies', href: '/technologies/' },
-  { label: 'Learning Paths', href: '/learning-paths/' },
   { label: 'Certifications', href: '/certifications/' },
   { label: 'Resources', href: '/resources/' },
+  { label: 'Search', href: '/search/' },
   { label: 'About', href: '/about/' },
 ] as const;

@@ -1,7 +1,6 @@
 ---
-import { primaryNavigation } from '@config/navigation';
 import { siteConfig } from '@config/site';
-import NavigationMenu from './navigation-menu.astro';
+import { getLinkPrefetchStrategy } from '@utils/prefetch';
 
 const currentYear = new Date().getFullYear();
 ---
@@ -9,34 +8,40 @@ const currentYear = new Date().getFullYear();
 <footer class="site-footer">
   <div class="site-footer__inner">
     <div class="site-footer__meta">
-      <p class="site-footer__title">{siteConfig.fullName}</p>
+      <p class="site-footer__title">{siteConfig.footer.title}</p>
       <p class="site-footer__text">{siteConfig.footer.description}</p>
+      {
+        siteConfig.footer.statements.map((statement) => (
+          <p class="site-footer__text">{statement}</p>
+        ))
+      }
       <p class="site-footer__text">
-        {siteConfig.footer.copyrightLabel}
-        {currentYear}
-        {siteConfig.author}.
+        {`${siteConfig.footer.copyrightLabel} ${currentYear} ${siteConfig.author}.`}
       </p>
     </div>
 
     <div class="site-footer__navigation">
-      <NavigationMenu
-        currentPath={Astro.url.pathname}
-        items={primaryNavigation}
-        label={siteConfig.footer.navigationLabel}
-        variant="mobile"
-      />
-      <nav class="site-footer__links" aria-label={siteConfig.footer.linksLabel}>
-        <ul class="site-footer__link-list">
-          {
-            siteConfig.footer.links.map((link) => (
-              <li>
-                <a class="site-footer__link" href={link.href}>
-                  {link.label}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
+      <nav class="site-footer__groups" aria-label={siteConfig.footer.navigationLabel}>
+        {
+          siteConfig.footer.sections.map((section) => (
+            <section class="site-footer__group">
+              <h2 class="site-footer__group-title">{section.title}</h2>
+              <ul class="site-footer__link-list">
+                {section.links.map((link) => (
+                  <li>
+                    <a
+                      class="site-footer__link"
+                      href={link.href}
+                      data-astro-prefetch={getLinkPrefetchStrategy(link.href)}
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))
+        }
       </nav>
     </div>
   </div>

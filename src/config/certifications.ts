@@ -22,6 +22,7 @@ export const certificationConfig = {
     difficulty: 'Difficulty',
     skills: 'Skills Validated',
     technologies: 'Technologies Covered',
+    relatedContent: 'Related content',
     relatedProjects: 'Related Projects',
     relatedProjectsEmpty:
       'Related projects will appear here when matching project records are published.',

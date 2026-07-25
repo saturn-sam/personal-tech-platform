@@ -1,0 +1,33 @@
+---
+import { siteConfig } from '@config/site';
+
+export interface BreadcrumbItem {
+  label: string;
+  href?: string;
+  current?: boolean;
+}
+
+export interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+
+const baseUrl = siteConfig.url;
+const itemListElement = items
+  .filter((item): item is BreadcrumbItem & { href: string } => Boolean(item.href))
+  .map((item, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: item.label,
+    item: item.href.startsWith('http') ? item.href : `${baseUrl}${item.href}`,
+  }));
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement,
+};
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />

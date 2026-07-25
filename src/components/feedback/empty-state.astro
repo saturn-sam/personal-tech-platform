@@ -1,15 +1,47 @@
 ---
 import Button from '@components/ui/button.astro';
+import Icon from '@components/ui/icon.astro';
+
+interface Action {
+  href: string;
+  label: string;
+  rel?: string;
+  target?: '_blank' | '_self' | '_parent' | '_top';
+  variant?: 'primary' | 'secondary' | 'ghost';
+  'aria-label'?: string;
+}
 
 export interface Props {
   actionHref?: string;
   actionLabel?: string;
   class?: string;
   description?: string;
+  iconLabel?: string;
+  primaryAction?: Action;
+  secondaryAction?: Action;
   title: string;
 }
 
-const { actionHref, actionLabel, class: className = '', description, title } = Astro.props as Props;
+const {
+  actionHref,
+  actionLabel,
+  class: className = '',
+  description,
+  iconLabel,
+  primaryAction: primaryActionProp,
+  secondaryAction,
+  title,
+} = Astro.props as Props;
+
+const primaryAction =
+  primaryActionProp ??
+  (actionHref && actionLabel
+    ? {
+        href: actionHref,
+        label: actionLabel,
+        variant: 'secondary' as const,
+      }
+    : undefined);
 
 const slugify = (value: string): string =>
   value
@@ -22,14 +54,42 @@ const titleId = `${slugify(title)}-empty-title`;
 
 <section class:list={['empty-state', className]} aria-labelledby={titleId}>
   <div class="empty-state__body">
+    {
+      Astro.slots.has('icon') && (
+        <div class="empty-state__icon">
+          <Icon size="lg" label={iconLabel}>
+            <slot name="icon" />
+          </Icon>
+        </div>
+      )
+    }
     <h2 class="empty-state__title" id={titleId}>{title}</h2>
     {description && <p class="empty-state__description">{description}</p>}
     {
-      actionHref && actionLabel && (
-        <div class="empty-state__action">
-          <Button href={actionHref} variant="secondary">
-            {actionLabel}
-          </Button>
+      (primaryAction || secondaryAction) && (
+        <div class="empty-state__actions">
+          {primaryAction && (
+            <Button
+              href={primaryAction.href}
+              variant={primaryAction.variant ?? 'primary'}
+              target={primaryAction.target}
+              rel={primaryAction.rel}
+              aria-label={primaryAction['aria-label']}
+            >
+              {primaryAction.label}
+            </Button>
+          )}
+          {secondaryAction && (
+            <Button
+              href={secondaryAction.href}
+              variant={secondaryAction.variant ?? 'secondary'}
+              target={secondaryAction.target}
+              rel={secondaryAction.rel}
+              aria-label={secondaryAction['aria-label']}
+            >
+              {secondaryAction.label}
+            </Button>
+          )}
         </div>
       )
     }

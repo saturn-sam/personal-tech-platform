@@ -5,11 +5,35 @@ export interface Props {
 }
 
 const { caption, class: className = '' } = Astro.props as Props;
+
+const slugify = (value: string): string =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
+const tableId = caption ? `data-table-${slugify(caption)}` : 'data-table';
+const captionId = caption ? `${tableId}-caption` : undefined;
+const hintId = `${tableId}-hint`;
 ---
 
 <figure class:list={['data-table', className]}>
-  {caption && <figcaption class="data-table__caption">{caption}</figcaption>}
-  <div class="data-table__scroll" tabindex="0">
+  {
+    caption && (
+      <figcaption class="data-table__caption" id={captionId}>
+        {caption}
+      </figcaption>
+    )
+  }
+  <p class="sr-only" id={hintId}>Scrollable table. Scroll horizontally to review all columns.</p>
+  <div
+    class="data-table__scroll"
+    tabindex="0"
+    role="region"
+    aria-labelledby={captionId}
+    aria-describedby={hintId}
+    aria-label={caption ? undefined : 'Scrollable data table'}
+  >
     <slot />
   </div>
 </figure>

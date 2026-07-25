@@ -7,10 +7,12 @@ import {
   sortByUpdatedDate,
   type KnowledgeAssetEntry,
 } from './queries';
+import { resolveRelatedEntries } from './relationships';
 
 export type TechnologyEntry = CollectionEntry<'technologies'>;
 
-export type TechnologyRelatedKnowledgeCollection = 'articles' | 'lab-notes' | 'architecture-guides';
+export type TechnologyRelatedKnowledgeCollection =
+  'articles' | 'lab-notes' | 'architecture-guides' | 'case-studies';
 
 export type TechnologyRelatedKnowledgeEntry = {
   [CollectionName in TechnologyRelatedKnowledgeCollection]: CollectionEntry<CollectionName>;
@@ -37,12 +39,14 @@ export const technologyRelatedKnowledgeCollections = [
   'articles',
   'lab-notes',
   'architecture-guides',
+  'case-studies',
 ] as const;
 
 const relatedKnowledgeRoutes = {
   articles: '/articles/',
   'lab-notes': '/lab-notes/',
   'architecture-guides': '/architecture/',
+  'case-studies': '/case-studies/',
 } satisfies Record<TechnologyRelatedKnowledgeCollection, string>;
 
 const titleCollator = new Intl.Collator(technologyConfig.locale, {
@@ -135,12 +139,17 @@ const getExplicitRelatedKnowledgeEntries = (
   entry: TechnologyEntry,
   lookup: ReadonlyMap<string, TechnologyRelatedKnowledgeEntry>,
 ): TechnologyRelatedKnowledgeEntry[] =>
-  entry.data.relatedAssets
-    .filter((reference) => isTechnologyRelatedKnowledgeCollection(reference.collection))
-    .map((reference) => lookup.get(`${reference.collection}:${reference.slug}`))
-    .filter((relatedEntry): relatedEntry is TechnologyRelatedKnowledgeEntry =>
-      Boolean(relatedEntry),
-    );
+  resolveRelatedEntries(
+    {
+      collection: entry.collection,
+      slug: entry.data.slug,
+    },
+    entry.data.relatedAssets,
+    lookup,
+    {
+      filter: (reference) => isTechnologyRelatedKnowledgeCollection(reference.collection),
+    },
+  );
 
 const getRelatedKnowledgeEntries = (
   entry: TechnologyEntry,

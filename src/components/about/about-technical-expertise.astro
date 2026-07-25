@@ -1,0 +1,39 @@
+---
+import Card from '@components/ui/card.astro';
+import Grid from '@components/layout/grid.astro';
+import Link from '@components/ui/link.astro';
+import type { AboutData, AboutResolvedTechnologyGroup } from '@lib/content/about';
+import { getEntryUrl } from '@lib/content/relationships';
+
+import AboutSectionHeader from './about-section-header.astro';
+
+interface Props {
+  groups: readonly AboutResolvedTechnologyGroup[];
+  id: string;
+  section: AboutData['technicalExpertise'];
+}
+
+const { groups, id, section } = Astro.props as Props;
+const columns: 2 | 3 = groups.length >= 3 ? 3 : 2;
+---
+
+<section class="about-section about-groups" aria-labelledby={id}>
+  <AboutSectionHeader id={id} title={section.title} intro={section.intro} />
+
+  <Grid columns={columns} gap="lg" class="about-group-grid">
+    {
+      groups.map((group) => (
+        <Card as="section" class="about-group-card">
+          <h3>{group.title}</h3>
+          <ul class="about-group-list">
+            {group.entries.map((entry) => (
+              <li>
+                <Link href={getEntryUrl(entry)}>{entry.data.title}</Link>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      ))
+    }
+  </Grid>
+</section>

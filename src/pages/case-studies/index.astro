@@ -1,0 +1,9 @@
+---
+import KnowledgeIndexLayout from '@layouts/knowledge-index-layout.astro';
+import { getPublishedKnowledgeAssetEntries } from '@lib/content/knowledge-assets';
+
+const collection = 'case-studies';
+const entries = await getPublishedKnowledgeAssetEntries(collection);
+---
+
+<KnowledgeIndexLayout collection={collection} entries={entries} />

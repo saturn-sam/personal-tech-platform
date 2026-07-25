@@ -10,6 +10,7 @@ import {
   isRelatedKnowledgeCollection,
   matchesTerms,
   relatedKnowledgeCollections,
+  resolveRelatedEntries,
   type RelatedKnowledgeEntry,
 } from './relationships';
 
@@ -156,12 +157,17 @@ const getExplicitRelatedKnowledgeEntries = (
   entry: CertificationEntry,
   lookup: ReadonlyMap<string, CertificationRelatedKnowledgeEntry>,
 ): CertificationRelatedKnowledgeEntry[] =>
-  entry.data.relatedAssets
-    .filter((reference) => isRelatedKnowledgeCollection(reference.collection))
-    .map((reference) => lookup.get(getReferenceKey(reference.collection, reference.slug)))
-    .filter((relatedEntry): relatedEntry is CertificationRelatedKnowledgeEntry =>
-      Boolean(relatedEntry),
-    );
+  resolveRelatedEntries(
+    {
+      collection: entry.collection,
+      slug: entry.data.slug,
+    },
+    entry.data.relatedAssets,
+    lookup,
+    {
+      filter: (reference) => isRelatedKnowledgeCollection(reference.collection),
+    },
+  );
 
 const getRelatedKnowledgeEntries = (
   entry: CertificationEntry,

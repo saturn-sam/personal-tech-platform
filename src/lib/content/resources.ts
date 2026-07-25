@@ -8,6 +8,7 @@ import {
   getEntryUrl,
   getReferenceKey,
   matchesTerms,
+  resolveRelatedEntries,
   type RoutableEntry,
 } from './relationships';
 
@@ -131,10 +132,17 @@ const getExplicitArticleEntries = (
   entry: ResourceEntry,
   lookup: ReadonlyMap<string, ResourceRelatedArticleEntry>,
 ): ResourceRelatedArticleEntry[] =>
-  entry.data.relatedAssets
-    .filter((reference) => reference.collection === 'articles')
-    .map((reference) => lookup.get(getReferenceKey(reference.collection, reference.slug)))
-    .filter((relatedEntry): relatedEntry is ResourceRelatedArticleEntry => Boolean(relatedEntry));
+  resolveRelatedEntries(
+    {
+      collection: entry.collection,
+      slug: entry.data.slug,
+    },
+    entry.data.relatedAssets,
+    lookup,
+    {
+      filter: (reference) => reference.collection === 'articles',
+    },
+  );
 
 const getRelatedArticleEntries = (
   entry: ResourceEntry,
@@ -166,10 +174,17 @@ const getExplicitProjectEntries = (
   entry: ResourceEntry,
   lookup: ReadonlyMap<string, ResourceRelatedProjectEntry>,
 ): ResourceRelatedProjectEntry[] =>
-  entry.data.relatedAssets
-    .filter((reference) => reference.collection === 'projects')
-    .map((reference) => lookup.get(getReferenceKey(reference.collection, reference.slug)))
-    .filter((relatedEntry): relatedEntry is ResourceRelatedProjectEntry => Boolean(relatedEntry));
+  resolveRelatedEntries(
+    {
+      collection: entry.collection,
+      slug: entry.data.slug,
+    },
+    entry.data.relatedAssets,
+    lookup,
+    {
+      filter: (reference) => reference.collection === 'projects',
+    },
+  );
 
 const getRelatedProjectEntries = (
   entry: ResourceEntry,

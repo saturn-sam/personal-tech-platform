@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Article placeholder</title>
+  <desc id="desc">Placeholder artwork for articles.</desc>
+  <rect width="1200" height="675" fill="#15201c" />
+  <rect x="164" y="92" width="872" height="491" rx="28" fill="#1f2d28" stroke="#6bb8c0" stroke-width="2" />
+  <path d="M244 196h536M244 264h640M244 332h584M244 400h488" stroke="#dceff1" stroke-width="20" stroke-linecap="round" opacity="0.65" />
+  <text x="244" y="520" font-family="Segoe UI, Arial, sans-serif" font-size="54" font-weight="700" fill="#edf3ef">Article</text>
+  <text x="244" y="570" font-family="Segoe UI, Arial, sans-serif" font-size="26" fill="#b2c0b8">Long-form technical writing and engineering guidance</text>
+</svg>

@@ -1,0 +1,70 @@
+---
+import { siteConfig } from '@config/site';
+
+export interface Props {
+  description?: string;
+  email?: string;
+  image?: string;
+  jobTitle?: string;
+  knowsAbout?: readonly string[];
+  name?: string;
+  sameAs?: readonly string[];
+  url?: string;
+  worksForName?: string;
+  worksForUrl?: string;
+  homeLocation?: string;
+}
+
+const {
+  description = siteConfig.description,
+  email,
+  image,
+  jobTitle,
+  knowsAbout,
+  name = siteConfig.author,
+  sameAs,
+  url = `${siteConfig.url}/about/`,
+  worksForName,
+  worksForUrl,
+  homeLocation,
+} = Astro.props;
+
+const resolvedSameAs =
+  sameAs?.filter((href) => /^https?:\/\//.test(href)) ??
+  siteConfig.socialLinks
+    .map((link) => link.href)
+    .filter((href) => /^https?:\/\//.test(href))
+    .filter((href) => !['https://github.com/', 'https://www.linkedin.com/'].includes(href));
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  description,
+  name,
+  ...(email ? { email } : {}),
+  ...(homeLocation
+    ? {
+        homeLocation: {
+          '@type': 'Place',
+          name: homeLocation,
+        },
+      }
+    : {}),
+  ...(image ? { image } : {}),
+  ...(jobTitle ? { jobTitle } : {}),
+  ...(knowsAbout && knowsAbout.length > 0 ? { knowsAbout } : {}),
+  ...(resolvedSameAs.length > 0 ? { sameAs: resolvedSameAs } : {}),
+  url,
+  ...(worksForName
+    ? {
+        worksFor: {
+          '@type': 'Organization',
+          name: worksForName,
+          ...(worksForUrl ? { url: worksForUrl } : {}),
+        },
+      }
+    : {}),
+};
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />

@@ -7,9 +7,17 @@ import { fileURLToPath } from 'node:url';
 import { remarkMermaidCodeBlocks } from './src/lib/markdown/remark-mermaid-code-blocks.ts';
 
 const resolvePath = (path) => fileURLToPath(new URL(path, import.meta.url));
+const siteUrl =
+  process.env.PUBLIC_SITE_URL?.trim().replace(/\/$/, '') ||
+  process.env.SITE_URL?.trim().replace(/\/$/, '') ||
+  'https://personal-tech-platform.pages.dev';
 
 export default defineConfig({
   output: 'static',
+  prefetch: {
+    defaultStrategy: 'hover',
+  },
+  site: siteUrl,
   integrations: [mdx()],
   markdown: {
     processor: unified({
@@ -28,6 +36,9 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    optimizeDeps: {
+      exclude: ['dompurify'],
+    },
     resolve: {
       alias: {
         '@': resolvePath('./src'),

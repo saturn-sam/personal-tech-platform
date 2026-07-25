@@ -188,32 +188,36 @@ const structuredData: Record<string, unknown> = {
               </ul>
             </section>
 
-            <div class="project-related-grid">
-              <Card as="section" class="project-related-knowledge">
-                <h2>{labels.relatedKnowledge}</h2>
-                {
-                  relatedKnowledgeEntries.length > 0 ? (
-                    <ul class="project-related-list">
-                      {relatedKnowledgeEntries.map((relatedEntry) => (
-                        <li>
-                          <a href={getRelatedKnowledgeUrl(relatedEntry)}>
-                            <span>{relatedEntry.data.assetType}</span>
-                            <strong>{relatedEntry.data.title}</strong>
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p>{labels.relatedKnowledgeEmpty}</p>
-                  )
-                }
-              </Card>
+            <Card as="section" class="content-related-card project-related">
+              <h2>{labels.relatedContent}</h2>
 
-              <Card as="section" class="project-related-projects">
-                <h2>{labels.relatedProjects}</h2>
-                <p>{labels.relatedProjectsPlaceholder}</p>
-              </Card>
-            </div>
+              <div class="content-related-groups">
+                <section class="content-related-group">
+                  <h3>{labels.relatedKnowledge}</h3>
+                  {
+                    relatedKnowledgeEntries.length > 0 ? (
+                      <ul class="project-related-list">
+                        {relatedKnowledgeEntries.map((relatedEntry) => (
+                          <li>
+                            <a href={getRelatedKnowledgeUrl(relatedEntry)}>
+                              <span>{relatedEntry.data.assetType}</span>
+                              <strong>{relatedEntry.data.title}</strong>
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p>{labels.relatedKnowledgeEmpty}</p>
+                    )
+                  }
+                </section>
+
+                <section class="content-related-group">
+                  <h3>{labels.relatedProjects}</h3>
+                  <p>{labels.relatedProjectsPlaceholder}</p>
+                </section>
+              </div>
+            </Card>
 
             <nav class="project-adjacent" aria-label={labels.projectNavigation}>
               {

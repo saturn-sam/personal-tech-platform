@@ -13,6 +13,7 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
+    "postbuild": "npm run validate:production",
     "preview": "astro preview",
     "check": "astro check",
     "typecheck": "astro sync && tsc --noEmit",
@@ -20,6 +21,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
+    "validate:production": "node scripts/production/harden-dist.mjs",
     "lint-staged": "lint-staged",
     "validate": "npm run check && npm run typecheck && npm run lint && npm run format:check && npm run build",
     "prepare": "husky"

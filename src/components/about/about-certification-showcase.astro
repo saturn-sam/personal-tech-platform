@@ -1,0 +1,74 @@
+---
+import Badge from '@components/ui/badge.astro';
+import Card from '@components/ui/card.astro';
+import Button from '@components/ui/button.astro';
+import Grid from '@components/layout/grid.astro';
+import Stack from '@components/layout/stack.astro';
+import Tag from '@components/ui/tag.astro';
+import type { AboutCertificationEntry, AboutData } from '@lib/content/about';
+import {
+  formatCertificationDate,
+  formatCertificationMachineDate,
+} from '@lib/content/certifications';
+import { getEntryUrl } from '@lib/content/relationships';
+
+import AboutSectionHeader from './about-section-header.astro';
+
+interface Props {
+  entries: readonly AboutCertificationEntry[];
+  id: string;
+  section: AboutData['certifications'];
+}
+
+const { entries, id, section } = Astro.props as Props;
+const previewEntries = section.limit ? entries.slice(0, section.limit) : entries;
+---
+
+<section class="about-section about-certifications" aria-labelledby={id}>
+  <AboutSectionHeader id={id} title={section.title} intro={section.intro} />
+
+  <Grid as="ul" columns={3} gap="lg" class="certification-index__grid about-certifications__grid">
+    {
+      previewEntries.map((entry) => (
+        <Card as="li" variant="interactive" class="certification-card">
+          <article class="certification-card__article">
+            <Stack gap="sm">
+              <div class="certification-card__meta-row">
+                <Badge size="sm">{entry.data.difficulty}</Badge>
+                <span>
+                  <time datetime={formatCertificationMachineDate(entry.data.certificationDate)}>
+                    {formatCertificationDate(entry.data.certificationDate)}
+                  </time>
+                </span>
+              </div>
+              <h3 class="certification-card__title">
+                <a class="certification-card__link" href={getEntryUrl(entry)}>
+                  {entry.data.title}
+                </a>
+              </h3>
+              <p class="certification-card__description">{entry.data.description}</p>
+              <p class="certification-card__description about-certification-card__meta">
+                {entry.data.issuer}
+              </p>
+              <div class="certification-card__tags" aria-label={`${entry.data.title} skills`}>
+                {entry.data.skills.slice(0, 3).map((skill) => (
+                  <Tag>{skill}</Tag>
+                ))}
+              </div>
+            </Stack>
+          </article>
+        </Card>
+      ))
+    }
+  </Grid>
+
+  {
+    section.viewAll && (
+      <div class="about-section__actions">
+        <Button href={section.viewAll.href} variant={section.viewAll.variant}>
+          {section.viewAll.label}
+        </Button>
+      </div>
+    )
+  }
+</section>

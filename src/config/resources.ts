@@ -20,6 +20,7 @@ export const resourceConfig = {
     estimatedStudyTime: 'Study time',
     categories: 'Categories',
     technologies: 'Related Technologies',
+    relatedContent: 'Related content',
     relatedArticles: 'Related Articles',
     relatedArticlesEmpty:
       'Related articles will appear here when matching article records are published.',

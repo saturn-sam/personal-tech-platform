@@ -1,0 +1,74 @@
+---
+import Badge from '@components/ui/badge.astro';
+import Card from '@components/ui/card.astro';
+import Button from '@components/ui/button.astro';
+import Grid from '@components/layout/grid.astro';
+import Stack from '@components/layout/stack.astro';
+import Tag from '@components/ui/tag.astro';
+import type { AboutData, AboutProjectEntry } from '@lib/content/about';
+import {
+  formatProjectDate,
+  formatProjectMachineDate,
+  formatProjectWindow,
+} from '@lib/content/projects';
+import { getEntryUrl } from '@lib/content/relationships';
+
+import AboutSectionHeader from './about-section-header.astro';
+
+interface Props {
+  entries: readonly AboutProjectEntry[];
+  id: string;
+  section: AboutData['projects'];
+}
+
+const { entries, id, section } = Astro.props as Props;
+const previewEntries = section.limit ? entries.slice(0, section.limit) : entries;
+---
+
+<section class="about-section about-projects" aria-labelledby={id}>
+  <AboutSectionHeader id={id} title={section.title} intro={section.intro} />
+
+  <Grid as="ul" columns={2} gap="lg" class="project-index__grid about-projects__grid">
+    {
+      previewEntries.map((entry) => (
+        <Card as="li" variant="interactive" class="project-card">
+          <article class="project-card__article">
+            <Stack gap="sm">
+              <div class="project-card__meta-row">
+                <Badge size="sm">{entry.data.projectStatus}</Badge>
+                <span>{formatProjectWindow(entry)}</span>
+              </div>
+              <h3 class="project-card__title">
+                <a class="project-card__link" href={getEntryUrl(entry)}>
+                  {entry.data.title}
+                </a>
+              </h3>
+              <p class="project-card__description">{entry.data.description}</p>
+              <p class="project-card__description about-project-card__meta">
+                {entry.data.environment} ·{' '}
+                <time datetime={formatProjectMachineDate(entry.data.updatedDate)}>
+                  {formatProjectDate(entry.data.updatedDate)}
+                </time>
+              </p>
+              <div class="project-card__tags" aria-label={`${entry.data.title} technologies`}>
+                {entry.data.technologies.slice(0, 4).map((technology) => (
+                  <Tag>{technology}</Tag>
+                ))}
+              </div>
+            </Stack>
+          </article>
+        </Card>
+      ))
+    }
+  </Grid>
+
+  {
+    section.viewAll && (
+      <div class="about-section__actions">
+        <Button href={section.viewAll.href} variant={section.viewAll.variant}>
+          {section.viewAll.label}
+        </Button>
+      </div>
+    )
+  }
+</section>

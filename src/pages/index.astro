@@ -11,6 +11,8 @@ import Grid from '@components/layout/grid.astro';
 import Section from '@components/layout/section.astro';
 import PageContainer from '@components/layout/page-container.astro';
 import Stack from '@components/layout/stack.astro';
+import PersonSchema from '@components/seo/person-schema.astro';
+import WebsiteSchema from '@components/seo/website-schema.astro';
 import { homepageConfig } from '@config/homepage';
 import AppLayout from '@layouts/app-layout.astro';
 import {
@@ -77,6 +79,7 @@ const certifications = (await getPublishedCollectionEntries('certifications'))
 const recentEntries = sortByUpdatedDate([
   ...(await getPublishedCollectionEntries('articles')),
   ...(await getPublishedCollectionEntries('lab-notes')),
+  ...(await getPublishedCollectionEntries('case-studies')),
 ])
   .filter((entry) => entry.data.featured)
   .slice(0, recentUpdatesConfig.limit);
@@ -88,6 +91,8 @@ const recentEntries = sortByUpdatedDate([
   canonicalPath={seo.canonicalPath}
   mainClass="homepage"
 >
+  <WebsiteSchema />
+  <PersonSchema />
   <Section spacing="spacious">
     <PageContainer size="wide">
       <div class="homepage-hero">
@@ -102,6 +107,13 @@ const recentEntries = sortByUpdatedDate([
             <Button href={hero.primaryAction.href}>{hero.primaryAction.label}</Button>
             <Button href={hero.secondaryAction.href} variant="secondary">
               {hero.secondaryAction.label}
+            </Button>
+            <Button
+              href={hero.tertiaryAction.href}
+              variant="ghost"
+              download={hero.tertiaryAction.download}
+            >
+              {hero.tertiaryAction.label}
             </Button>
           </div>
         </Stack>

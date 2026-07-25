@@ -1,4 +1,6 @@
 ---
+import { getLinkPrefetchStrategy } from '@utils/prefetch';
+
 export interface BreadcrumbItem {
   readonly href?: string;
   readonly label: string;
@@ -25,7 +27,11 @@ const lastIndex = items.length - 1;
           return (
             <li class="breadcrumb__item">
               {item.href && !isCurrent ? (
-                <a class="breadcrumb__link" href={item.href}>
+                <a
+                  class="breadcrumb__link"
+                  href={item.href}
+                  data-astro-prefetch={getLinkPrefetchStrategy(item.href)}
+                >
                   {item.label}
                 </a>
               ) : (

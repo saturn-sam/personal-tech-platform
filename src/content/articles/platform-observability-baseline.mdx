@@ -1,0 +1,73 @@
+---
+assetType: article
+title: Platform Observability Baseline for Kubernetes
+slug: platform-observability-baseline
+description: A practical baseline for observability design in Kubernetes platforms, covering signals, ownership, and service health expectations.
+summary: An operational guide to defining the minimum observability baseline for Kubernetes platforms so teams can detect regressions before incidents become costly.
+author: Md. Samrat Uz Zaman
+publishedDate: '2026-07-15'
+updatedDate: '2026-07-15'
+status: published
+tags:
+  - Kubernetes
+  - Observability
+  - Platform Engineering
+technologies:
+  - Kubernetes
+  - Prometheus
+categories:
+  - Containers
+difficulty: intermediate
+readingTime:
+  minutes: 7
+  text: 7 min read
+relatedAssets:
+  - collection: technologies
+    slug: kubernetes
+  - collection: resources
+    slug: kubernetes-node-triage-checklist
+featuredImage:
+  src: /assets/placeholders/kubernetes-platform.svg
+  alt: Platform observability baseline illustration
+seo:
+  title: Platform Observability Baseline for Kubernetes
+  description: A practical observability baseline for Kubernetes platform teams covering signals, ownership, and incident readiness.
+  canonicalPath: /articles/platform-observability-baseline/
+  robots: index,follow
+featured: true
+---
+
+A useful observability baseline does more than collect metrics. It makes ownership, signal quality, and recovery expectations visible to the teams operating the platform.
+
+## Start With the Platform Signals
+
+Every Kubernetes platform should expose a minimum set of signals that show whether the control plane, worker nodes, and supporting services are healthy. These signals should be reviewed during regular operations, not only during incidents.
+
+- API server availability and latency
+- Node readiness and pressure conditions
+- Workload rollout health and restart frequency
+- Ingress and service reliability
+- Persistent storage readiness and backup health
+
+## Define Ownership
+
+A strong baseline assigns each signal to a specific owner and a recovery workflow. When teams know who responds to a failing dashboard or alert, they can reduce delay during incidents.
+
+```yaml
+observability:
+  alerting:
+    primaryOwner: platform-operations
+    escalation: platform-leads
+  dashboards:
+    owners:
+      - platform-engineering
+      - application-operations
+```
+
+## Make the Baseline Reusable
+
+The baseline should remain simple enough to be reused across environments. If every team needs a custom alert strategy, the platform loses consistency and operators lose trust in the shared model.
+
+## Related Practice
+
+Use this article alongside the Kubernetes node triage checklist when you need to move from signal review to incident response.

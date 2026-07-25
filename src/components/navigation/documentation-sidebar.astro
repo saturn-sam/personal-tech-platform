@@ -1,0 +1,76 @@
+---
+import { getLinkPrefetchStrategy } from '@utils/prefetch';
+
+interface SidebarItem {
+  readonly href: string;
+  readonly title: string;
+  readonly current?: boolean;
+}
+
+interface Props {
+  currentPageHref: string;
+  currentPageTitle: string;
+  items?: readonly SidebarItem[];
+  sectionHref: string;
+  sectionLabel: string;
+  title: string;
+}
+
+const {
+  currentPageHref,
+  currentPageTitle,
+  items = [],
+  sectionHref,
+  sectionLabel,
+  title,
+} = Astro.props as Props;
+---
+
+<aside class="documentation-sidebar" aria-label={title}>
+  <div class="documentation-sidebar__section">
+    <p class="documentation-sidebar__eyebrow">Section</p>
+    <a
+      class="documentation-sidebar__section-link"
+      href={sectionHref}
+      data-astro-prefetch={getLinkPrefetchStrategy(sectionHref)}
+    >
+      {sectionLabel}
+    </a>
+  </div>
+
+  <div class="documentation-sidebar__current">
+    <p class="documentation-sidebar__eyebrow">Current page</p>
+    <a
+      class="documentation-sidebar__current-link"
+      href={currentPageHref}
+      data-astro-prefetch={getLinkPrefetchStrategy(currentPageHref)}
+    >
+      {currentPageTitle}
+    </a>
+  </div>
+
+  {
+    items.length > 0 && (
+      <nav class="documentation-sidebar__nav" aria-label={`${title} navigation`}>
+        <h2 id="documentation-sidebar-title">{title}</h2>
+        <ol class="documentation-sidebar__list">
+          {items.map((item) => (
+            <li class="documentation-sidebar__item">
+              <a
+                class:list={[
+                  'documentation-sidebar__link',
+                  item.current && 'documentation-sidebar__link--active',
+                ]}
+                href={item.href}
+                aria-current={item.current ? 'page' : undefined}
+                data-astro-prefetch={getLinkPrefetchStrategy(item.href)}
+              >
+                {item.title}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    )
+  }
+</aside>

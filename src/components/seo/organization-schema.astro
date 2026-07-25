@@ -1,0 +1,26 @@
+---
+import { siteConfig } from '@config/site';
+
+export interface Props {
+  url?: string;
+}
+
+const { url = siteConfig.url } = Astro.props;
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: siteConfig.fullName,
+  alternateName: siteConfig.name,
+  description: siteConfig.description,
+  url: url || 'https://example.com',
+  sameAs: ['https://github.com/', 'https://www.linkedin.com/'],
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'Customer Support',
+    url: url || 'https://example.com',
+  },
+};
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />

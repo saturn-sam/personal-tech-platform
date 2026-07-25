@@ -1,0 +1,238 @@
+---
+import AboutAchievements from '@components/about/about-achievements.astro';
+import AboutCallToAction from '@components/about/about-call-to-action.astro';
+import AboutCertificationShowcase from '@components/about/about-certification-showcase.astro';
+import AboutContact from '@components/about/about-contact.astro';
+import AboutGroupedSection from '@components/about/about-grouped-section.astro';
+import AboutHero from '@components/about/about-hero.astro';
+import AboutNarrativeSection from '@components/about/about-narrative-section.astro';
+import AboutProjectShowcase from '@components/about/about-project-showcase.astro';
+import AboutTechnicalExpertise from '@components/about/about-technical-expertise.astro';
+import AboutTechnologyStack from '@components/about/about-technology-stack.astro';
+import AboutTimeline from '@components/about/about-timeline.astro';
+import PageContainer from '@components/layout/page-container.astro';
+import Section from '@components/layout/section.astro';
+import Stack from '@components/layout/stack.astro';
+import Breadcrumb from '@components/navigation/breadcrumb.astro';
+import PersonSchema from '@components/seo/person-schema.astro';
+import { siteConfig } from '@config/site';
+import AppLayout from '@layouts/app-layout.astro';
+import {
+  getAboutCertificationEntries,
+  getAboutPageEntry,
+  getAboutProjectEntries,
+  getAboutTechnologyGroups,
+  type AboutSectionId,
+} from '@lib/content/about';
+
+const entry = await getAboutPageEntry();
+const canonicalPath = entry.data.seo.canonicalPath ?? '/about/';
+
+const [projectEntries, certificationEntries, technicalExpertiseGroups, technologyGroups] =
+  await Promise.all([
+    getAboutProjectEntries(entry.data.projects.slugs),
+    getAboutCertificationEntries(entry.data.certifications),
+    getAboutTechnologyGroups(entry.data.technicalExpertise.groups),
+    getAboutTechnologyGroups(entry.data.technologyStack.groups),
+  ]);
+const enabledSectionIds = new Set(
+  entry.data.sections.filter((section) => section.enabled).map((section) => section.id),
+);
+const heroEnabled = enabledSectionIds.has('hero');
+
+const breadcrumbs = [
+  { href: '/', label: 'Home' },
+  { current: true, label: entry.data.title },
+];
+
+const mailtoMethod = entry.data.contact.methods.find((method) => method.href.startsWith('mailto:'));
+const email = mailtoMethod?.value;
+const sameAs = entry.data.contact.methods
+  .map((method) => method.href)
+  .filter((href) => href.startsWith('http'));
+const knowsAbout = [
+  ...new Set(
+    technologyGroups.flatMap((group) => group.entries.map((technology) => technology.data.title)),
+  ),
+];
+const resolveUrl = (path: string): string | undefined =>
+  siteConfig.url ? new URL(path, siteConfig.url).toString() : undefined;
+
+const headingIds: Record<Exclude<AboutSectionId, 'hero'>, string> = {
+  'professional-summary': 'about-professional-summary',
+  'personal-story': 'about-personal-story',
+  'career-timeline': 'about-career-timeline',
+  'technical-expertise': 'about-technical-expertise',
+  certifications: 'about-certifications',
+  projects: 'about-projects',
+  'learning-journey': 'about-learning-journey',
+  achievements: 'about-achievements',
+  philosophy: 'about-philosophy',
+  'personal-interests': 'about-personal-interests',
+  'technology-stack': 'about-technology-stack',
+  'current-focus': 'about-current-focus',
+  contact: 'about-contact',
+  'call-to-action': 'about-call-to-action',
+};
+---
+
+<AppLayout
+  title={entry.data.seo.title}
+  description={entry.data.seo.description}
+  canonicalPath={canonicalPath}
+  ogImage={entry.data.hero.photo.src}
+  pageSchemaType="AboutPage"
+  mainClass="about-page"
+>
+  <PersonSchema
+    name={entry.data.hero.fullName}
+    description={entry.data.hero.introduction}
+    url={resolveUrl(canonicalPath)}
+    image={resolveUrl(entry.data.hero.photo.src)}
+    email={email}
+    jobTitle={entry.data.hero.professionalTitle}
+    sameAs={sameAs}
+    worksForName={entry.data.hero.currentOrganization.value}
+    worksForUrl={entry.data.hero.currentOrganization.href}
+    homeLocation={entry.data.hero.location.value}
+    knowsAbout={knowsAbout}
+  />
+
+  <Section spacing="compact" class="about-profile">
+    <PageContainer size="wide">
+      <Stack gap="xl">
+        <Breadcrumb items={breadcrumbs} />
+
+        <article class="about-profile__article">
+          {
+            entry.data.sections
+              .filter((section) => section.enabled)
+              .map((section) => {
+                switch (section.id) {
+                  case 'hero':
+                    return (
+                      <AboutHero
+                        hero={entry.data.hero}
+                        professionalSummary={
+                          enabledSectionIds.has('professional-summary')
+                            ? {
+                                id: headingIds['professional-summary'],
+                                section: entry.data.professionalSummary,
+                              }
+                            : undefined
+                        }
+                        personalStory={
+                          enabledSectionIds.has('personal-story')
+                            ? {
+                                id: headingIds['personal-story'],
+                                section: entry.data.personalStory,
+                              }
+                            : undefined
+                        }
+                      />
+                    );
+                  case 'professional-summary':
+                    return heroEnabled ? null : (
+                      <AboutNarrativeSection
+                        id={headingIds['professional-summary']}
+                        section={entry.data.professionalSummary}
+                      />
+                    );
+                  case 'personal-story':
+                    return heroEnabled ? null : (
+                      <AboutNarrativeSection
+                        id={headingIds['personal-story']}
+                        section={entry.data.personalStory}
+                      />
+                    );
+                  case 'career-timeline':
+                    return (
+                      <AboutTimeline
+                        id={headingIds['career-timeline']}
+                        section={entry.data.careerTimeline}
+                      />
+                    );
+                  case 'technical-expertise':
+                    return technicalExpertiseGroups.length > 0 ? (
+                      <AboutTechnicalExpertise
+                        id={headingIds['technical-expertise']}
+                        section={entry.data.technicalExpertise}
+                        groups={technicalExpertiseGroups}
+                      />
+                    ) : null;
+                  case 'certifications':
+                    return certificationEntries.length > 0 ? (
+                      <AboutCertificationShowcase
+                        id={headingIds.certifications}
+                        section={entry.data.certifications}
+                        entries={certificationEntries}
+                      />
+                    ) : null;
+                  case 'projects':
+                    return projectEntries.length > 0 ? (
+                      <AboutProjectShowcase
+                        id={headingIds.projects}
+                        section={entry.data.projects}
+                        entries={projectEntries}
+                      />
+                    ) : null;
+                  case 'learning-journey':
+                    return (
+                      <AboutNarrativeSection
+                        id={headingIds['learning-journey']}
+                        section={entry.data.learningJourney}
+                      />
+                    );
+                  case 'achievements':
+                    return (
+                      <AboutAchievements
+                        id={headingIds.achievements}
+                        section={entry.data.achievements}
+                      />
+                    );
+                  case 'philosophy':
+                    return (
+                      <AboutNarrativeSection
+                        id={headingIds.philosophy}
+                        section={entry.data.philosophy}
+                      />
+                    );
+                  case 'personal-interests':
+                    return (
+                      <AboutGroupedSection
+                        id={headingIds['personal-interests']}
+                        section={entry.data.personalInterests}
+                      />
+                    );
+                  case 'technology-stack':
+                    return technologyGroups.length > 0 ? (
+                      <AboutTechnologyStack
+                        id={headingIds['technology-stack']}
+                        section={entry.data.technologyStack}
+                        groups={technologyGroups}
+                      />
+                    ) : null;
+                  case 'current-focus':
+                    return (
+                      <AboutGroupedSection
+                        id={headingIds['current-focus']}
+                        section={entry.data.currentFocus}
+                      />
+                    );
+                  case 'contact':
+                    return <AboutContact id={headingIds.contact} section={entry.data.contact} />;
+                  case 'call-to-action':
+                    return (
+                      <AboutCallToAction
+                        id={headingIds['call-to-action']}
+                        section={entry.data.callToAction}
+                      />
+                    );
+                }
+              })
+          }
+        </article>
+      </Stack>
+    </PageContainer>
+  </Section>
+</AppLayout>

@@ -1,0 +1,30 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: readonly MarkdownHeading[];
+  title?: string;
+}
+
+const { headings, title = 'On this page' } = Astro.props as Props;
+const tocHeadings = headings.filter(
+  (heading) => heading.depth >= 2 && heading.depth <= 4 && heading.slug,
+);
+---
+
+{
+  tocHeadings.length > 0 && (
+    <nav class="knowledge-toc" aria-labelledby="knowledge-toc-title" data-toc>
+      <h2 id="knowledge-toc-title">{title}</h2>
+      <ol class="knowledge-toc__list">
+        {tocHeadings.map((heading) => (
+          <li class:list={['knowledge-toc__item', `knowledge-toc__item--depth-${heading.depth}`]}>
+            <a class="knowledge-toc__link" href={`#${heading.slug}`}>
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+}

@@ -1,0 +1,65 @@
+---
+assetType: certification
+title: Example Certification
+slug: example-certification
+description: Credential record connected to related technologies, projects, and study assets.
+summary: Certification page documenting issuer, dates, verification, related skills, and study context.
+author: Md. Samrat Uz Zaman
+publishedDate: '2026-07-25'
+updatedDate: '2026-07-25'
+reviewedDate: '2026-07-25'
+revision: '1.0'
+status: draft
+tags:
+  - Certification
+  - Kubernetes
+technologies:
+  - Kubernetes
+categories:
+  - Credentials
+difficulty: advanced
+issuer: Example Issuer
+credentialId: EXAMPLE-12345
+certificationDate: '2026-07-25'
+expirationDate: '2028-07-25'
+verificationUrl: https://example.com/verify/example-certification
+badge:
+  src: /assets/placeholders/certification.svg
+  alt: Example certification badge
+skills:
+  - Cluster operations
+  - Troubleshooting
+  - Security baseline
+relatedAssets:
+  - collection: technologies
+    slug: kubernetes
+  - collection: articles
+    slug: enterprise-kubernetes-platform-architecture
+featuredImage:
+  src: /assets/placeholders/certification.svg
+  alt: Example certification illustration
+seo:
+  title: Example Certification
+  description: Credential record connected to related technologies, projects, and study assets.
+  canonicalPath: /certifications/example-certification/
+  robots: noindex,follow
+featured: false
+---
+
+## Overview
+
+Summarize what the certification covers and why it matters.
+
+## Exam Scope
+
+- Topic area one
+- Topic area two
+
+## Study Approach
+
+Explain how the preparation was structured.
+
+## Practical Value
+
+Describe how the credential connects to real engineering work.
+```

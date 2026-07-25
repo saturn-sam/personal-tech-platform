@@ -47,6 +47,14 @@ export const readingTimeSchema = z
   })
   .strict();
 
+const hrefSchema = z
+  .string()
+  .trim()
+  .refine(
+    (value) => value.startsWith('/') || value.startsWith('mailto:') || /^https?:\/\//.test(value),
+    'Use a site-relative path, mailto link, or absolute URL.',
+  );
+
 export const baseKnowledgeAssetSchema = z
   .object({
     title: nonEmptyString,
@@ -100,6 +108,204 @@ export const architectureGuideSchema = baseKnowledgeAssetSchema
       })
       .strict()
       .optional(),
+  })
+  .strict();
+
+export const caseStudySchema = baseKnowledgeAssetSchema
+  .extend({
+    assetType: z.literal('case-study'),
+    readingTime: readingTimeSchema,
+  })
+  .strict();
+
+const aboutSectionIdSchema = z.enum([
+  'hero',
+  'professional-summary',
+  'personal-story',
+  'career-timeline',
+  'technical-expertise',
+  'certifications',
+  'projects',
+  'learning-journey',
+  'achievements',
+  'philosophy',
+  'personal-interests',
+  'technology-stack',
+  'current-focus',
+  'contact',
+  'call-to-action',
+]);
+
+const aboutSectionSchema = z
+  .object({
+    id: aboutSectionIdSchema,
+    enabled: z.boolean().default(true),
+  })
+  .strict();
+
+const aboutSectionHeadingSchema = z
+  .object({
+    title: nonEmptyString,
+    intro: nonEmptyString.optional(),
+  })
+  .strict();
+
+const aboutNarrativeSectionSchema = aboutSectionHeadingSchema
+  .extend({
+    paragraphs: z.array(nonEmptyString).min(1),
+  })
+  .strict();
+
+const aboutListGroupSchema = z
+  .object({
+    title: nonEmptyString,
+    items: z.array(nonEmptyString).min(1),
+  })
+  .strict();
+
+const aboutGroupedSectionSchema = aboutSectionHeadingSchema
+  .extend({
+    groups: z.array(aboutListGroupSchema).min(1),
+  })
+  .strict();
+
+const aboutActionSchema = z
+  .object({
+    label: nonEmptyString,
+    href: hrefSchema,
+    variant: z.enum(['primary', 'secondary', 'ghost']).default('secondary'),
+  })
+  .strict();
+
+const aboutTechnologyGroupSchema = z
+  .object({
+    title: nonEmptyString,
+    technologies: z.array(slugSchema).min(1),
+  })
+  .strict();
+
+const aboutTechnologyStackSchema = aboutSectionHeadingSchema
+  .extend({
+    groups: z.array(aboutTechnologyGroupSchema).min(1),
+    viewAll: aboutActionSchema.optional(),
+  })
+  .strict();
+
+const aboutTechnicalExpertiseSchema = aboutSectionHeadingSchema
+  .extend({
+    groups: z.array(aboutTechnologyGroupSchema).min(1),
+  })
+  .strict();
+
+const aboutCareerTimelineEntrySchema = z
+  .object({
+    period: nonEmptyString,
+    role: nonEmptyString,
+    organization: nonEmptyString,
+    highlights: z.array(nonEmptyString).min(1),
+  })
+  .strict();
+
+const aboutCareerTimelineSchema = aboutSectionHeadingSchema
+  .extend({
+    entries: z.array(aboutCareerTimelineEntrySchema).min(1),
+  })
+  .strict();
+
+const aboutLinkValueSchema = z
+  .object({
+    label: nonEmptyString,
+    value: nonEmptyString,
+    href: hrefSchema.optional(),
+  })
+  .strict();
+
+const aboutContactMethodSchema = z
+  .object({
+    label: nonEmptyString,
+    value: nonEmptyString,
+    href: hrefSchema,
+    description: nonEmptyString.optional(),
+  })
+  .strict();
+
+const aboutAchievementSchema = z
+  .object({
+    title: nonEmptyString,
+    description: nonEmptyString,
+    label: nonEmptyString.optional(),
+    href: hrefSchema.optional(),
+    value: nonEmptyString.optional(),
+  })
+  .strict();
+
+const aboutHeroSchema = z
+  .object({
+    eyebrow: nonEmptyString,
+    fullName: nonEmptyString,
+    professionalTitle: nonEmptyString,
+    introduction: nonEmptyString,
+    photo: featuredImageSchema,
+    currentRole: aboutLinkValueSchema,
+    currentOrganization: aboutLinkValueSchema,
+    location: aboutLinkValueSchema,
+    additionalDetails: z.array(aboutLinkValueSchema).default([]),
+  })
+  .strict();
+
+const aboutProjectsSectionSchema = aboutSectionHeadingSchema
+  .extend({
+    limit: z.number().int().positive().optional(),
+    slugs: z.array(slugSchema).min(1),
+    viewAll: aboutActionSchema.optional(),
+  })
+  .strict();
+
+const aboutCertificationsSectionSchema = aboutSectionHeadingSchema
+  .extend({
+    limit: z.number().int().positive().optional(),
+    mode: z.enum(['all', 'selected']).default('all'),
+    slugs: z.array(slugSchema).default([]),
+    viewAll: aboutActionSchema.optional(),
+  })
+  .strict();
+
+const aboutContactSectionSchema = aboutSectionHeadingSchema
+  .extend({
+    methods: z.array(aboutContactMethodSchema).min(1),
+  })
+  .strict();
+
+const aboutCallToActionSchema = aboutSectionHeadingSchema
+  .extend({
+    actions: z.array(aboutActionSchema).min(1),
+  })
+  .strict();
+
+export const aboutSchema = z
+  .object({
+    title: nonEmptyString,
+    seo: seoMetadataSchema,
+    hero: aboutHeroSchema,
+    sections: z.array(aboutSectionSchema).min(1),
+    professionalSummary: aboutNarrativeSectionSchema,
+    personalStory: aboutNarrativeSectionSchema,
+    careerTimeline: aboutCareerTimelineSchema,
+    technicalExpertise: aboutTechnicalExpertiseSchema,
+    certifications: aboutCertificationsSectionSchema,
+    projects: aboutProjectsSectionSchema,
+    learningJourney: aboutNarrativeSectionSchema,
+    achievements: aboutSectionHeadingSchema
+      .extend({
+        items: z.array(aboutAchievementSchema).min(1),
+      })
+      .strict(),
+    philosophy: aboutNarrativeSectionSchema,
+    personalInterests: aboutGroupedSectionSchema,
+    technologyStack: aboutTechnologyStackSchema,
+    currentFocus: aboutGroupedSectionSchema,
+    contact: aboutContactSectionSchema,
+    callToAction: aboutCallToActionSchema,
   })
   .strict();
 

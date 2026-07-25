@@ -1,0 +1,75 @@
+---
+assetType: lab-note
+title: GitOps Promotion Checklist
+slug: gitops-promotion-checklist
+description: A compact checklist for validating GitOps promotions across environments before release.
+summary: A short operational checklist for reviewing manifests, approvals, drift, and deployment readiness before promoting changes through GitOps.
+author: Md. Samrat Uz Zaman
+publishedDate: '2026-07-15'
+updatedDate: '2026-07-15'
+status: published
+tags:
+  - GitOps
+  - Deployment
+  - Operations
+technologies:
+  - Kubernetes
+  - GitLab CI/CD
+categories:
+  - Delivery
+difficulty: intermediate
+readingTime:
+  minutes: 3
+  text: 3 min read
+tools:
+  - kubectl
+  - git
+relatedAssets:
+  - collection: articles
+    slug: platform-observability-baseline
+  - collection: projects
+    slug: enterprise-kubernetes-platform
+featuredImage:
+  src: /assets/placeholders/resource.svg
+  alt: GitOps promotion checklist
+seo:
+  title: GitOps Promotion Checklist
+  description: A concise checklist for validating GitOps promotions and deployment readiness.
+  canonicalPath: /lab-notes/gitops-promotion-checklist/
+  robots: index,follow
+featured: true
+---
+
+Use this note before promoting a GitOps change into a shared environment. The goal is to make the review repeatable and reduce the chance that a promotion moves forward without the expected validation.
+
+## Pre-Promotion Review
+
+- Confirm the target environment and branch mapping.
+- Review the manifest diff for unexpected resource changes.
+- Validate required approvals and release ownership.
+- Check whether the change affects observability, storage, or ingress behavior.
+
+Read the [GitOps Promotion Checklist](/lab-notes/gitops-promotion-checklist/).
+
+- Platform work
+  - Kubernetes
+  - GitOps
+
+1. Review
+2. Approve
+   - Security check
+   - Rollback check
+3. Promote
+
+```bash
+git diff origin/main...HEAD
+kubectl diff -f manifests/
+```
+
+## Drift Check
+
+If the cluster differs from the repository state, investigate the cause before continuing. Drift can hide a deployment that is technically applied but not governed by the expected source of truth.
+
+## Release Note
+
+Record the promotion decision, the validation evidence, and the owner responsible for the change. This makes follow-up support simpler when the deployment causes an issue later.

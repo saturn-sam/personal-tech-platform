@@ -1,0 +1,48 @@
+---
+import Card from '@components/ui/card.astro';
+import Button from '@components/ui/button.astro';
+import Grid from '@components/layout/grid.astro';
+import Tag from '@components/ui/tag.astro';
+import type { AboutData, AboutResolvedTechnologyGroup } from '@lib/content/about';
+import { getEntryUrl } from '@lib/content/relationships';
+
+import AboutSectionHeader from './about-section-header.astro';
+
+interface Props {
+  groups: readonly AboutResolvedTechnologyGroup[];
+  id: string;
+  section: AboutData['technologyStack'];
+}
+
+const { groups, id, section } = Astro.props as Props;
+const columns: 2 | 3 = groups.length >= 3 ? 3 : 2;
+---
+
+<section class="about-section about-tech-stack" aria-labelledby={id}>
+  <AboutSectionHeader id={id} title={section.title} intro={section.intro} />
+
+  <Grid columns={columns} gap="lg" class="about-tech-stack__grid">
+    {
+      groups.map((group) => (
+        <Card as="section" class="about-tech-stack__card">
+          <h3>{group.title}</h3>
+          <div class="about-tech-stack__tags" aria-label={group.title}>
+            {group.entries.map((entry) => (
+              <Tag href={getEntryUrl(entry)}>{entry.data.title}</Tag>
+            ))}
+          </div>
+        </Card>
+      ))
+    }
+  </Grid>
+
+  {
+    section.viewAll && (
+      <div class="about-section__actions">
+        <Button href={section.viewAll.href} variant={section.viewAll.variant}>
+          {section.viewAll.label}
+        </Button>
+      </div>
+    )
+  }
+</section>

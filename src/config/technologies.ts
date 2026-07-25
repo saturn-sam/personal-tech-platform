@@ -23,6 +23,7 @@ export const technologyConfig = {
     aliases: 'Aliases',
     tags: 'Tags',
     technologyMetadata: 'Technology metadata',
+    relatedContent: 'Related content',
     relatedKnowledge: 'Related Knowledge Assets',
     relatedKnowledgeEmpty:
       'Related Knowledge Assets will appear here when matching content is published.',

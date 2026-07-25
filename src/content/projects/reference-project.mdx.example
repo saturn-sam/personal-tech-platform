@@ -1,0 +1,91 @@
+---
+assetType: project
+title: Example Project
+slug: example-project
+description: Real implementation record for a platform or infrastructure initiative.
+summary: A project entry describing objectives, architecture, implementation milestones, outcomes, and lessons learned.
+author: Md. Samrat Uz Zaman
+publishedDate: '2026-07-25'
+updatedDate: '2026-07-25'
+reviewedDate: '2026-07-25'
+revision: '1.0'
+status: draft
+tags:
+  - Kubernetes
+  - Observability
+  - GitOps
+technologies:
+  - Kubernetes
+  - Prometheus
+  - GitLab CI/CD
+categories:
+  - Containers
+  - Monitoring
+difficulty: advanced
+projectStatus: active
+environment: Enterprise Kubernetes platform
+startDate: '2026-03-01'
+endDate: '2026-07-25'
+outcomes:
+  - Standardized platform onboarding rules.
+  - Reduced delivery inconsistency across environments.
+gallery:
+  - src: /assets/placeholders/project.svg
+    alt: Example project architecture overview
+  - src: /assets/placeholders/enterprise-kubernetes-platform.svg
+    alt: Example project delivery workflow
+timeline:
+  - date: '2026-03-01'
+    title: Scope confirmed
+    description: Defined the platform problem and success criteria.
+  - date: '2026-05-15'
+    title: Delivery workflow established
+    description: Standardized GitOps promotion and baseline observability.
+diagram:
+  language: mermaid
+  title: Example project flow
+relatedAssets:
+  - collection: articles
+    slug: enterprise-kubernetes-platform-architecture
+  - collection: technologies
+    slug: kubernetes
+  - collection: case-studies
+    slug: gitops-promotion-governance
+featuredImage:
+  src: /assets/placeholders/project.svg
+  alt: Example project illustration
+seo:
+  title: Example Project
+  description: Real implementation record for a platform or infrastructure initiative.
+  canonicalPath: /projects/example-project/
+  robots: noindex,follow
+featured: false
+---
+
+## Project Overview
+
+Summarize the project at a practical level.
+
+## Architecture Diagram
+
+```mermaid
+flowchart LR
+  Team[Application Team] --> Git[Git Repository]
+  Git --> Pipeline[Pipeline]
+  Pipeline --> Cluster[Platform Cluster]
+```
+
+## Implementation
+
+Describe the delivery approach and guardrails.
+
+![Example section image](/assets/placeholders/enterprise-kubernetes-platform.svg)
+
+## Challenges
+
+- Record the real constraints.
+
+## Lessons Learned
+
+- Record what should be repeated next time.
+```

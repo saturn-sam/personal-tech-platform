@@ -1,0 +1,38 @@
+---
+import Card from '@components/ui/card.astro';
+import Grid from '@components/layout/grid.astro';
+import Link from '@components/ui/link.astro';
+import type { AboutData } from '@lib/content/about';
+
+import AboutSectionHeader from './about-section-header.astro';
+
+interface Props {
+  id: string;
+  section: AboutData['contact'];
+}
+
+const { id, section } = Astro.props as Props;
+const columns: 2 | 3 = section.methods.length >= 3 ? 3 : 2;
+const getTarget = (href: string): '_blank' | undefined =>
+  href.startsWith('http') ? '_blank' : undefined;
+---
+
+<section class="about-section about-contact" aria-labelledby={id}>
+  <AboutSectionHeader id={id} title={section.title} intro={section.intro} />
+
+  <Grid columns={columns} gap="lg" class="about-contact__grid">
+    {
+      section.methods.map((method) => (
+        <Card as="section" class="about-contact__card">
+          <p class="about-contact__label">{method.label}</p>
+          <h3 class="about-contact__value">
+            <Link href={method.href} target={getTarget(method.href)}>
+              {method.value}
+            </Link>
+          </h3>
+          {method.description && <p class="about-contact__description">{method.description}</p>}
+        </Card>
+      ))
+    }
+  </Grid>
+</section>

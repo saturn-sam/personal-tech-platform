@@ -1,0 +1,139 @@
+---
+import EmptyState from '@components/feedback/empty-state.astro';
+import { errorExperienceConfig } from '@config/error-experience';
+
+interface Props {
+  clearHistoryLabel?: string;
+  defaultStatus?: string;
+  initialQuery?: string;
+  inputId: string;
+  surface: 'dialog' | 'page';
+}
+
+const {
+  clearHistoryLabel = 'Clear history',
+  defaultStatus = 'Search across articles, lab notes, architecture guides, case studies, projects, technologies, certifications, resources, and learning paths.',
+  initialQuery = '',
+  inputId,
+  surface,
+} = Astro.props as Props;
+
+const searchEmptyStates = errorExperienceConfig.search;
+const statusId = `${inputId}-search-status`;
+const historyLabelId = `${inputId}-search-history-label`;
+const resultsLabelId = `${inputId}-search-results-label`;
+---
+
+<div class="search-page__surface" data-search-surface={surface}>
+  <form
+    class="search-page__form"
+    data-search-form
+    role="search"
+    novalidate
+    aria-describedby={statusId}
+  >
+    <label class="sr-only" for={inputId}>Search the knowledge platform</label>
+    <div class="search-page__input-wrap">
+      <input
+        id={inputId}
+        class="search-page__input"
+        name="q"
+        type="search"
+        autocomplete="off"
+        placeholder="Search by keyword, technology, or tag"
+        value={initialQuery}
+        data-search-input
+      />
+      <button
+        class="search-page__clear"
+        type="button"
+        data-search-clear
+        aria-label="Clear search query"
+      >
+        Clear
+      </button>
+    </div>
+    <button class="search-page__submit" type="submit">Search</button>
+  </form>
+
+  <div class="search-page__controls">
+    <label class="search-page__control">
+      <span class="search-page__control-label">Type</span>
+      <select class="search-page__select" data-search-filter-collection>
+        <option value="">All types</option>
+      </select>
+    </label>
+
+    <label class="search-page__control">
+      <span class="search-page__control-label">Category</span>
+      <select class="search-page__select" data-search-filter-category>
+        <option value="">All categories</option>
+      </select>
+    </label>
+
+    <label class="search-page__control">
+      <span class="search-page__control-label">Sort</span>
+      <select class="search-page__select" data-search-sort>
+        <option value="relevance">Relevance</option>
+        <option value="recent">Recently updated</option>
+        <option value="title">Title</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="search-page__meta">
+    <p
+      class="search-page__status"
+      id={statusId}
+      aria-live="polite"
+      aria-atomic="true"
+      data-search-status
+    >
+      {defaultStatus}
+    </p>
+    <button
+      class="search-page__history-toggle"
+      type="button"
+      data-search-history-clear
+      aria-label="Clear recent searches"
+    >
+      {clearHistoryLabel}
+    </button>
+  </div>
+
+  <h2 class="sr-only" id={historyLabelId}>Recent searches</h2>
+  <div
+    class="search-page__history"
+    role="region"
+    aria-labelledby={historyLabelId}
+    data-search-history
+    hidden
+  >
+  </div>
+  <h2 class="sr-only" id={resultsLabelId}>Search results</h2>
+  <div
+    class="search-page__results"
+    role="region"
+    aria-labelledby={resultsLabelId}
+    data-search-results
+  >
+  </div>
+  <template data-search-empty-state="initial">
+    <EmptyState
+      class="search-page__empty-state"
+      title={searchEmptyStates.initial.title}
+      description={searchEmptyStates.initial.description}
+      primaryAction={searchEmptyStates.initial.primaryAction}
+      secondaryAction={searchEmptyStates.initial.secondaryAction}
+    />
+  </template>
+  <template data-search-empty-state="no-results">
+    <EmptyState
+      class="search-page__empty-state"
+      title={searchEmptyStates.noResults.title}
+      description={searchEmptyStates.noResults.description}
+      primaryAction={searchEmptyStates.noResults.primaryAction}
+      secondaryAction={searchEmptyStates.noResults.secondaryAction}
+    />
+  </template>
+</div>

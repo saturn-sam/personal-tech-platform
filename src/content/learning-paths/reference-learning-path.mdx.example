@@ -1,0 +1,63 @@
+---
+assetType: learning-path
+title: Example Learning Path
+slug: example-learning-path
+description: Ordered study path that connects multiple PTKP assets into a sequence.
+summary: A learning path entry defining recommended study order across articles, projects, lab notes, and guides.
+author: Md. Samrat Uz Zaman
+publishedDate: '2026-07-25'
+updatedDate: '2026-07-25'
+reviewedDate: '2026-07-25'
+revision: '1.0'
+status: draft
+tags:
+  - Learning Path
+  - Kubernetes
+technologies:
+  - Kubernetes
+categories:
+  - Learning
+difficulty: intermediate
+estimatedHours: 6
+steps:
+  - title: Read the architectural baseline
+    order: 1
+    asset:
+      collection: architecture-guides
+      slug: secure-platform-operations-baseline
+  - title: Read the platform article
+    order: 2
+    asset:
+      collection: articles
+      slug: enterprise-kubernetes-platform-architecture
+  - title: Review the implementation project
+    order: 3
+    asset:
+      collection: projects
+      slug: enterprise-kubernetes-platform
+relatedAssets:
+  - collection: technologies
+    slug: kubernetes
+featuredImage:
+  src: /assets/placeholders/learning-path.svg
+  alt: Example learning path illustration
+seo:
+  title: Example Learning Path
+  description: Ordered study path that connects multiple PTKP assets into a sequence.
+  canonicalPath: /learning-paths/example-learning-path/
+  robots: noindex,follow
+featured: false
+---
+
+## Objective
+
+Explain what the reader should be able to do after completing the path.
+
+## Recommended Order
+
+Follow the `steps` list in sequence.
+
+## Expected Outcome
+
+State the learning outcome clearly.
+```
