@@ -37,6 +37,7 @@ const canonicalPath = entry.data.seo.canonicalPath ?? getProjectUrl(entry.data.s
 const gallery = getProjectGallery(entry);
 const timeline = getProjectTimeline(entry);
 const mermaidTitle = entry.data.diagram?.title ?? labels.mermaidDiagram;
+const hasRelatedKnowledge = relatedKnowledgeEntries.length > 0;
 
 const metadata = [
   {
@@ -100,7 +101,6 @@ const structuredData: Record<string, unknown> = {
         <article class="project-detail__article">
           <header class="project-detail__header">
             <div class="project-detail__badges">
-              <Badge tone="accent">{projectConfig.badgeLabel}</Badge>
               <Badge>{entry.data.projectStatus}</Badge>
             </div>
             <h1>{entry.data.title}</h1>
@@ -191,11 +191,11 @@ const structuredData: Record<string, unknown> = {
             <Card as="section" class="content-related-card project-related">
               <h2>{labels.relatedContent}</h2>
 
-              <div class="content-related-groups">
-                <section class="content-related-group">
-                  <h3>{labels.relatedKnowledge}</h3>
-                  {
-                    relatedKnowledgeEntries.length > 0 ? (
+              {
+                hasRelatedKnowledge ? (
+                  <div class="content-related-groups">
+                    <section class="content-related-group">
+                      <h3>{labels.relatedKnowledge}</h3>
                       <ul class="project-related-list">
                         {relatedKnowledgeEntries.map((relatedEntry) => (
                           <li>
@@ -206,17 +206,12 @@ const structuredData: Record<string, unknown> = {
                           </li>
                         ))}
                       </ul>
-                    ) : (
-                      <p>{labels.relatedKnowledgeEmpty}</p>
-                    )
-                  }
-                </section>
-
-                <section class="content-related-group">
-                  <h3>{labels.relatedProjects}</h3>
-                  <p>{labels.relatedProjectsPlaceholder}</p>
-                </section>
-              </div>
+                    </section>
+                  </div>
+                ) : (
+                  <p>{labels.relatedContentEmpty}</p>
+                )
+              }
             </Card>
 
             <nav class="project-adjacent" aria-label={labels.projectNavigation}>

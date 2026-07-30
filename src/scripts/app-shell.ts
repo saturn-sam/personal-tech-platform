@@ -1,4 +1,5 @@
 const searchOpenEvent = 'ptkp:search-open';
+const themeChangeEvent = 'ptkp:theme-change';
 const validThemes = ['light', 'dark', 'system'] as const;
 
 type ThemePreference = (typeof validThemes)[number];
@@ -52,6 +53,14 @@ const applyTheme = (preference: ThemePreference): void => {
   root.dataset.themePreference = preference;
   root.dataset.theme = resolveTheme(preference);
   updateThemeControls(preference);
+  document.dispatchEvent(
+    new CustomEvent(themeChangeEvent, {
+      detail: {
+        preference,
+        resolvedTheme: root.dataset.theme,
+      },
+    }),
+  );
 };
 
 const initThemeToggle = (): void => {

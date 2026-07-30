@@ -8,7 +8,6 @@ import AboutHero from '@components/about/about-hero.astro';
 import AboutNarrativeSection from '@components/about/about-narrative-section.astro';
 import AboutProjectShowcase from '@components/about/about-project-showcase.astro';
 import AboutTechnicalExpertise from '@components/about/about-technical-expertise.astro';
-import AboutTechnologyStack from '@components/about/about-technology-stack.astro';
 import AboutTimeline from '@components/about/about-timeline.astro';
 import PageContainer from '@components/layout/page-container.astro';
 import Section from '@components/layout/section.astro';
@@ -28,13 +27,11 @@ import {
 const entry = await getAboutPageEntry();
 const canonicalPath = entry.data.seo.canonicalPath ?? '/about/';
 
-const [projectEntries, certificationEntries, technicalExpertiseGroups, technologyGroups] =
-  await Promise.all([
-    getAboutProjectEntries(entry.data.projects.slugs),
-    getAboutCertificationEntries(entry.data.certifications),
-    getAboutTechnologyGroups(entry.data.technicalExpertise.groups),
-    getAboutTechnologyGroups(entry.data.technologyStack.groups),
-  ]);
+const [projectEntries, certificationEntries, technicalExpertiseGroups] = await Promise.all([
+  getAboutProjectEntries(entry.data.projects.slugs),
+  getAboutCertificationEntries(entry.data.certifications),
+  getAboutTechnologyGroups(entry.data.technicalExpertise.groups),
+]);
 const enabledSectionIds = new Set(
   entry.data.sections.filter((section) => section.enabled).map((section) => section.id),
 );
@@ -52,7 +49,9 @@ const sameAs = entry.data.contact.methods
   .filter((href) => href.startsWith('http'));
 const knowsAbout = [
   ...new Set(
-    technologyGroups.flatMap((group) => group.entries.map((technology) => technology.data.title)),
+    technicalExpertiseGroups.flatMap((group) =>
+      group.entries.map((technology) => technology.data.title),
+    ),
   ),
 ];
 const resolveUrl = (path: string): string | undefined =>
@@ -205,13 +204,7 @@ const headingIds: Record<Exclude<AboutSectionId, 'hero'>, string> = {
                       />
                     );
                   case 'technology-stack':
-                    return technologyGroups.length > 0 ? (
-                      <AboutTechnologyStack
-                        id={headingIds['technology-stack']}
-                        section={entry.data.technologyStack}
-                        groups={technologyGroups}
-                      />
-                    ) : null;
+                    return null;
                   case 'current-focus':
                     return (
                       <AboutGroupedSection

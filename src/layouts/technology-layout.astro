@@ -52,6 +52,10 @@ const labels = technologyConfig.labels;
 const breadcrumbs = getTechnologyBreadcrumbs(entry.data.title);
 const canonicalPath = entry.data.seo.canonicalPath ?? getTechnologyUrl(entry.data.slug);
 const mermaidTitle = labels.mermaidDiagram;
+const hasRelatedKnowledge = relatedKnowledgeEntries.length > 0;
+const hasRelatedProjects = relatedProjectEntries.length > 0;
+const hasRelatedCertifications = relatedCertificationEntries.length > 0;
+const hasRelatedContent = hasRelatedKnowledge || hasRelatedProjects || hasRelatedCertifications;
 
 const formatWebsiteLabel = (website: string): string => {
   try {
@@ -146,7 +150,6 @@ const structuredData: Record<string, unknown> = {
         <article class="technology-detail__article">
           <header class="technology-detail__header">
             <div class="technology-detail__badges">
-              <Badge tone="accent">{technologyConfig.badgeLabel}</Badge>
               {entry.data.categories.map((category) => <Badge>{category}</Badge>)}
             </div>
             <h1>{entry.data.title}</h1>
@@ -197,70 +200,67 @@ const structuredData: Record<string, unknown> = {
             <Card as="section" class="content-related-card technology-related">
               <h2>{labels.relatedContent}</h2>
 
-              <div class="content-related-groups">
-                <section class="content-related-group">
-                  <h3>{labels.relatedKnowledge}</h3>
-                  {
-                    relatedKnowledgeEntries.length > 0 ? (
-                      <ul class="technology-related-list">
-                        {relatedKnowledgeEntries.map((relatedEntry) => (
-                          <li>
-                            <a href={getRelatedKnowledgeUrl(relatedEntry)}>
-                              <span>{formatAssetType(relatedEntry.data.assetType)}</span>
-                              <strong>{relatedEntry.data.title}</strong>
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p>{labels.relatedKnowledgeEmpty}</p>
-                    )
-                  }
-                </section>
+              {
+                hasRelatedContent ? (
+                  <div class="content-related-groups">
+                    {hasRelatedKnowledge && (
+                      <section class="content-related-group">
+                        <h3>{labels.relatedKnowledge}</h3>
+                        <ul class="technology-related-list">
+                          {relatedKnowledgeEntries.map((relatedEntry) => (
+                            <li>
+                              <a href={getRelatedKnowledgeUrl(relatedEntry)}>
+                                <span>{formatAssetType(relatedEntry.data.assetType)}</span>
+                                <strong>{relatedEntry.data.title}</strong>
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </section>
+                    )}
 
-                <section class="content-related-group">
-                  <h3>{labels.relatedProjects}</h3>
-                  {
-                    relatedProjectEntries.length > 0 ? (
-                      <ul class="technology-related-list">
-                        {relatedProjectEntries.map((projectEntry) => (
-                          <li>
-                            <a href={getRelatedProjectUrl(projectEntry)}>
-                              <span>{projectEntry.data.projectStatus}</span>
-                              <strong>{projectEntry.data.title}</strong>
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p>{labels.relatedProjectsEmpty}</p>
-                    )
-                  }
-                </section>
+                    {hasRelatedProjects && (
+                      <section class="content-related-group">
+                        <h3>{labels.relatedProjects}</h3>
+                        <ul class="technology-related-list">
+                          {relatedProjectEntries.map((projectEntry) => (
+                            <li>
+                              <a href={getRelatedProjectUrl(projectEntry)}>
+                                <span>{projectEntry.data.projectStatus}</span>
+                                <strong>{projectEntry.data.title}</strong>
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </section>
+                    )}
 
-                <section class="content-related-group">
-                  <h3>{labels.relatedCertifications}</h3>
-                  {
-                    relatedCertificationEntries.length > 0 ? (
-                      <ul class="technology-related-list">
-                        {relatedCertificationEntries.map((certificationEntry) => (
-                          <li>
-                            <article class="technology-certification">
-                              <span>{certificationEntry.data.issuer}</span>
-                              <strong>{certificationEntry.data.title}</strong>
-                              <Link href={certificationEntry.data.verificationUrl} target="_blank">
-                                Verification
-                              </Link>
-                            </article>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p>{labels.relatedCertificationsEmpty}</p>
-                    )
-                  }
-                </section>
-              </div>
+                    {hasRelatedCertifications && (
+                      <section class="content-related-group">
+                        <h3>{labels.relatedCertifications}</h3>
+                        <ul class="technology-related-list">
+                          {relatedCertificationEntries.map((certificationEntry) => (
+                            <li>
+                              <article class="technology-certification">
+                                <span>{certificationEntry.data.issuer}</span>
+                                <strong>{certificationEntry.data.title}</strong>
+                                <Link
+                                  href={certificationEntry.data.verificationUrl}
+                                  target="_blank"
+                                >
+                                  Verification
+                                </Link>
+                              </article>
+                            </li>
+                          ))}
+                        </ul>
+                      </section>
+                    )}
+                  </div>
+                ) : (
+                  <p>{labels.relatedContentEmpty}</p>
+                )
+              }
             </Card>
 
             <nav class="technology-adjacent" aria-label={labels.technologyNavigation}>

@@ -4,12 +4,13 @@ export const certificationConfig = {
   badgeLabel: 'Certification',
   indexTitle: 'Certifications',
   indexDescription:
-    'Validated technical knowledge connected to practical platform work, related technologies, and supporting documentation.',
+    'Professional certifications I have that validate technical expertise, reinforce hands-on engineering experience, and demonstrate a commitment to continuous learning across enterprise infrastructure, cloud, virtualization, Kubernetes, automation, and security.',
   seoTitle: 'Certifications',
   seoDescription:
-    'Certification records connected to PTKP technologies, projects, and knowledge assets.',
+    'Browse professional certifications covering VMware, Kubernetes, cloud, DevOps, storage, networking, security, and enterprise infrastructure engineering.',
   emptyTitle: 'No published certifications',
-  emptyDescription: 'Published certification records will appear here after review.',
+  emptyDescription:
+    'Certification records will be published here as verified credentials, supporting resources, and practical implementation experiences are documented.',
   labels: {
     home: 'Home',
     certifications: 'Certifications',
@@ -23,6 +24,8 @@ export const certificationConfig = {
     skills: 'Skills Validated',
     technologies: 'Technologies Covered',
     relatedContent: 'Related content',
+    relatedContentEmpty:
+      'Related content will appear here when matching project, knowledge, or learning path records are published.',
     relatedProjects: 'Related Projects',
     relatedProjectsEmpty:
       'Related projects will appear here when matching project records are published.',

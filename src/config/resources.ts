@@ -21,6 +21,8 @@ export const resourceConfig = {
     categories: 'Categories',
     technologies: 'Related Technologies',
     relatedContent: 'Related content',
+    relatedContentEmpty:
+      'Related content will appear here when matching article, project, or learning path records are published.',
     relatedArticles: 'Related Articles',
     relatedArticlesEmpty:
       'Related articles will appear here when matching article records are published.',

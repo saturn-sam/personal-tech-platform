@@ -25,6 +25,8 @@ export const projectConfig = {
     gallery: 'Project gallery',
     timeline: 'Timeline',
     relatedContent: 'Related content',
+    relatedContentEmpty:
+      'Related content will appear here when linked project assets are published.',
     relatedKnowledge: 'Related Knowledge Assets',
     relatedKnowledgeEmpty:
       'Related Knowledge Assets will appear here when project references are published.',

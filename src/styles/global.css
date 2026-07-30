@@ -312,11 +312,14 @@ html[data-theme='dark'] {
     position: absolute;
     inset-block-start: calc(100% + var(--space-2));
     inset-inline-end: 0;
-    min-inline-size: min(18rem, calc(100vw - 2rem));
+    inline-size: min(18rem, calc(100vw - (2 * var(--layout-page-gutter))));
+    min-inline-size: 0;
+    max-inline-size: calc(100vw - (2 * var(--layout-page-gutter)));
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     background: var(--color-surface);
     box-shadow: var(--shadow-md);
+    overflow-x: hidden;
     padding: var(--space-2);
   }
 
@@ -331,6 +334,9 @@ html[data-theme='dark'] {
 
   .navigation-menu--mobile .navigation-menu__link {
     inline-size: 100%;
+    min-inline-size: 0;
+    justify-content: flex-start;
+    white-space: normal;
   }
 
   .theme-toggle {
@@ -2947,13 +2953,15 @@ html[data-theme='dark'] {
   }
 
   .homepage-hero__title {
-    max-inline-size: 24ch;
+    inline-size: 100%;
+    max-inline-size: none;
     font-size: clamp(1.5rem, 4vw, 3rem);
     line-height: 1.05;
   }
 
   .homepage-hero__intro {
-    max-inline-size: 68ch;
+    inline-size: 100%;
+    max-inline-size: none;
     color: var(--color-text-muted);
     font-size: clamp(1.0625rem, 2vw, 1.25rem);
     line-height: 1.8;
@@ -3489,8 +3497,15 @@ html[data-theme='dark'] {
     grid-template-columns: minmax(0, 1fr) auto;
   }
 
-  .site-footer__navigation {
+  .site-footer__meta {
+    order: 2;
     justify-items: end;
+    text-align: end;
+  }
+
+  .site-footer__navigation {
+    order: 1;
+    justify-items: start;
   }
 
   .site-footer__groups {
@@ -3498,8 +3513,8 @@ html[data-theme='dark'] {
   }
 
   .site-footer__group {
-    justify-items: end;
-    text-align: end;
+    justify-items: start;
+    text-align: start;
   }
 
   .homepage-update {
@@ -3589,6 +3604,7 @@ html[data-theme='dark'] {
   .site-header__inner {
     display: grid;
     gap: var(--space-2);
+    position: relative;
     padding-block: var(--space-2);
   }
 
@@ -3600,6 +3616,18 @@ html[data-theme='dark'] {
 
   .theme-toggle__button {
     padding-inline: var(--space-2);
+  }
+
+  .mobile-navigation {
+    position: static;
+  }
+
+  .mobile-navigation__panel {
+    inset-block-start: calc(100% + var(--space-2));
+    inset-inline: 0;
+    inline-size: auto;
+    min-inline-size: 0;
+    max-inline-size: none;
   }
 
   /* Mobile: Show heading anchors always for better accessibility */

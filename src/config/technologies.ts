@@ -24,6 +24,8 @@ export const technologyConfig = {
     tags: 'Tags',
     technologyMetadata: 'Technology metadata',
     relatedContent: 'Related content',
+    relatedContentEmpty:
+      'Related content will appear here when matching knowledge, project, or certification records are published.',
     relatedKnowledge: 'Related Knowledge Assets',
     relatedKnowledgeEmpty:
       'Related Knowledge Assets will appear here when matching content is published.',

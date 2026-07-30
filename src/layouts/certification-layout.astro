@@ -55,6 +55,10 @@ const labels = certificationConfig.labels;
 const breadcrumbs = getCertificationBreadcrumbs(entry.data.title);
 const canonicalPath = entry.data.seo.canonicalPath ?? getCertificationUrl(entry.data.slug);
 const mermaidTitle = labels.mermaidDiagram;
+const hasRelatedProjects = relatedProjectEntries.length > 0;
+const hasRelatedKnowledge = relatedKnowledgeEntries.length > 0;
+const hasRelatedLearningPaths = relatedLearningPathEntries.length > 0;
+const hasRelatedContent = hasRelatedProjects || hasRelatedKnowledge || hasRelatedLearningPaths;
 
 const metadata: CertificationMetadataItem[] = [
   {
@@ -136,7 +140,6 @@ const structuredData: Record<string, unknown> = {
         <article class="certification-detail__article">
           <header class="certification-detail__header">
             <div class="certification-detail__badges">
-              <Badge tone="accent">{certificationConfig.badgeLabel}</Badge>
               <Badge>{entry.data.issuer}</Badge>
             </div>
             <h1>{entry.data.title}</h1>
@@ -201,67 +204,61 @@ const structuredData: Record<string, unknown> = {
             <Card as="section" class="content-related-card certification-related">
               <h2>{labels.relatedContent}</h2>
 
-              <div class="content-related-groups">
-                <section class="content-related-group">
-                  <h3>{labels.relatedProjects}</h3>
-                  {
-                    relatedProjectEntries.length > 0 ? (
-                      <ul class="certification-related-list">
-                        {relatedProjectEntries.map((projectEntry) => (
-                          <li>
-                            <a href={getCertificationEntryUrl(projectEntry)}>
-                              <span>{projectEntry.data.projectStatus}</span>
-                              <strong>{projectEntry.data.title}</strong>
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p>{labels.relatedProjectsEmpty}</p>
-                    )
-                  }
-                </section>
+              {
+                hasRelatedContent ? (
+                  <div class="content-related-groups">
+                    {hasRelatedProjects && (
+                      <section class="content-related-group">
+                        <h3>{labels.relatedProjects}</h3>
+                        <ul class="certification-related-list">
+                          {relatedProjectEntries.map((projectEntry) => (
+                            <li>
+                              <a href={getCertificationEntryUrl(projectEntry)}>
+                                <span>{projectEntry.data.projectStatus}</span>
+                                <strong>{projectEntry.data.title}</strong>
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </section>
+                    )}
 
-                <section class="content-related-group">
-                  <h3>{labels.relatedKnowledge}</h3>
-                  {
-                    relatedKnowledgeEntries.length > 0 ? (
-                      <ul class="certification-related-list">
-                        {relatedKnowledgeEntries.map((knowledgeEntry) => (
-                          <li>
-                            <a href={getCertificationEntryUrl(knowledgeEntry)}>
-                              <span>{formatAssetType(knowledgeEntry.data.assetType)}</span>
-                              <strong>{knowledgeEntry.data.title}</strong>
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p>{labels.relatedKnowledgeEmpty}</p>
-                    )
-                  }
-                </section>
+                    {hasRelatedKnowledge && (
+                      <section class="content-related-group">
+                        <h3>{labels.relatedKnowledge}</h3>
+                        <ul class="certification-related-list">
+                          {relatedKnowledgeEntries.map((knowledgeEntry) => (
+                            <li>
+                              <a href={getCertificationEntryUrl(knowledgeEntry)}>
+                                <span>{formatAssetType(knowledgeEntry.data.assetType)}</span>
+                                <strong>{knowledgeEntry.data.title}</strong>
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </section>
+                    )}
 
-                <section class="content-related-group">
-                  <h3>{labels.relatedLearningPaths}</h3>
-                  {
-                    relatedLearningPathEntries.length > 0 ? (
-                      <ul class="certification-related-list">
-                        {relatedLearningPathEntries.map((learningPathEntry) => (
-                          <li>
-                            <article class="certification-learning-path">
-                              <span>Learning Path</span>
-                              <strong>{learningPathEntry.data.title}</strong>
-                            </article>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p>{labels.relatedLearningPathsEmpty}</p>
-                    )
-                  }
-                </section>
-              </div>
+                    {hasRelatedLearningPaths && (
+                      <section class="content-related-group">
+                        <h3>{labels.relatedLearningPaths}</h3>
+                        <ul class="certification-related-list">
+                          {relatedLearningPathEntries.map((learningPathEntry) => (
+                            <li>
+                              <article class="certification-learning-path">
+                                <span>Learning Path</span>
+                                <strong>{learningPathEntry.data.title}</strong>
+                              </article>
+                            </li>
+                          ))}
+                        </ul>
+                      </section>
+                    )}
+                  </div>
+                ) : (
+                  <p>{labels.relatedContentEmpty}</p>
+                )
+              }
             </Card>
 
             <Card as="section" class="certification-verification">

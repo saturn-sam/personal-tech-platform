@@ -3,7 +3,6 @@ import type { MarkdownHeading } from 'astro';
 
 import MarkdownEnhancements from '@components/documentation/markdown-enhancements.astro';
 import BreadcrumbSchema from '@components/seo/breadcrumb-schema.astro';
-import Badge from '@components/ui/badge.astro';
 import Card from '@components/ui/card.astro';
 import Tag from '@components/ui/tag.astro';
 import PageContainer from '@components/layout/page-container.astro';
@@ -151,7 +150,6 @@ const structuredData: Record<string, unknown> = {
 
         <article class="knowledge-asset__article">
           <header class="knowledge-asset__header">
-            <Badge tone="accent">{collectionConfig.badgeLabel}</Badge>
             <h1>{entry.data.title}</h1>
             <p>{entry.data.description}</p>
 

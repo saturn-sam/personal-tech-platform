@@ -32,62 +32,66 @@ export const knowledgeAssetConfig = {
       badgeLabel: 'Article',
       indexTitle: 'Articles',
       indexDescription:
-        'Long-form technical writing focused on architecture, platform operations, and engineering decisions.',
+        'In-depth technical insights, practical engineering experiences, and production lessons that bridge theory with real-world enterprise infrastructure.',
       routeBase: '/articles/',
       seoTitle: 'Articles',
       seoDescription:
-        'Technical articles about infrastructure, Kubernetes, virtualization, cloud, and platform engineering.',
+        'Explore expert articles on enterprise infrastructure, Kubernetes, VMware, cloud, storage, networking, automation, and platform engineering.',
       emptyTitle: 'No published articles',
-      emptyDescription: 'Published technical articles will appear here after editorial review.',
+      emptyDescription:
+        'Thought-provoking technical articles are on the way. Check back soon for practical engineering insights.',
     },
     'lab-notes': {
       badgeLabel: 'Lab Note',
       indexTitle: 'Lab Notes',
       indexDescription:
-        'Concise operational references for commands, checks, troubleshooting notes, and repeatable workflows.',
+        'Field-tested commands, troubleshooting techniques, validation procedures, and operational shortcuts collected from hands-on engineering practice.',
       routeBase: '/lab-notes/',
       seoTitle: 'Lab Notes',
       seoDescription:
-        'Practical lab notes for infrastructure troubleshooting, Kubernetes operations, and platform validation.',
+        'Quick-reference operational notes for troubleshooting, validation, automation, and day-to-day platform administration.',
       emptyTitle: 'No published lab notes',
-      emptyDescription: 'Published lab notes will appear here after operational validation.',
+      emptyDescription:
+        'Hands-on operational notes and proven troubleshooting references will be published here soon.',
     },
     'architecture-guides': {
       badgeLabel: 'Architecture Guide',
       indexTitle: 'Architecture Guides',
       indexDescription:
-        'Production-focused architecture references with business context, requirements, diagrams, and operating guidance.',
+        'Production-ready reference architectures that explain design principles, technology choices, implementation strategies, and operational best practices.',
       routeBase: '/architecture/',
       seoTitle: 'Architecture Guides',
       seoDescription:
-        'Architecture guides for enterprise platforms, infrastructure operations, and secure technical systems.',
+        'Enterprise architecture blueprints covering virtualization, Kubernetes, cloud platforms, networking, storage, security, and automation.',
       emptyTitle: 'No published architecture guides',
-      emptyDescription: 'Published architecture guides will appear here after technical review.',
+      emptyDescription:
+        'Enterprise architecture blueprints and design guides will appear here after technical validation.',
     },
     'case-studies': {
       badgeLabel: 'Case Study',
       indexTitle: 'Case Studies',
       indexDescription:
-        'Decision-focused engineering narratives that document context, trade-offs, implementation choices, and lessons learned.',
+        'Real implementation stories that capture business challenges, architectural decisions, deployment journeys, operational outcomes, and lessons learned.',
       routeBase: '/case-studies/',
       seoTitle: 'Case Studies',
       seoDescription:
-        'Engineering case studies covering technical decisions, implementation trade-offs, and operating outcomes.',
+        'Real-world enterprise infrastructure projects documenting implementation strategies, technical decisions, challenges, and measurable outcomes.',
       emptyTitle: 'No published case studies',
-      emptyDescription: 'Published case studies will appear here after editorial review.',
+      emptyDescription:
+        'Real engineering stories and implementation experiences will be published as projects reach completion.',
     },
     'learning-paths': {
       badgeLabel: 'Learning Path',
       indexTitle: 'Learning Paths',
       indexDescription:
-        'Structured learning sequences that connect articles, architecture guidance, lab notes, and supporting resources into an ordered study path.',
+        'Carefully curated learning journeys that transform complex technologies into structured, progressive, and practical mastery.',
       routeBase: '/learning-paths/',
       seoTitle: 'Learning Paths',
       seoDescription:
-        'Learning paths that connect PTKP knowledge assets into guided study sequences for platform and infrastructure topics.',
+        'Guided learning roadmaps connecting articles, labs, architecture guides, and projects into complete technical learning experiences.',
       emptyTitle: 'No published learning paths',
       emptyDescription:
-        'Published learning paths will appear here after the first guided learning sequence is released.',
+        'Guided learning journeys will be available once the first complete study roadmap is released.',
     },
   },
 } as const;

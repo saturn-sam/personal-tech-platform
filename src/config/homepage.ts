@@ -1,15 +1,16 @@
 export const homepageConfig = {
   seo: {
-    title: 'Personal Technical Knowledge Platform',
+    title: 'Samrat',
     description:
-      'Engineering knowledge, architecture notes, projects, and learning resources for infrastructure and platform engineers.',
+      'Enterprise infrastructure engineering, virtualization, Kubernetes, cloud architecture, automation, storage, networking, and DevSecOps knowledge from real-world production environments.',
     canonicalPath: '/',
   },
   hero: {
     name: 'Md. Samrat Uz Zaman',
-    title: 'Infrastructure Engineer, Kubernetes Architect, and Technical Knowledge Author',
+    title:
+      'Enterprise Infrastructure Engineer, Virtualization Specialist, Kubernetes Architect, DevSecOps Practitioner, Technical Author',
     introduction:
-      'Focused on secure, resilient, and automated enterprise platforms across virtualization, Kubernetes, cloud, and infrastructure operations.',
+      'I design, deploy, automate, and operate enterprise infrastructure for mission-critical environments. This platform documents practical knowledge, production architectures, implementation experiences, and engineering lessons across VMware, Kubernetes, cloud, storage, networking, automation, observability, and modern platform engineering as well as cloud-native architecture.',
     primaryAction: {
       label: 'Browse Articles',
       href: '/articles/',
@@ -20,7 +21,7 @@ export const homepageConfig = {
     },
     tertiaryAction: {
       label: 'Download Resume',
-      href: '/downloads/md-samrat-uz-zaman-resume.pdf',
+      href: '/downloads/Md_Samrat-Uz-Zaman_resume_60405.pdf',
       download: true,
     },
     actionsLabel: 'Homepage primary actions',
@@ -30,7 +31,7 @@ export const homepageConfig = {
     featuredKnowledge: {
       title: 'Featured Knowledge',
       description:
-        'Curated technical notes and architecture references selected for platform engineering readers.',
+        'Production-focused architecture guides, implementation notes, operational runbooks, and technical deep dives based on enterprise infrastructure projects and continuous learning.',
       collectionLabels: {
         'architecture-guides': 'Architecture Guide',
         articles: 'Article',
@@ -50,7 +51,7 @@ export const homepageConfig = {
     featuredProjects: {
       title: 'Featured Projects',
       description:
-        'Engineering implementations focused on enterprise platforms, automation, observability, and operations.',
+        'Real engineering projects covering enterprise virtualization, Kubernetes platforms, cloud infrastructure, storage modernization, automation, monitoring, and operational excellence.',
       statusLabel: 'Status',
       linkLabel: 'View Project',
       limit: 5,
@@ -58,7 +59,7 @@ export const homepageConfig = {
     technologyOverview: {
       title: 'Technology Overview',
       description:
-        'Technologies are grouped by domain so related knowledge can grow without changing the platform structure.',
+        'Knowledge is organized by technology domain that I have to connect architecture, implementation, operations, automation, and troubleshooting into a unified engineering reference.',
       categories: [
         'Infrastructure',
         'Virtualization',
@@ -74,14 +75,15 @@ export const homepageConfig = {
     certifications: {
       title: 'Certifications',
       description:
-        'Credential records connect platform knowledge to verified technical domains and study paths.',
+        'Professional certifications that validate my technical expertise while supporting continuous learning across infrastructure, cloud, Kubernetes, virtualization, networking, automation, and security.',
       issuerLabel: 'Issuer',
       linkLabel: 'View Credential',
       limit: 3,
     },
     recentUpdates: {
       title: 'Recent Updates',
-      description: 'Recent articles, lab notes, and case studies prepared for ongoing publication.',
+      description:
+        'Latest technical articles, lab experiments, architecture references, implementation notes, and engineering insights published as the platform continues to evolve.',
       updatedLabel: 'Updated',
       collections: ['articles', 'lab-notes', 'case-studies'],
       limit: 4,

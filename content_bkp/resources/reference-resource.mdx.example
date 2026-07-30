@@ -1,0 +1,54 @@
+---
+assetType: resource
+title: Example Resource
+slug: example-resource
+description: Downloadable or reference-oriented asset linked to related PTKP content.
+summary: A resource entry for a checklist, template, script, reference document, or external link.
+author: Md. Samrat Uz Zaman
+publishedDate: '2026-07-25'
+updatedDate: '2026-07-25'
+reviewedDate: '2026-07-25'
+revision: '1.0'
+status: draft
+tags:
+  - Checklist
+  - Operations
+technologies:
+  - Kubernetes
+categories:
+  - Reference
+difficulty: foundational
+resourceType: reference-document
+format: PDF
+estimatedStudyTime: 10 minutes
+downloadPath: /downloads/example-resource.pdf
+externalUrl: https://example.com/resources/example-resource
+relatedAssets:
+  - collection: technologies
+    slug: kubernetes
+  - collection: articles
+    slug: enterprise-kubernetes-platform-architecture
+featuredImage:
+  src: /assets/placeholders/resource.svg
+  alt: Example resource illustration
+seo:
+  title: Example Resource
+  description: Downloadable or reference-oriented asset linked to related PTKP content.
+  canonicalPath: /resources/example-resource/
+  robots: noindex,follow
+featured: false
+---
+
+## Overview
+
+Explain what the resource is for and when to use it.
+
+## Contents
+
+- Checklist section one
+- Checklist section two
+
+## Usage Notes
+
+Document how the resource should be applied.
+```

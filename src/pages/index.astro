@@ -83,6 +83,12 @@ const recentEntries = sortByUpdatedDate([
 ])
   .filter((entry) => entry.data.featured)
   .slice(0, recentUpdatesConfig.limit);
+
+const hasFeaturedKnowledge = featuredKnowledge.length > 0;
+const hasFeaturedProjects = featuredProjects.length > 0;
+const hasTechnologyOverview = technologyGroups.length > 0;
+const hasCertifications = certifications.length > 0;
+const hasRecentUpdates = recentEntries.length > 0;
 ---
 
 <AppLayout
@@ -121,175 +127,185 @@ const recentEntries = sortByUpdatedDate([
     </PageContainer>
   </Section>
 
-  <Section spacing="compact" ariaLabel={featuredKnowledgeConfig.title}>
-    <PageContainer size="wide">
-      <Stack gap="lg">
-        <div class="homepage-section-header">
-          <h2>{featuredKnowledgeConfig.title}</h2>
-          <p>{featuredKnowledgeConfig.description}</p>
-        </div>
+  {
+    hasFeaturedKnowledge && (
+      <Section spacing="compact" ariaLabel={featuredKnowledgeConfig.title}>
+        <PageContainer size="wide">
+          <Stack gap="lg">
+            <div class="homepage-section-header">
+              <h2>{featuredKnowledgeConfig.title}</h2>
+              <p>{featuredKnowledgeConfig.description}</p>
+            </div>
 
-        <Grid columns={2}>
-          {
-            featuredKnowledge.map((entry) => (
-              <Card as="article" variant="interactive">
-                <Stack gap="sm">
-                  <Badge tone="accent">
-                    {featuredKnowledgeConfig.collectionLabels[entry.collection]}
-                  </Badge>
-                  <h3 class="homepage-card__title">
-                    <a class="homepage-card__link" href={getAssetPath(entry)}>
-                      {entry.data.title}
-                    </a>
-                  </h3>
-                  <p class="homepage-card__description">{entry.data.description}</p>
-                  <div class="homepage-card__meta">
-                    {entry.data.technologies.slice(0, 3).map((technology) => (
-                      <Tag>{technology}</Tag>
-                    ))}
+            <Grid columns={2}>
+              {featuredKnowledge.map((entry) => (
+                <Card as="article" variant="interactive">
+                  <Stack gap="sm">
+                    <Badge tone="accent">
+                      {featuredKnowledgeConfig.collectionLabels[entry.collection]}
+                    </Badge>
+                    <h3 class="homepage-card__title">
+                      <a class="homepage-card__link" href={getAssetPath(entry)}>
+                        {entry.data.title}
+                      </a>
+                    </h3>
+                    <p class="homepage-card__description">{entry.data.description}</p>
+                    <div class="homepage-card__meta">
+                      {entry.data.technologies.slice(0, 3).map((technology) => (
+                        <Tag>{technology}</Tag>
+                      ))}
+                    </div>
+                  </Stack>
+                </Card>
+              ))}
+            </Grid>
+          </Stack>
+        </PageContainer>
+      </Section>
+    )
+  }
+
+  {
+    hasFeaturedProjects && (
+      <Section spacing="compact" ariaLabel={featuredProjectsConfig.title}>
+        <PageContainer size="wide">
+          <Stack gap="lg">
+            <div class="homepage-section-header">
+              <h2>{featuredProjectsConfig.title}</h2>
+              <p>{featuredProjectsConfig.description}</p>
+            </div>
+
+            <Grid columns={3}>
+              {featuredProjects.map((entry) => (
+                <Card as="article" variant="interactive">
+                  <Stack gap="sm">
+                    <Badge>
+                      {featuredProjectsConfig.statusLabel}: {entry.data.projectStatus}
+                    </Badge>
+                    <h3 class="homepage-card__title">
+                      <a class="homepage-card__link" href={getAssetPath(entry)}>
+                        {entry.data.title}
+                      </a>
+                    </h3>
+                    <p class="homepage-card__description">{entry.data.description}</p>
+                    <div class="homepage-card__meta">
+                      {entry.data.technologies.slice(0, 3).map((technology) => (
+                        <Tag>{technology}</Tag>
+                      ))}
+                    </div>
+                    <Link href={getAssetPath(entry)} variant="standalone">
+                      {featuredProjectsConfig.linkLabel}
+                    </Link>
+                  </Stack>
+                </Card>
+              ))}
+            </Grid>
+          </Stack>
+        </PageContainer>
+      </Section>
+    )
+  }
+
+  {
+    hasTechnologyOverview && (
+      <Section spacing="compact" ariaLabel={technologyOverviewConfig.title}>
+        <PageContainer size="wide">
+          <Stack gap="lg">
+            <div class="homepage-section-header">
+              <h2>{technologyOverviewConfig.title}</h2>
+              <p>{technologyOverviewConfig.description}</p>
+            </div>
+
+            <Grid columns={3}>
+              {technologyGroups.map((group) => (
+                <Card>
+                  <Stack gap="sm">
+                    <h3 class="homepage-card__title">{group.category}</h3>
+                    <div class="homepage-chip-list">
+                      {group.entries.map((entry) => (
+                        <Chip href={getAssetPath(entry)}>{entry.data.title}</Chip>
+                      ))}
+                    </div>
+                  </Stack>
+                </Card>
+              ))}
+            </Grid>
+          </Stack>
+        </PageContainer>
+      </Section>
+    )
+  }
+
+  {
+    hasCertifications && (
+      <Section spacing="compact" ariaLabel={certificationsConfig.title}>
+        <PageContainer size="wide">
+          <Stack gap="lg">
+            <div class="homepage-section-header">
+              <h2>{certificationsConfig.title}</h2>
+              <p>{certificationsConfig.description}</p>
+            </div>
+
+            <Grid columns={4}>
+              {certifications.map((entry) => (
+                <Card as="article" variant="interactive">
+                  <Stack gap="sm">
+                    <h3 class="homepage-card__title">
+                      <a class="homepage-card__link" href={getAssetPath(entry)}>
+                        {entry.data.title}
+                      </a>
+                    </h3>
+                    <p class="homepage-card__description">
+                      {certificationsConfig.issuerLabel}: {entry.data.issuer}
+                    </p>
+                    <div class="homepage-card__meta">
+                      {entry.data.skills.slice(0, 2).map((skill) => (
+                        <Tag>{skill}</Tag>
+                      ))}
+                    </div>
+                    <Link href={getAssetPath(entry)} variant="standalone">
+                      {certificationsConfig.linkLabel}
+                    </Link>
+                  </Stack>
+                </Card>
+              ))}
+            </Grid>
+          </Stack>
+        </PageContainer>
+      </Section>
+    )
+  }
+
+  {
+    hasRecentUpdates && (
+      <Section spacing="compact" ariaLabel={recentUpdatesConfig.title}>
+        <PageContainer size="wide">
+          <Stack gap="lg">
+            <div class="homepage-section-header">
+              <h2>{recentUpdatesConfig.title}</h2>
+              <p>{recentUpdatesConfig.description}</p>
+            </div>
+
+            <div class="homepage-update-list">
+              {recentEntries.map((entry) => (
+                <article class="homepage-update">
+                  <div>
+                    <h3 class="homepage-update__title">
+                      <a class="homepage-card__link" href={getAssetPath(entry)}>
+                        {entry.data.title}
+                      </a>
+                    </h3>
+                    <p class="homepage-update__description">{entry.data.summary}</p>
                   </div>
-                </Stack>
-              </Card>
-            ))
-          }
-        </Grid>
-      </Stack>
-    </PageContainer>
-  </Section>
-
-  <Section spacing="compact" ariaLabel={featuredProjectsConfig.title}>
-    <PageContainer size="wide">
-      <Stack gap="lg">
-        <div class="homepage-section-header">
-          <h2>{featuredProjectsConfig.title}</h2>
-          <p>{featuredProjectsConfig.description}</p>
-        </div>
-
-        <Grid columns={3}>
-          {
-            featuredProjects.map((entry) => (
-              <Card as="article" variant="interactive">
-                <Stack gap="sm">
-                  <Badge>
-                    {featuredProjectsConfig.statusLabel}: {entry.data.projectStatus}
-                  </Badge>
-                  <h3 class="homepage-card__title">
-                    <a class="homepage-card__link" href={getAssetPath(entry)}>
-                      {entry.data.title}
-                    </a>
-                  </h3>
-                  <p class="homepage-card__description">{entry.data.description}</p>
-                  <div class="homepage-card__meta">
-                    {entry.data.technologies.slice(0, 3).map((technology) => (
-                      <Tag>{technology}</Tag>
-                    ))}
-                  </div>
-                  <Link href={getAssetPath(entry)} variant="standalone">
-                    {featuredProjectsConfig.linkLabel}
-                  </Link>
-                </Stack>
-              </Card>
-            ))
-          }
-        </Grid>
-      </Stack>
-    </PageContainer>
-  </Section>
-
-  <Section spacing="compact" ariaLabel={technologyOverviewConfig.title}>
-    <PageContainer size="wide">
-      <Stack gap="lg">
-        <div class="homepage-section-header">
-          <h2>{technologyOverviewConfig.title}</h2>
-          <p>{technologyOverviewConfig.description}</p>
-        </div>
-
-        <Grid columns={3}>
-          {
-            technologyGroups.map((group) => (
-              <Card>
-                <Stack gap="sm">
-                  <h3 class="homepage-card__title">{group.category}</h3>
-                  <div class="homepage-chip-list">
-                    {group.entries.map((entry) => (
-                      <Chip href={getAssetPath(entry)}>{entry.data.title}</Chip>
-                    ))}
-                  </div>
-                </Stack>
-              </Card>
-            ))
-          }
-        </Grid>
-      </Stack>
-    </PageContainer>
-  </Section>
-
-  <Section spacing="compact" ariaLabel={certificationsConfig.title}>
-    <PageContainer size="wide">
-      <Stack gap="lg">
-        <div class="homepage-section-header">
-          <h2>{certificationsConfig.title}</h2>
-          <p>{certificationsConfig.description}</p>
-        </div>
-
-        <Grid columns={4}>
-          {
-            certifications.map((entry) => (
-              <Card as="article" variant="interactive">
-                <Stack gap="sm">
-                  <h3 class="homepage-card__title">
-                    <a class="homepage-card__link" href={getAssetPath(entry)}>
-                      {entry.data.title}
-                    </a>
-                  </h3>
-                  <p class="homepage-card__description">
-                    {certificationsConfig.issuerLabel}: {entry.data.issuer}
+                  <p class="homepage-update__date">
+                    {recentUpdatesConfig.updatedLabel} {formatDate(entry.data.updatedDate)}
                   </p>
-                  <div class="homepage-card__meta">
-                    {entry.data.skills.slice(0, 2).map((skill) => (
-                      <Tag>{skill}</Tag>
-                    ))}
-                  </div>
-                  <Link href={getAssetPath(entry)} variant="standalone">
-                    {certificationsConfig.linkLabel}
-                  </Link>
-                </Stack>
-              </Card>
-            ))
-          }
-        </Grid>
-      </Stack>
-    </PageContainer>
-  </Section>
-
-  <Section spacing="compact" ariaLabel={recentUpdatesConfig.title}>
-    <PageContainer size="wide">
-      <Stack gap="lg">
-        <div class="homepage-section-header">
-          <h2>{recentUpdatesConfig.title}</h2>
-          <p>{recentUpdatesConfig.description}</p>
-        </div>
-
-        <div class="homepage-update-list">
-          {
-            recentEntries.map((entry) => (
-              <article class="homepage-update">
-                <div>
-                  <h3 class="homepage-update__title">
-                    <a class="homepage-card__link" href={getAssetPath(entry)}>
-                      {entry.data.title}
-                    </a>
-                  </h3>
-                  <p class="homepage-update__description">{entry.data.summary}</p>
-                </div>
-                <p class="homepage-update__date">
-                  {recentUpdatesConfig.updatedLabel} {formatDate(entry.data.updatedDate)}
-                </p>
-              </article>
-            ))
-          }
-        </div>
-      </Stack>
-    </PageContainer>
-  </Section>
+                </article>
+              ))}
+            </div>
+          </Stack>
+        </PageContainer>
+      </Section>
+    )
+  }
 </AppLayout>
