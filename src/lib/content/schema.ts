@@ -282,6 +282,12 @@ const aboutCallToActionSchema = aboutSectionHeadingSchema
   })
   .strict();
 
+const aboutAchievementsSectionSchema = aboutSectionHeadingSchema
+  .extend({
+    items: z.array(aboutAchievementSchema).min(1),
+  })
+  .strict();
+
 export const aboutSchema = z
   .object({
     title: nonEmptyString,
@@ -295,11 +301,7 @@ export const aboutSchema = z
     certifications: aboutCertificationsSectionSchema,
     projects: aboutProjectsSectionSchema,
     learningJourney: aboutNarrativeSectionSchema,
-    achievements: aboutSectionHeadingSchema
-      .extend({
-        items: z.array(aboutAchievementSchema).min(1),
-      })
-      .strict(),
+    achievements: aboutAchievementsSectionSchema.optional(),
     philosophy: aboutNarrativeSectionSchema,
     personalInterests: aboutGroupedSectionSchema,
     technologyStack: aboutTechnologyStackSchema,

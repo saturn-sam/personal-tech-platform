@@ -183,12 +183,12 @@ const headingIds: Record<Exclude<AboutSectionId, 'hero'>, string> = {
                       />
                     );
                   case 'achievements':
-                    return (
+                    return entry.data.achievements ? (
                       <AboutAchievements
                         id={headingIds.achievements}
                         section={entry.data.achievements}
                       />
-                    );
+                    ) : null;
                   case 'philosophy':
                     return (
                       <AboutNarrativeSection

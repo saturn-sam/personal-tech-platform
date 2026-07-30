@@ -9,7 +9,7 @@ import AboutSectionHeader from './about-section-header.astro';
 
 interface Props {
   id: string;
-  section: AboutData['achievements'];
+  section: NonNullable<AboutData['achievements']>;
 }
 
 const { id, section } = Astro.props as Props;
