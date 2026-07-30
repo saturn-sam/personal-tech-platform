@@ -2196,6 +2196,7 @@ html[data-theme='dark'] {
 
   .certification-index__header p,
   .certification-detail__header > p,
+  .certification-detail__summary > p,
   .resource-index__header p,
   .resource-detail__header > p {
     color: var(--color-text-muted);
@@ -2292,6 +2293,30 @@ html[data-theme='dark'] {
     text-decoration: underline;
   }
 
+  .certification-card__badge-link {
+    display: block;
+    inline-size: 100%;
+    text-decoration: none;
+  }
+
+  .certification-card__badge {
+    display: grid;
+    place-items: center;
+    inline-size: min(100%, 14rem);
+    aspect-ratio: 1;
+    margin-inline: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-muted);
+    padding: var(--space-4);
+  }
+
+  .certification-card__badge-image {
+    max-inline-size: 100%;
+    max-block-size: 100%;
+    object-fit: contain;
+  }
+
   .certification-card__description,
   .resource-card__description {
     color: var(--color-text-muted);
@@ -2327,6 +2352,28 @@ html[data-theme='dark'] {
     min-inline-size: 0;
   }
 
+  .certification-detail__hero {
+    display: grid;
+    gap: var(--space-6);
+    align-items: start;
+    inline-size: 100%;
+    min-inline-size: 0;
+  }
+
+  .certification-detail__hero--with-badge {
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 19rem);
+  }
+
+  .certification-detail__hero--without-badge {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .certification-detail__summary {
+    display: grid;
+    gap: var(--space-3);
+    min-inline-size: 0;
+  }
+
   .certification-meta,
   .resource-meta {
     display: grid;
@@ -2356,6 +2403,26 @@ html[data-theme='dark'] {
     margin: 0;
     color: var(--color-text);
     font-weight: 650;
+  }
+
+  .certification-badge-card {
+    align-self: start;
+  }
+
+  .certification-badge-card__image-wrap {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-muted);
+    padding: var(--space-4);
+  }
+
+  .certification-badge-card__image {
+    max-inline-size: 100%;
+    max-block-size: 100%;
+    object-fit: contain;
   }
 
   .certification-section,
@@ -3679,6 +3746,10 @@ html[data-theme='dark'] {
   .resource-token-groups {
     display: grid;
     align-items: start;
+  }
+
+  .certification-detail__hero--with-badge {
+    grid-template-columns: 1fr;
   }
 
   .knowledge-content :where(pre) {

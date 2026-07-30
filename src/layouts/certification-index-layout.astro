@@ -1,7 +1,6 @@
 ---
 import Badge from '@components/ui/badge.astro';
 import Card from '@components/ui/card.astro';
-import Tag from '@components/ui/tag.astro';
 import EmptyState from '@components/feedback/empty-state.astro';
 import Grid from '@components/layout/grid.astro';
 import PageContainer from '@components/layout/page-container.astro';
@@ -84,9 +83,24 @@ const getIssuerId = (issuer: string): string =>
                                   {entry.data.title}
                                 </a>
                               </h3>
-                              <p class="certification-card__description">
-                                {entry.data.description}
-                              </p>
+                              {entry.data.badge && (
+                                <a class="certification-card__badge-link" href={href}>
+                                  <div class="certification-card__badge">
+                                    <img
+                                      class="certification-card__badge-image"
+                                      src={entry.data.badge.src}
+                                      alt={entry.data.badge.alt}
+                                      loading="lazy"
+                                      decoding="async"
+                                    />
+                                  </div>
+                                </a>
+                              )}
+                              {!entry.data.badge && (
+                                <p class="certification-card__description">
+                                  {entry.data.description}
+                                </p>
+                              )}
                               <dl class="certification-card__metadata">
                                 <div>
                                   <dt>{labels.issuer}</dt>
@@ -97,11 +111,6 @@ const getIssuerId = (issuer: string): string =>
                                   <dd>{entry.data.skills.length}</dd>
                                 </div>
                               </dl>
-                              <div class="certification-card__tags" aria-label={labels.skills}>
-                                {entry.data.skills.slice(0, 3).map((skill) => (
-                                  <Tag>{skill}</Tag>
-                                ))}
-                              </div>
                             </Stack>
                           </article>
                         </Card>

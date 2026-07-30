@@ -55,6 +55,9 @@ const labels = certificationConfig.labels;
 const breadcrumbs = getCertificationBreadcrumbs(entry.data.title);
 const canonicalPath = entry.data.seo.canonicalPath ?? getCertificationUrl(entry.data.slug);
 const mermaidTitle = labels.mermaidDiagram;
+const hasBadgeImage = Boolean(entry.data.badge);
+const expirationDate = entry.data.expirationDate;
+const hasExpirationDate = expirationDate instanceof Date && !Number.isNaN(expirationDate.getTime());
 const hasRelatedProjects = relatedProjectEntries.length > 0;
 const hasRelatedKnowledge = relatedKnowledgeEntries.length > 0;
 const hasRelatedLearningPaths = relatedLearningPathEntries.length > 0;
@@ -81,11 +84,11 @@ const metadata: CertificationMetadataItem[] = [
   },
 ];
 
-if (entry.data.expirationDate) {
+if (hasExpirationDate) {
   metadata.splice(2, 0, {
-    dateTime: formatCertificationMachineDate(entry.data.expirationDate),
+    dateTime: formatCertificationMachineDate(expirationDate),
     label: labels.expires,
-    value: formatCertificationDate(entry.data.expirationDate),
+    value: formatCertificationDate(expirationDate),
   });
 }
 
@@ -109,9 +112,7 @@ const structuredData: Record<string, unknown> = {
   dateCreated: formatCertificationMachineDate(entry.data.certificationDate),
   description: entry.data.description,
   educationalLevel: entry.data.difficulty,
-  expires: entry.data.expirationDate
-    ? formatCertificationMachineDate(entry.data.expirationDate)
-    : undefined,
+  expires: expirationDate ? formatCertificationMachineDate(expirationDate) : undefined,
   image: resolveUrl(entry.data.featuredImage.src),
   name: entry.data.title,
   recognizedBy: {
@@ -139,32 +140,59 @@ const structuredData: Record<string, unknown> = {
 
         <article class="certification-detail__article">
           <header class="certification-detail__header">
-            <div class="certification-detail__badges">
-              <Badge>{entry.data.issuer}</Badge>
-            </div>
-            <h1>{entry.data.title}</h1>
-            <p>{entry.data.summary}</p>
+            <div
+              class:list={[
+                'certification-detail__hero',
+                hasBadgeImage
+                  ? 'certification-detail__hero--with-badge'
+                  : 'certification-detail__hero--without-badge',
+              ]}
+            >
+              <div class="certification-detail__summary">
+                <div class="certification-detail__badges">
+                  <Badge>{entry.data.issuer}</Badge>
+                </div>
+                <h1>{entry.data.title}</h1>
+                <p>{entry.data.summary}</p>
 
-            <dl class="certification-meta" aria-label={labels.certificationMetadata}>
+                <dl class="certification-meta" aria-label={labels.certificationMetadata}>
+                  {
+                    metadata.map((item) => (
+                      <div>
+                        <dt>{item.label}</dt>
+                        <dd>
+                          {item.dateTime ? (
+                            <time datetime={item.dateTime}>{item.value}</time>
+                          ) : item.href ? (
+                            <Link href={item.href} target="_blank">
+                              {item.value}
+                            </Link>
+                          ) : (
+                            item.value
+                          )}
+                        </dd>
+                      </div>
+                    ))
+                  }
+                </dl>
+              </div>
+
               {
-                metadata.map((item) => (
-                  <div>
-                    <dt>{item.label}</dt>
-                    <dd>
-                      {item.dateTime ? (
-                        <time datetime={item.dateTime}>{item.value}</time>
-                      ) : item.href ? (
-                        <Link href={item.href} target="_blank">
-                          {item.value}
-                        </Link>
-                      ) : (
-                        item.value
-                      )}
-                    </dd>
-                  </div>
-                ))
+                entry.data.badge && (
+                  <Card class="certification-badge-card">
+                    <div class="certification-badge-card__image-wrap">
+                      <img
+                        class="certification-badge-card__image"
+                        src={entry.data.badge.src}
+                        alt={entry.data.badge.alt}
+                        loading="eager"
+                        decoding="async"
+                      />
+                    </div>
+                  </Card>
+                )
               }
-            </dl>
+            </div>
           </header>
 
           <section class="certification-section" aria-labelledby="certification-skills-title">

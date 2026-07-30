@@ -358,7 +358,7 @@ export const certificationSchema = baseKnowledgeAssetSchema
     certificationDate: dateSchema,
     expirationDate: dateSchema.optional(),
     verificationUrl: z.url(),
-    badge: featuredImageSchema,
+    badge: featuredImageSchema.optional(),
     skills: z.array(nonEmptyString).min(1),
   })
   .strict();
